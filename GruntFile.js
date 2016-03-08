@@ -1,4 +1,5 @@
 module.exports = function(grunt) {
+
     grunt.initConfig({
         bower: grunt.file.readJSON('bower.json'),
         clean: {
@@ -16,7 +17,8 @@ module.exports = function(grunt) {
             },
             js: {
                 files: [
-                    {src: 'dist/scripts/app.angular.js', dest : 'dist/angular/scripts/app.angular.js'}
+                    {src: 'dist/scripts/app.angular.js', dest : 'dist/angular/scripts/app.angular.js'},
+                    {src: 'dist/scripts/app.html.js', dest : 'dist/html/scripts/app.html.js'}
                 ]
             },
             libs:{
@@ -47,10 +49,10 @@ module.exports = function(grunt) {
             }
         },
         useminPrepare: {
-            html: ['angular/index.html','angular/index.rtl.html']
+            html: ['angular/index.html']
         },
         usemin: {
-            html: ['dist/angular/index.html','dist/angular/index.rtl.html']
+            html: ['dist/angular/index.html']
         },
         bump: {
             options: {
@@ -78,6 +80,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-sass');
     grunt.loadNpmTasks('grunt-bump');
+    grunt.loadNpmTasks('grunt-assemble');
 
     grunt.registerTask('build', [
         'clean:dist',
@@ -95,5 +98,10 @@ module.exports = function(grunt) {
 
     grunt.registerTask('release', [
         'bump'
+    ]);
+
+    grunt.registerTask('html', [
+        'clean:html',
+        'assemble'
     ]);
 };

@@ -694,7 +694,7 @@ th {
 .form-control-danger,
 .form-control-success,
 .form-control-warning {
-  background-position: center left 0.5625rem;
+  background-position: center left .5625rem;
   padding-right: 0.75rem;
   padding-left: 2.25rem; }
 
@@ -942,7 +942,8 @@ th {
   margin-left: 5px;
   margin-right: auto; }
 
-.alert-dismissable, .alert-dismissible {
+.alert-dismissable,
+.alert-dismissible {
   padding-left: 35px;
   padding-right: 15px; }
 

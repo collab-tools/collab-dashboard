@@ -1,0 +1,81 @@
+
+  <ul class="nav" ui-nav>
+    <li class="nav-header hidden-folded">
+      <small class="text-muted">General</small>
+    </li>
+    
+    <li ui-sref-active="active">
+      <a href="dashboard.html" ui-sref="app.dashboard">
+        <span class="nav-icon">
+          <i class="material-icons">&#xE84F;<span ui-include="'../assets/images/i_0.svg'"></span></i>
+        </span>
+        <span class="nav-text">Dashboard</span>
+      </a>
+    </li>
+
+    <li>
+      <a>
+        <span class="nav-icon">
+          <i class="material-icons">&#xE7EF;<span ui-include="'../assets/images/i_1.svg'"></span></i>
+        </span>
+        <span class="nav-text">Teams</span>
+      </a>
+    </li>
+
+    <li ng-class="{active:$state.includes('app.ui')}">
+      <a>
+        <span class="nav-icon">
+          <i class="material-icons">&#xE7FD;<span ui-include="'../assets/images/i_2.svg'"></span></i>
+        </span>
+        <span class="nav-text">Users</span>
+      </a>
+    </li>
+
+    <li class="nav-header hidden-folded">
+      <small class="text-muted">Global Features</small>
+    </li>
+
+    <li ng-class="{active:$state.includes('app.git')}">
+      <a>
+        <span class="nav-icon">
+          <i class="fa fa-github"><span ui-include="'../assets/images/i_4.svg'"></span></i>
+        </span>
+        <span class="nav-text">GitHub</span>
+      </a>
+    </li>
+
+    <li ng-class="{active:$state.includes('app.drive')}">
+      <a>
+        <span class="nav-icon">
+          <i class="fa fa-google"><span ui-include="'../assets/images/i_5.svg'"></span></i>
+        </span>
+        <span class="nav-text">Google Drive</span>
+      </a>
+    </li>
+
+    <li ng-class="{active:$state.includes('app.ide')}">
+      <a>
+        <span class="nav-icon">
+          <i class="material-icons">&#xE2BD;<span ui-include="'../assets/images/i_6.svg'"></span></i>
+        </span>
+        <span class="nav-text">Cloud IDE</span>
+      </a>
+    </li>
+
+    <li ng-class="{active:$state.includes('app.table')}">
+      <a>
+        <span class="nav-icon">
+          <i class="material-icons">&#xe896;<span ui-include="'../assets/images/i_7.svg'"></span></i>
+        </span>
+        <span class="nav-text">Tasks</span>
+      </a>
+    </li>
+    <li ui-sref-active="active">
+      <a>
+        <span class="nav-icon">
+          <i class="material-icons">&#xe1b8;<span ui-include="'../assets/images/i_8.svg'"></span></i>
+        </span>
+        <span class="nav-text">Milestones</span>
+      </a>
+    </li>
+  </ul>

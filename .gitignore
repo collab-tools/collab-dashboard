@@ -34,4 +34,8 @@ jspm_packages
 .node_repl_history
 
 # Bower Components
-bower_components
+bower_components/*
+
+# Grunt Copied Libs
+libs
+dist
