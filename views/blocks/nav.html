@@ -13,8 +13,8 @@
       </a>
     </li>
 
-    <li>
-      <a>
+    <li ng-class="{active:$state.includes('app.teams')}">
+      <a href="teams.html" ui-sref="app.teams">
         <span class="nav-icon">
           <i class="material-icons">&#xE7EF;<span ui-include="'../assets/images/i_1.svg'"></span></i>
         </span>
@@ -22,8 +22,8 @@
       </a>
     </li>
 
-    <li ng-class="{active:$state.includes('app.ui')}">
-      <a>
+    <li ng-class="{active:$state.includes('app.users')}">
+      <a href="users.html" ui-sref="app.users">
         <span class="nav-icon">
           <i class="material-icons">&#xE7FD;<span ui-include="'../assets/images/i_2.svg'"></span></i>
         </span>
@@ -35,8 +35,8 @@
       <small class="text-muted">Global Features</small>
     </li>
 
-    <li ng-class="{active:$state.includes('app.git')}">
-      <a>
+    <li ng-class="{active:$state.includes('app.github')}">
+      <a href="github.html" ui-sref="app.github">
         <span class="nav-icon">
           <i class="fa fa-github"><span ui-include="'../assets/images/i_4.svg'"></span></i>
         </span>
@@ -45,7 +45,7 @@
     </li>
 
     <li ng-class="{active:$state.includes('app.drive')}">
-      <a>
+      <a href="drive.html" ui-sref="app.drive">
         <span class="nav-icon">
           <i class="fa fa-google"><span ui-include="'../assets/images/i_5.svg'"></span></i>
         </span>
@@ -53,8 +53,8 @@
       </a>
     </li>
 
-    <li ng-class="{active:$state.includes('app.ide')}">
-      <a>
+    <li ng-class="{active:$state.includes('app.cloud')}">
+      <a href="cloud.html" ui-sref="app.cloud">
         <span class="nav-icon">
           <i class="material-icons">&#xE2BD;<span ui-include="'../assets/images/i_6.svg'"></span></i>
         </span>
@@ -62,8 +62,8 @@
       </a>
     </li>
 
-    <li ng-class="{active:$state.includes('app.table')}">
-      <a>
+    <li ng-class="{active:$state.includes('app.tasks')}">
+      <a href="tasks.html" ui-sref="app.tasks">
         <span class="nav-icon">
           <i class="material-icons">&#xe896;<span ui-include="'../assets/images/i_7.svg'"></span></i>
         </span>
@@ -71,7 +71,7 @@
       </a>
     </li>
     <li ui-sref-active="active">
-      <a>
+      <a href="milestones.html" ui-sref="app.milestones">
         <span class="nav-icon">
           <i class="material-icons">&#xe1b8;<span ui-include="'../assets/images/i_8.svg'"></span></i>
         </span>

@@ -1,0 +1,93 @@
+{ "aaData": [
+	{
+		"team_id": "A1",
+		"team_name": "Alpha",
+		"tag": "Milestone 1",
+		"repo": "alpha/cs3202proj",
+		"date": "27/05/16 05:02:11"
+	},
+	{
+		"team_id": "A2",
+		"team_name": "Bravo",
+		"tag": "Milestone 1",
+		"repo": "bravo/cs3202proj",
+		"date": "27/05/16 05:02:11"
+	},
+	{
+		"team_id": "A3",
+		"team_name": "Charlie",
+		"tag": "Milestone 2",
+		"repo": "charlie/cs3202proj",
+		"date": "27/05/16 05:02:11"
+	},
+	{
+		"team_id": "A4",
+		"team_name": "Delta",
+		"tag": "Milestone 1",
+		"repo": "delta/cs3202proj",
+		"date": "27/05/16 05:02:11"
+	},
+	{
+		"team_id": "B1",
+		"team_name": "Tango",
+		"tag": "Milestone 1",
+		"repo": "tango/cs3202proj",
+		"date": "27/05/16 05:02:11"
+	},
+	{
+		"team_id": "B2",
+		"team_name": "Infamous",
+		"tag": "Milestone 1",
+		"repo": "infam/cs3202proj",
+		"date": "27/05/16 05:02:11"
+	},
+	{
+		"team_id": "B3",
+		"team_name": "Two Bit",
+		"tag": "Milestone 1",
+		"repo": "2bit/cs3202proj",
+		"date": "27/05/16 05:02:11"
+	},
+	{
+		"team_id": "B4",
+		"team_name": "Team Three",
+		"tag": "Milestone 1",
+		"repo": "three/cs3202proj",
+		"date": "27/05/16 05:02:11"
+	},
+	{
+		"team_id": "C1",
+		"team_name": "Team One",
+		"tag": "Milestone 1",
+		"repo": "one/cs3202proj",
+		"date": "27/05/16 05:02:11"
+	},
+	{
+		"team_id": "C2",
+		"team_name": "Rollo",
+		"tag": "Milestone 1",
+		"repo": "rollo/cs3202proj",
+		"date": "27/05/16 05:02:11"
+	},
+	{
+		"team_id": "C3",
+		"team_name": "Equinox",
+		"tag": "Milestone 1",
+		"repo": "eq/cs3202proj",
+		"date": "27/05/16 05:02:11"
+	},
+	{
+		"team_id": "C4",
+		"team_name": "Katt",
+		"tag": "Milestone 1",
+		"repo": "ka/cs3202proj",
+		"date": "27/05/16 05:02:11"
+	},
+	{
+		"team_id": "D1",
+		"team_name": "Zox",
+		"tag": "Milestone 1",
+		"repo": "zzoxx/cs3202proj",
+		"date": "27/05/16 05:02:11"
+	}											
+] }

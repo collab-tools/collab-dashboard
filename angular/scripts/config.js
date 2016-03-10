@@ -1,1 +1,1 @@
-// put your config code here
+/* Place config here */

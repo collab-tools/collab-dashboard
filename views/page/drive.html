@@ -1,1 +1,151 @@
-<div style="min-height: 200px"></div>
+<div class="p-a white lt box-shadow">
+	<div class="row">
+		<div class="col-sm-6">
+			<h4 class="m-b-0 _300">Google Drive</h4>
+			<small class="text-muted">Collab Statistics on Google Drive Usage</small>
+		</div>
+		<div class="col-sm-6 text-sm-right">
+			<div class="m-y-sm">
+				<span class="m-r-sm">Date Range</span>
+				<div class="btn-group dropdown">
+					<button class="btn white btn-sm ">Last 7 Days</button>
+					<button class="btn white btn-sm dropdown-toggle" data-toggle="dropdown"></button>
+					<div class="dropdown-menu dropdown-menu-scale pull-right">
+						<a class="dropdown-item" href>30 Days</a>
+						<a class="dropdown-item" href>90 Days</a>
+						<a class="dropdown-item" href>All-Time</a>
+						<a class="dropdown-item" href>Date Range</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="padding">
+	<div class="row">
+		<div class="col-sm-6 col-md-4 col-lg-4">
+			<div class="box-color p-a red">
+				<div class="pull-right m-l">
+					<span class="w-20 dker text-center rounded">
+						<i class="fa fa-file-text"></i>
+					</span>
+				</div>
+				<div class="clear">
+					<h4 class="m-a-0 text-md"><a href>1052 <span class="text-sm">New Files Shared</span></a></h4>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4 col-lg-4">
+			<div class="box-color p-a blue">
+				<div class="pull-right m-l">
+					<span class="w-20 dker text-center rounded">
+						<i class="material-icons">&#xE254;</i>
+					</span>
+				</div>
+				<div class="clear">
+					<h4 class="m-a-0 text-md"><a href>8502 <span class="text-sm">Revisions Made</span></a></h4>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4 col-lg-4">
+			<div class="box-color p-a teal">
+				<div class="pull-right m-l">
+					<span class="w-20 dker text-center rounded">
+						<i class="material-icons">&#xE7FF;</i>
+					</span>
+				</div>
+				<div class="clear">
+					<h4 class="m-a-0 text-md"><a href>78% <span class="text-sm">Participation Rate</span></a></h4>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-6 col-md-6">
+			<div class="box">
+				<div class="box-header">
+					<h3>File Types Shared</h3>
+				</div>
+				<div class="box-body">
+					<div ui-jp="plot" ui-refresh="app.setting.color" ui-options="
+						{{p_p_5}},
+						{
+						series: { pie: { show: true, innerRadius: 0, stroke: { width: 0 }, label: { show: true, threshold: 0.05 } } },
+						legend: {backgroundColor: 'transparent'},
+						colors: ['{{app.color.info}}','{{app.color.success}}', '{{app.color.warn}}'],
+						grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(120,120,120,0.5)' },
+						tooltip: true,
+						tooltipOpts: { content: '%s: %p.0%' }
+						}
+					" style="height:218px"></div>
+				</div>
+			</div>
+		</div>	
+		<div class="col-sm-6 col-md-6">
+			<div class="box">
+				<div class="box-header">
+					<h3>Revisions</h3>
+					<small>Recorded file revisions over time</small>
+				</div>
+				<div class="box-body">
+					<div ui-jp="plot" ui-refresh="app.setting.color" ui-options="
+						[
+						{
+						data: {{p_l_3}},
+						points: { show: true, radius: 3},
+						splines: { show: true, tension: 0.45, lineWidth: 0, fill: 0.4}
+						}
+						],
+						{
+						colors: ['green'],
+						series: { shadowSize: 3 },
+						xaxis: { show: true, font: { color: '#ccc' }, position: 'bottom' },
+						yaxis:{ show: true, font: { color: '#ccc' }, min:1},
+						grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(120,120,120,0.5)' },
+						tooltip: true,
+						tooltipOpts: { content: '%x.0 is %y.4',  defaultTheme: false, shifts: { x: 0, y: -40 } }
+						}
+						" style="height:200px" >
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+      <div class="col-sm-6 col-md-4 col-lg-4">
+        <div class="box p-a">
+          <div class="pull-left m-r">
+            <span ui-jp="sparkline" ui-refresh="app.setting.color" ui-options="[44,56], {type:'pie', height:36, sliceColors:['{{app.color.light}}','{{app.color.warn}}']}" class="sparkline inline"></span>
+          </div>
+          <div class="clear">
+            <h4 class="m-a-0 text-md"><a href>56% <span class="text-sm">Feature Utilization Rate</span></a></h4>
+            <small class="text-muted">5243 Unique Drive Activities</small>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-4 col-lg-4">
+        <div class="box p-a dark">
+          <div class="pull-left m-r">
+            <span class="m-y-sm inline" ui-jp="sparkline" ui-options="[[2,8],[4,6],[6,4],[8,2],[10,0],[8,2],[6,4],[4,6],[2,8]], {type:'bar', height:24, barWidth:4, barSpacing:2, stackedBarColor:['#fff', 'rgba(255,255,255,0.2)']}"></span>
+          </div>
+          <div class="clear">
+            <h4 class="m-a-0 text-md"><a href><span class="text-sm">Standard Deviation (Revisions):</span> 51.93</a></h4>
+            <small class="text-muted">Max: 1222 (16/2/16) Min: 533 (22/2/16)</small>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-4 col-lg-4">
+        <div class="box p-a">
+          <div class="pull-left m-r">
+            <span class="w-40 pink text-center rounded">
+              <i class="fa fa-group"></i>
+            </span>
+          </div>
+          <div class="clear">
+            <h4 class="m-a-0 text-md"><a href>56212 <span class="text-sm">Active Teams</span></a></h4>
+            <small class="text-muted">425 Inactive Teams</small>
+          </div>
+        </div>
+      </div>            
+	</div>
+</div>
