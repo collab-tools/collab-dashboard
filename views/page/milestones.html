@@ -57,7 +57,7 @@
 				</div>
 				<div class="box-body">
 					<div class="p-y-md">
-						<div ui-jp="plot" ui-refresh="app.setting.color" ui-options="
+						<div ui-jp="plot" ui-refresh="app.color" ui-options="
 							{{p_p_2}},
 							{
 							series: { pie: { show: true, innerRadius: 0, stroke: { width: 2, color: '#fff' }, label: { show: true, threshold: 0.05 }, tilt: 0.5, startAngle: 30 } },
@@ -79,7 +79,7 @@
 					<small>Mean time to complete</small>
 				</div>
 				<div class="box-body">
-					<div ui-jp="plot" ui-refresh="app.setting.color" ui-options="
+					<div ui-jp="plot" ui-refresh="app.color" ui-options="
 						[
 						{
 						data: {{p_b_1}},
@@ -91,7 +91,7 @@
 						}
 						],
 						{
-						colors: ['{{app.setting.color.primary}}','{{app.setting.color.warn}}'],
+						colors: ['{{app.color.primary}}','{{app.color.warn}}'],
 						series: { shadowSize: 3 },
 						xaxis: { show: true, font: { color: '#ccc' }, position: 'bottom' },
 						yaxis:{ show: true, font: { color: '#ccc' }},
@@ -109,7 +109,7 @@
 		<div class="col-sm-6 col-md-4 col-lg-4">
 			<div class="box p-a">
 				<div class="pull-left m-r">
-					<span ui-jp="sparkline" ui-refresh="app.setting.color" ui-options="[34,66], {type:'pie', height:36, sliceColors:['{{app.color.light}}','{{app.color.primary}}']}" class="sparkline inline"></span>
+					<span ui-jp="sparkline" ui-refresh="app.color" ui-options="[34,66], {type:'pie', height:36, sliceColors:['{{app.color.light}}','{{app.color.primary}}']}" class="sparkline inline"></span>
 				</div>
 				<div class="clear">
 					<h4 class="m-a-0 text-md"><a href>66% <span class="text-sm">Feature Utilization Rate</span></a></h4>

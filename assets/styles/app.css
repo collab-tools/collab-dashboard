@@ -1375,7 +1375,8 @@ a.list-group-item {
     opacity: 0.6; }
 
 .box-body {
-  padding: 1rem; }
+  padding: 1rem; 
+  padding-top: 0;}
 
 .box-footer {
   padding: 1rem; }

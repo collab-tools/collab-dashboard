@@ -1,14 +1,14 @@
 {
   "name": "jquery.sparkline",
-  "homepage": "https://github.com/gwatts/jquery.sparkline",
-  "version": "2.1.2",
-  "_release": "2.1.2",
+  "homepage": "https://github.com/hooitong/jquery.sparkline",
+  "version": "2.1.3",
+  "_release": "2.1.3",
   "_resolution": {
     "type": "version",
-    "tag": "v2.1.2",
-    "commit": "0ab30df52d464f54ea0fb4b8b58c317ecba0fb8d"
+    "tag": "2.1.3",
+    "commit": "861556bc38a492dc0acf3b2375e6b18f38360a11"
   },
-  "_source": "git://github.com/gwatts/jquery.sparkline.git",
-  "_target": "~2.1.2",
-  "_originalSource": "jquery.sparkline"
+  "_source": "git://github.com/hooitong/jquery.sparkline.git",
+  "_target": "2.1.3",
+  "_originalSource": "hooitong/jquery.sparkline"
 }

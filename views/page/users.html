@@ -54,7 +54,7 @@
 			<table ui-jp="dataTable" ui-options="{
 				sAjaxSource: 'api/users.json',
 				aoColumns: [
-				{ mData: 'user_id' },
+				{ mData: 'user_id', mRender: function(data, type, full) {return '<a href=&quot;#/app/user&quot; ui-sref=&quot;app.user&quot;>' + data + '</a>'}},
 				{ mData: 'user_name' },
 				{ mData: 'team_id' },
 				{ mData: 'team_name' },
@@ -76,3 +76,5 @@
 		</div>
 	</div>
 </div>
+
+<a href="dashboard.html" ui-sref="app.dashboard">

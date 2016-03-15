@@ -9,7 +9,7 @@ module.exports = function(grunt) {
         copy: {
             dist: {
                 files: [
-                    {expand: true, cwd: 'angular/', src: '**', dest: 'dist/angular/'},
+                    {expand: true, cwd: 'app/', src: '**', dest: 'dist/app/'},
                     {expand: true, cwd: 'assets/', src: ['**', '!**/scss/**'], dest: 'dist/assets/'},
                     {expand: true, cwd: 'libs/', src: '**', dest: 'dist/libs/'},
                     {src: 'index.html', dest: 'dist/index.html'}
@@ -17,8 +17,7 @@ module.exports = function(grunt) {
             },
             js: {
                 files: [
-                    {src: 'dist/scripts/app.angular.js', dest : 'dist/angular/scripts/app.angular.js'},
-                    {src: 'dist/scripts/app.html.js', dest : 'dist/html/scripts/app.html.js'}
+                    {src: 'dist/scripts/app.angular.js', dest : 'dist/app/scripts/app.angular.js'}
                 ]
             },
             libs:{
@@ -49,10 +48,10 @@ module.exports = function(grunt) {
             }
         },
         useminPrepare: {
-            html: ['angular/index.html']
+            html: ['app/index.html']
         },
         usemin: {
-            html: ['dist/angular/index.html']
+            html: ['dist/app/index.html']
         },
         bump: {
             options: {

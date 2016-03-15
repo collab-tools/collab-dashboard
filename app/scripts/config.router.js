@@ -33,6 +33,8 @@
     var cloud = '../views/page/cloud.html';
     var milestones = '../views/page/milestones.html';
     var tasks = '../views/page/tasks.html';
+    var user = '../views/page/users/overview.html';
+    var team = '../views/page/teams/overview.html';
 
     $urlRouterProvider
       .otherwise('/app/dashboard');
@@ -119,8 +121,26 @@
         },
         controller: 'ChartCtrl',
         resolve: load(['scripts/controllers/chart.js'])
-      });
-    
+      })
+      .state('app.user', {
+        url: '/user',
+        templateUrl: user,
+        data: {
+          title: 'User Overview: Hooi Tong',
+        },
+        controller: 'ChartCtrl',
+        resolve: load(['scripts/controllers/chart.js'])
+      })      
+      .state('app.team', {
+          url: '/team',
+          templateUrl: team,
+          data: {
+            title: 'Team Overview: Team Gene',
+          },
+          controller: 'ChartCtrl',
+          resolve: load(['scripts/controllers/chart.js'])
+        });
+          
     function load(srcs, callback) {
       return {
         deps: ['$ocLazyLoad', '$q',
