@@ -21,6 +21,9 @@
   "dependencies": {
     "body-parser": "^1.15.0",
     "express": "^4.13.4",
+    "github": "^0.2.4",
+    "googleapis": "^3.0.0",
+    "lodash": "^4.6.1",
     "morgan": "^1.7.0",
     "sequelize": "^3.19.3"
   },

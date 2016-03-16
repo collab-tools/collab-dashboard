@@ -32,8 +32,8 @@ app.use(express.static(__dirname + '/public/dist'))
 
 // API Routes
 // =====================================================
-var apiRouter = express.Router()
-app.use('/api', apiRouter)
+var apiRoutes = require('./app/routes/api')(app, express)
+app.use('/api', apiRoutes)
 
 // Catch-All Routing - Sends user to front-end
 // =====================================================
