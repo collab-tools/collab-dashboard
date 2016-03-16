@@ -25,6 +25,7 @@ build/Release
 
 # Dependency directories
 node_modules
+public/node_modules
 jspm_packages
 
 # Optional npm cache directory
@@ -34,8 +35,8 @@ jspm_packages
 .node_repl_history
 
 # Bower Components
-bower_components/*
+public/bower_components/*
 
 # Grunt Copied Libs
-libs
-dist
+public/libs
+public/dist
