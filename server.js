@@ -29,11 +29,9 @@ app.use(morgan('dev'));
 // set static file location for front-end
 app.use(express.static(__dirname + '/public/dist'))
 
-
 // API Routes
 // =====================================================
-var apiRoutes = require('./app/routes/api')(app, express)
-app.use('/api', apiRoutes)
+require('./app/routes')(app, express)
 
 // Catch-All Routing - Sends user to front-end
 // =====================================================
