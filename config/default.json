@@ -1,0 +1,33 @@
+{
+    "port": 8080,
+    "app-database": {
+        "name": "collab",
+        "username": "root",
+        "password": "",
+        "options": {
+            "host": "localhost",
+            "dialect": "mysql",
+            "pool": {
+                "max": 5,
+                "min": 0,
+                "idle": 10000
+            },
+            "logging": false
+        }
+    },
+    "logging-database": {
+        "name": "collab-logging",
+        "username": "root",
+        "password": "",
+        "options": {
+            "host": "localhost",
+            "dialect": "mysql",
+            "pool": {
+                "max": 5,
+                "min": 0,
+                "idle": 10000
+            },
+            "logging": false
+        }
+    }
+}

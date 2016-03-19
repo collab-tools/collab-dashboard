@@ -5,7 +5,7 @@ const app = express()
 const path = require('path')
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
-const config = require('./config')
+const config = require('config')
 
 // App Configurations
 // ====================================================
@@ -39,5 +39,5 @@ app.get('*', function(req, res) {
 	res.redirect('/app')
 })
 
-app.listen(config.port)
+app.listen(config.get('port'))
 console.log('Server Port opened at ' + config.port)
