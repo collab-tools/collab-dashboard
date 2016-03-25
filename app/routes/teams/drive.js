@@ -1,11 +1,9 @@
-"use strict";
+'use strict';
 
 function getOverview(req, res) {
 
 }
 
-const driveAPI = {
-	getOverview: getOverview
-}
+const driveAPI = { getOverview };
 
-export default driveAPI
+export default driveAPI;

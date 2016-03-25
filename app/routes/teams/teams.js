@@ -1,11 +1,9 @@
-"use strict";
+'use strict';
 
 function getTeam(req, res) {
 
 }
 
-const teamsAPI = {
-	getTeam: getTeam
-}
+const teamsAPI = { getTeam };
 
-export default teamsAPI
+export default teamsAPI;

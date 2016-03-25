@@ -40,3 +40,8 @@ public/bower_components/*
 # Grunt Copied Libs
 public/libs
 public/dist
+
+# Local configuration files
+config/local.json
+
+# IDEA

@@ -1,11 +1,9 @@
-"use strict";
+'use strict';
 
 function getUser(req, res) {
 
 }
 
-const usersAPI = {
-	getUser: getUser
-}
+const usersAPI = { getUser };
 
-export default usersAPI
+export default usersAPI;

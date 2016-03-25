@@ -1,11 +1,9 @@
-"use strict";
+'use strict';
 
 function getOverview(req, res) {
 
 }
 
-const githubAPI = {
-	getOverview: getOverview
-}
+const githubAPI = { getOverview };
 
-export default githubAPI
+export default githubAPI;

@@ -1,11 +1,9 @@
-"use strict";
+'use strict';
 
 function getOverview(req, res) {
 
 }
 
-const ideAPI = {
-	getOverview: getOverview
-}
+const ideAPI = { getOverview };
 
-export default ideAPI
+export default ideAPI;

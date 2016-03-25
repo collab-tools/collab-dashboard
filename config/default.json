@@ -3,7 +3,7 @@
     "app-database": {
         "name": "collab",
         "username": "root",
-        "password": "",
+        "password": "root",
         "options": {
             "host": "localhost",
             "dialect": "mysql",
@@ -16,9 +16,9 @@
         }
     },
     "logging-database": {
-        "name": "collab-logging",
+        "name": "collab_logging",
         "username": "root",
-        "password": "",
+        "password": "root",
         "options": {
             "host": "localhost",
             "dialect": "mysql",

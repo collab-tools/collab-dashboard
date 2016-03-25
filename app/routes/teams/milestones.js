@@ -1,11 +1,9 @@
-"use strict";
+'use strict';
 
 function getOverview(req, res) {
 
 }
 
-const milestonesAPI = {
-	getOverview: getOverview
-}
+const milestonesAPI = { getOverview };
 
-export default milestonesAPI
+export default milestonesAPI;

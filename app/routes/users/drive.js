@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 function getOverview(req, res) {
 
@@ -16,13 +16,10 @@ function getFiles(req, res) {
 
 }
 
-function getFileCount (req, res) {
+function getFileCount(req, res) {
 
 }
 
+const driveAPI = { getOverview, getRevisions, getRevisionCount, getFiles, getFileCount };
 
-const driveAPI = {
-	getOverview: getOverview
-}
-
-export default driveAPI
+export default driveAPI;
