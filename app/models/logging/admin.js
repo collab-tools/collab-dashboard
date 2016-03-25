@@ -1,4 +1,8 @@
+'use strict';
+
+const _ = require('lodash');
 const bcrypt = require('bcrypt');
+const uuid = require('node-uuid');
 const saltRound = 8;
 
 module.exports = function (sequelize, DataTypes) {
@@ -7,6 +11,7 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING,
       primaryKey: true
     },
+    name: DataTypes.STRING,
     username: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -29,7 +34,27 @@ module.exports = function (sequelize, DataTypes) {
     },
     hooks: {
       beforeCreate(user) {
+        user.id = uuid.v4();
         user.password = bcrypt.hashSync(user.password, saltRound);
+      }
+    },
+    classMethods: {
+      findByName(name) {
+        const where = { name };
+        return this.findOne(where);
+      },
+      findByRole(role) {
+        const where = { role };
+        return this.findAll(where);
+      },
+      addUser(payload) {
+        const actualLoad = {
+          username: payload.username,
+          password: payload.password,
+          role: payload.role,
+          name: payload.name
+        };
+        return this.create(actualLoad);
       }
     }
   });

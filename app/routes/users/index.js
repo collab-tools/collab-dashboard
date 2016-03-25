@@ -4,9 +4,15 @@ import ide from './ide';
 import tasks from './tasks';
 import milestones from './milestones';
 import users from './users';
+import config from 'config';
 
 module.exports = function (express) {
   const usersRouter = express.Router();
+  const auth = require('express-jwt')({
+    secret: config['jwt-secret'],
+    userProperty: 'auth'
+  });
+  usersRouter.use(auth);
 
   // GitHub Related
   // =========================================================

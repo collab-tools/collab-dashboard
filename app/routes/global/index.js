@@ -3,9 +3,15 @@ import drive from './drive';
 import ide from './ide';
 import tasks from './tasks';
 import milestones from './milestones';
+import config from 'config';
 
 module.exports = function (express) {
   const globalRouter = express.Router();
+  const auth = require('express-jwt')({
+    secret: config['jwt-secret'],
+    userProperty: 'auth'
+  });
+  globalRouter.use(auth);
 
   // GitHub Related
   // =========================================================
