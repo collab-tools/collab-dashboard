@@ -1,7 +1,5 @@
-const config = require('config');
-
 module.exports = function (app, express) {
-  // Get all three subrouters 
+  // Get all four sub-routers and configure the app to use it
   const adminRouter = require('./admin')(express);
   const globalRouter = require('./global')(express);
   const teamsRouter = require('./teams')(express);

@@ -8,11 +8,11 @@ import config from 'config';
 
 module.exports = function (express) {
   const usersRouter = express.Router();
-  const auth = require('express-jwt')({
-    secret: config['jwt-secret'],
-    userProperty: 'auth'
-  });
-  usersRouter.use(auth);
+  // const auth = require('express-jwt')({
+  //   secret: config['jwt-secret'],
+  //   userProperty: 'auth'
+  // });
+  // usersRouter.use(auth);
 
   // GitHub Related
   // =========================================================
@@ -27,7 +27,6 @@ module.exports = function (express) {
   // Cloud IDE Related
   // =========================================================
   usersRouter.get('/ide/overview', ide.getOverview);
-
 
   // Tasks Related
   // =========================================================
