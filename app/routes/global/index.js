@@ -8,7 +8,7 @@ import config from 'config';
 module.exports = function (express) {
   const globalRouter = express.Router();
   const auth = require('express-jwt')({
-    secret: config['jwt-secret'],
+    secret: config.jwt_secret,
     userProperty: 'auth'
   });
   globalRouter.use(auth);

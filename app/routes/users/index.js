@@ -9,7 +9,7 @@ import config from 'config';
 module.exports = function (express) {
   const usersRouter = express.Router();
   // const auth = require('express-jwt')({
-  //   secret: config['jwt-secret'],
+  //   secret: config.jwt_secret,
   //   userProperty: 'auth'
   // });
   // usersRouter.use(auth);
@@ -23,6 +23,10 @@ module.exports = function (express) {
   // =========================================================
   usersRouter.get('/drive/overview', drive.getOverview);
 
+  // Dev Mode Usage
+  // =========================================================
+  usersRouter.get('/drive/oauth', drive.oauth);
+  usersRouter.get('/drive/oauth/callback', drive.oauthCallback);
 
   // Cloud IDE Related
   // =========================================================
@@ -40,7 +44,8 @@ module.exports = function (express) {
 
   // User Retrieval Related
   // =========================================================
-  usersRouter.get('/:user', users.getUser);
+  usersRouter.get('/:userId', users.getUser);
+  usersRouter.get('/', users.getUsers);
 
 
   return usersRouter;

@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define('users', {
     id: {
@@ -20,6 +22,9 @@ module.exports = function (sequelize, DataTypes) {
       },
       getUserById(id) {
         return this.findById(id);
+      },
+      getUsers() {
+        return this.findAll();
       }
     }
   });

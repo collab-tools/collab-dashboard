@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const config = require('config');
 const boom = require('express-boom-2');
+require('./app/common/mixins')();
 
 // App Configurations
 // ====================================================
@@ -41,6 +42,7 @@ require('./app/routes')(app, express);
 app.get('*', (req, res) => {
   res.redirect('/app');
 });
+
 
 app.listen(config.get('port'));
 console.log(`Server Port opened at ${config.port}`);

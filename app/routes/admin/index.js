@@ -8,7 +8,7 @@ const ERROR_INVALID = 'Invalid username / password';
 const ERROR_ILLEGAL = 'Unauthorized access';
 
 function checkDevAccess(devKey) {
-  return devKey === config['developer-mode'];
+  return devKey === config.developer_mode;
 }
 
 /**
@@ -26,7 +26,7 @@ function authenticate(req, res) {
       if (!isValidated) res.boom.unauthorized(ERROR_INVALID);
       else {
         const payload = { name: user.name, username: user.username, role: user.role };
-        const token = jwt.sign(payload, config['jwt-secret']);
+        const token = jwt.sign(payload, config.jwt_secret);
         res.json({ success: true, token });
       }
     }

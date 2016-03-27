@@ -2,21 +2,18 @@
 const _ = require('lodash');
 const config = require('config');
 const moment = require('moment');
+const models = require('../../models');
 
 const ERROR_BAD_REQUEST = 'Unable to serve your content. Check your arguments.';
 
 function getOverview(req, res) {
-  // Get user id of the user to retrieve information from.
-  const userId = req.body.userid;
-  const timeRange = req.body.range;
-
-  // Retrieve user from database
-
-  // Retrieve projects related to user in database
+  const userId = req.query.userId;
+  const dateRange = req.query.range;
+  const project = req.query.project;
 
   // Access GitHub with user's token and retrieve relevant statistics
   // Dev Token for testing purposes
-  const token = config['github-dev'];
+  const token = config.github_dev;
   const mockOwner = 'collab-tools';
   const mockProject = 'collab-dashboard';
   const mockRange = 'month';
@@ -86,8 +83,6 @@ function getOverview(req, res) {
 function getCommits(req, res) {
   const userId = req.body.userid;
   const timeRange = req.body.range;
-
-
 };
 
 const githubAPI = { getOverview };
