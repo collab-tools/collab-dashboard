@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define('projects', {
     id: {
@@ -9,6 +11,11 @@ module.exports = function (sequelize, DataTypes) {
     github_repo_name: DataTypes.STRING,
     github_repo_owner: DataTypes.STRING
   }, {
-    underscored: true
+    underscored: true,
+    classMethods: {
+      findProjectById(id) {
+        return this.findById(id);
+      }
+    }
   });
 };

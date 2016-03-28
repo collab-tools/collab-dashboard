@@ -1,4 +1,5 @@
 'use strict';
+const _ = require('lodash');
 const config = require('config');
 const Promise = require('bluebird');
 const google = require('googleapis');
@@ -13,21 +14,28 @@ function getOverview(req, res) {
   if (!userId) return res.boom.badRequest(ERROR_BAD_REQUEST);
   if (!projectId) return res.boom.badRequest(ERROR_BAD_REQUEST);
   const dateRange = req.query.range || 7;
-  if (!userId) return res.boom.badRequest(ERROR_BAD_REQUEST);
-
   const OAuth2 = google.auth.OAuth2;
   const oauthClient = new OAuth2(config.google_dev.client_id,
       config.google_dev.client_secret, config.google_dev.redirect_uris[0]);
+  const payload = { files: [], revisions: [] };
 
   const retrieveInfo = () => {
-    const dbInfo = {};
     return models.app.user.getUserById(userId)
         .then(user => {
-          
+          if (!user) return res.boom.badRequest(ERROR_BAD_REQUEST);
+          return oauthClient.setCredentials({ refresh_token: user.google_token });
+        })
+        .then(() => {
+          return models.app.project.findProjectById(projectId);
+        })
+        .then(project => {
+          if (!project) return res.boom.badRequest(ERROR_BAD_REQUEST);
+          return project.root_folder;
         });
   };
 
   const recTraverseFolder = (folder) => {
+    const drive = google.drive({ version: 'v3', auth: oauthClient });
     const options = {
       corpus: 'user',
       pageSize: 10,
@@ -46,13 +54,13 @@ function getOverview(req, res) {
                 return promise.reflect();
               }))
               .then(() => {
-                console.log('files done');
                 payload.files = payload.files.concat(response.files);
               });
         });
   };
 
   const retrieveRevisions = () => {
+    const drive = google.drive({ version: 'v3', auth: oauthClient });
     const Continue = {};
     const again = () => Continue;
     const repeat = fn => Promise.try(fn, again)
@@ -77,12 +85,15 @@ function getOverview(req, res) {
     });
   };
 
-  return recTraverseFolder(rootFolder)
+  const response = () => {
+    payload.success = true;
+    res.json(payload);
+  };
+
+  return retrieveInfo()
+      .then(recTraverseFolder)
       .then(retrieveRevisions)
-      .then(() => {
-        payload.success = true;
-        res.json(payload);
-      })
+      .then(response)
       .catch(err => {
         console.error(err);
         res.boom.badRequest(ERROR_BAD_REQUEST);
@@ -127,7 +138,6 @@ function oauthCallback(req, res) {
       config.google_dev.client_secret, config.google_dev.redirect_uris[0]);
   if (req.query.code) {
     oauthClient.getToken(req.query.code, (err, test) => {
-      console.log(test);
       res.json({ success: true });
     });
   } else res.boom.badRequest(ERROR_BAD_REQUEST);
