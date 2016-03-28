@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define('milestones', {
     id: {
@@ -9,10 +11,19 @@ module.exports = function (sequelize, DataTypes) {
     github_id: DataTypes.BIGINT,
     github_number: DataTypes.INTEGER
   }, {
+    indexes: [
+      {
+        fields: ['content'],
+        type: 'FULLTEXT'
+      }
+    ],
     underscored: true,
     classMethods: {
       isExist(id) {
         return this.findById(id).then(instance => instance !== null);
+      },
+      getMilestone(id) {
+        return this.findById(id);
       }
     }
   });

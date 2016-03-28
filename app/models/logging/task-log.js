@@ -11,6 +11,20 @@ module.exports = function (sequelize, DataTypes) {
     projectId: DataTypes.STRING,
     taskId: DataTypes.STRING
   }, {
-    underscored: true
+    underscored: true,
+    classMethods: {
+      // range is optional.
+      getByUserProject(userId, projectId, range) {
+        const where = !range ? { userId, projectId } : { userId, projectId, date: { $gt: range } };
+        return this.findAll(where);
+      }
+    }
   });
 };
+
+/*
+ Activity
+ ============
+ C -> Created
+ D -> Done
+ */

@@ -9,7 +9,7 @@ const ERROR_BAD_REQUEST = 'Unable to serve your content. Check your arguments.';
 const FOLDER_MIME = 'application/vnd.google-apps.folder';
 
 function getOverview(req, res) {
-  const userId = req.query.userId;
+  const userId = req.params.userId;
   const projectId = req.query.projectId;
   if (!userId) return res.boom.badRequest(ERROR_BAD_REQUEST);
   if (!projectId) return res.boom.badRequest(ERROR_BAD_REQUEST);

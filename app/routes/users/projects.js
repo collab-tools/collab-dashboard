@@ -4,7 +4,7 @@ const models = require('../../models');
 const ERROR_BAD_REQUEST = 'Unable to serve your content. Check your arguments.';
 
 function getUserProjects(req, res) {
-  const userId = req.query.userId;
+  const userId = req.params.userId;
   if (!userId) return res.boom.badRequest(ERROR_BAD_REQUEST);
 
   const retrieveProjects = (user) => {
@@ -21,6 +21,18 @@ function getUserProjects(req, res) {
       .then(response);
 }
 
-const projectsAPI = { getUserProjects };
+function getUserProject(req, res) {
+  const userId = req.params.userId;
+  const projectId = req.params.projectId;
+  if (!userId || !projectId) return res.boom.badRequest(ERROR_BAD_REQUEST);
+
+  const response = (project) => {
+    return res.json({ success: true, projects: project });
+  };
+  return models.app.project.findProjectById(projectId)
+      .then(response);
+}
+
+const projectsAPI = { getUserProjects, getUserProject };
 
 export default projectsAPI;

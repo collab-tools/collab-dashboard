@@ -4,6 +4,8 @@ import ide from './ide';
 import tasks from './tasks';
 import milestones from './milestones';
 import users from './users';
+import projects from './projects';
+
 import config from 'config';
 
 module.exports = function (express) {
@@ -16,12 +18,12 @@ module.exports = function (express) {
 
   // GitHub Related
   // =========================================================
-  usersRouter.get('/github/overview', github.getOverview);
+  usersRouter.get('/:userId/github/overview', github.getOverview);
 
 
   // Google Drive Related
   // =========================================================
-  usersRouter.get('/drive/overview', drive.getOverview);
+  usersRouter.get('/:userId/drive/overview', drive.getOverview);
 
   // Dev Mode Usage
   // =========================================================
@@ -30,23 +32,26 @@ module.exports = function (express) {
 
   // Cloud IDE Related
   // =========================================================
-  usersRouter.get('/ide/overview', ide.getOverview);
+  usersRouter.get('/:userId/ide/overview', ide.getOverview);
 
   // Tasks Related
   // =========================================================
-  usersRouter.get('/tasks/overview', tasks.getOverview);
+  usersRouter.get('/:userId/tasks/overview', tasks.getOverview);
 
 
   // Milestones Related
   // =========================================================
-  usersRouter.get('/milestones/overview', milestones.getOverview);
-
+  usersRouter.get('/:userId/milestones/overview', milestones.getOverview);
 
   // User Retrieval Related
   // =========================================================
   usersRouter.get('/:userId', users.getUser);
   usersRouter.get('/', users.getUsers);
 
+  // Project Retrieval Related
+  // ==========================================================
+  usersRouter.get('/:userId/projects/:projectId', projects.getUserProject);
+  usersRouter.get('/:userId/projects/', projects.getUserProjects);
 
   return usersRouter;
 };

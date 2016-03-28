@@ -21,7 +21,8 @@ const modelFiles = [
   'user',
   'project',
   'user-project',
-  'notification'
+  'notification',
+  'newsfeed'
 ];
 
 modelFiles.forEach(model => {
@@ -48,6 +49,7 @@ modelFiles.forEach(model => {
   m.user.hasMany(m.notification);
 
   m.notification.belongsTo(m.user);
+  m.newsfeed.belongsTo(m.project);
 })(module.exports);
 
 // Synchronize all the defined model into the actual mySQL database

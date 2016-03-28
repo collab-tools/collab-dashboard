@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define('milestone_log', {
     id: {
@@ -10,6 +12,22 @@ module.exports = function (sequelize, DataTypes) {
     projectId: DataTypes.STRING,
     milestoneId: DataTypes.STRING
   }, {
-    underscored: true
+    underscored: true,
+    classMethods: {
+      getByUserId(userId) {
+        const where = { userId };
+        return this.findAll(where);
+      },
+      // range is optional.
+      getByUserProject(userId, projectId, range) {
+        const where = !range ? { userId, projectId } : { userId, projectId, date: { $gt: range } };
+        return this.findAll(where);
+      }
+    }
   });
 };
+
+/* Activity
+ 1. Created
+ 2. Updated
+ */

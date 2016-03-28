@@ -1,5 +1,5 @@
 {
-    "port": 8080,
+    "port": 4000,
     "app-database": {
         "name": "collab",
         "username": "root",

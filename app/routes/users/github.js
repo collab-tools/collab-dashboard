@@ -7,9 +7,11 @@ const models = require('../../models');
 const ERROR_BAD_REQUEST = 'Unable to serve your content. Check your arguments.';
 
 function getOverview(req, res) {
-  const userId = req.query.userId;
-  const dateRange = req.query.range;
-  const project = req.query.project;
+  const userId = req.params.userId;
+  const projectId = req.query.projectId;
+  const dateRange = req.query.range || 7;
+
+  if (!userId || !projectId) res.boom.badRequest(ERROR_BAD_REQUEST);
 
   // Access GitHub with user's token and retrieve relevant statistics
   // Dev Token for testing purposes
