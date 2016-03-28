@@ -19,11 +19,13 @@ module.exports = function (express) {
   // GitHub Related
   // =========================================================
   usersRouter.get('/:userId/github/overview', github.getOverview);
-
+  usersRouter.get('/:userId/github/commits', github.getCommits);
 
   // Google Drive Related
   // =========================================================
   usersRouter.get('/:userId/drive/overview', drive.getOverview);
+  usersRouter.get('/:userId/drive/files', drive.getFiles);
+  usersRouter.get('/:userId/drive/revisions', drive.getRevisions);
 
   // Dev Mode Usage
   // =========================================================
@@ -37,11 +39,12 @@ module.exports = function (express) {
   // Tasks Related
   // =========================================================
   usersRouter.get('/:userId/tasks/overview', tasks.getOverview);
-
+  usersRouter.get('/:userId/tasks/', tasks.getTasks);
 
   // Milestones Related
   // =========================================================
   usersRouter.get('/:userId/milestones/overview', milestones.getOverview);
+  usersRouter.get('/:userId/milestones/', milestones.getMilestones);
 
   // User Retrieval Related
   // =========================================================

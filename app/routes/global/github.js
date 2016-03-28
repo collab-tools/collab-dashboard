@@ -4,6 +4,10 @@ function getOverview(req, res) {
 
 }
 
-const githubAPI = { getOverview };
+function getCommit(req, res) {
+
+}
+
+const githubAPI = { getOverview, getCommit };
 
 export default githubAPI;

@@ -4,6 +4,10 @@ function getOverview(req, res) {
 
 }
 
-const milestonesAPI = { getOverview };
+function getMilestone(req, res) {
+
+}
+
+const milestonesAPI = { getOverview, getMilestone };
 
 export default milestonesAPI;

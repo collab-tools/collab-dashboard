@@ -16,27 +16,27 @@ module.exports = function (express) {
   // GitHub Related
   // =========================================================
   globalRouter.get('/github/overview', github.getOverview);
-
+  globalRouter.get('/github/commit/:commitId', github.getCommit);
 
   // Google Drive Related
   // =========================================================
   globalRouter.get('/drive/overview', drive.getOverview);
-
+  globalRouter.get('/drive/files/:revisionId', drive.getRevisions);
+  globalRouter.get('/drive/files/:fileId', drive.getFile);
 
   // Cloud IDE Related
   // =========================================================
   globalRouter.get('/ide/overview', ide.getOverview);
 
-
   // Tasks Related
   // =========================================================
   globalRouter.get('/tasks/overview', tasks.getOverview);
-
+  globalRouter.get('/tasks/:taskId', tasks.getTask);
 
   // Milestones Related
   // =========================================================
   globalRouter.get('/milestones/overview', milestones.getOverview);
-
+  globalRouter.get('/milestones/:milestoneId', milestones.getMilestone);
 
   return globalRouter;
 };

@@ -4,6 +4,14 @@ function getOverview(req, res) {
 
 }
 
-const driveAPI = { getOverview };
+function getRevisions(req, res) {
+
+}
+
+function getFile(req, res) {
+
+}
+
+const driveAPI = { getOverview, getRevisions, getFile };
 
 export default driveAPI;

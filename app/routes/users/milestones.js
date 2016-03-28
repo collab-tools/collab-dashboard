@@ -50,7 +50,11 @@ function getOverview(req, res) {
       .then(response);
 }
 
+function getMilestones() {
 
-const milestonesAPI = { getOverview };
+}
+
+
+const milestonesAPI = { getOverview, getMilestones };
 
 export default milestonesAPI;
