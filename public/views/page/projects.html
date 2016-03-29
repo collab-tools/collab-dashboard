@@ -1,8 +1,8 @@
 <div class="p-a white lt box-shadow">
 	<div class="row">
 		<div class="col-sm-6">
-			<h4 class="m-b-0 _300">Teams</h4>
-			<small class="text-muted">Here you can browse and search for teams</small>
+			<h4 class="m-b-0 _300">Projects</h4>
+			<small class="text-muted">Here you can browse and search for Projects</small>
 		</div>
 		<div class="col-sm-6 text-sm-right">
 			<div class="m-y-sm">
@@ -29,7 +29,7 @@
 					</span>
 				</div>
 				<div class="clear">
-					<h4 class="m-a-0 text-md"><a href>1600 <span class="text-sm">Registered Teams</span></a></h4>
+					<h4 class="m-a-0 text-md"><a href>1600 <span class="text-sm">Registered Projects</span></a></h4>
 				</div>
 			</div>
 		</div>
@@ -41,7 +41,7 @@
 					</span>
 				</div>
 				<div class="clear">
-					<h4 class="m-a-0 text-md"><a href>100 <span class="text-sm">Teams This Semester</span></a></h4>
+					<h4 class="m-a-0 text-md"><a href>100 <span class="text-sm">Projects This Semester</span></a></h4>
 				</div>
 			</div>
 		</div>
@@ -53,21 +53,21 @@
 					</span>
 				</div>
 				<div class="clear">
-					<h4 class="m-a-0 text-md"><a href>50% <span class="text-sm">Active Teams</span></a></h4>
+					<h4 class="m-a-0 text-md"><a href>50% <span class="text-sm">Active Projects</span></a></h4>
 				</div>
 			</div>
 		</div>
 	</div>
 	<div class="box">
 		<div class="box-header">
-			<h2>Teams</h2>
+			<h2>Projects</h2>
 		</div>
 		<div class="table-responsive">
 			<table ui-jp="dataTable" ui-options="{
-				sAjaxSource: 'api/teams.json',
+				sAjaxSource: 'api/projects.json',
 				aoColumns: [
-				{ mData: 'team_id', mRender: function(data, type, full) {return '<a href=&quot;#/app/team&quot; ui-sref=&quot;app.team&quot;>' + data + '</a>'}},
-				{ mData: 'team_name' },
+				{ mData: 'project_id', mRender: function(data, type, full) {return '<a href=&quot;#/app/project&quot; ui-sref=&quot;app.project&quot;>' + data + '</a>'}},
+				{ mData: 'project_name' },
 				{ mData: 'members' },
 				{ mData: 'last_active' },
 				{ mData: 'batch' }
@@ -75,8 +75,8 @@
 				}" class="table table-striped b-t b-b table-hover">
 				<thead>
 					<tr>
-						<th  style="width:15%">Team ID</th>
-						<th  style="width:30%">Team Name</th>
+						<th  style="width:15%">Projects ID</th>
+						<th  style="width:30%">Projects Name</th>
 						<th  style="width:25%">Members</th>
 						<th  style="width:15%">Last Active</th>
 						<th  style="width:15%">Batch</th>

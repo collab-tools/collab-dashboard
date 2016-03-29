@@ -26,7 +26,7 @@
 
     var layout = '../views/layout/layout.html';
     var dashboard = '../views/dashboard/dashboard.html';
-    var teams = '../views/page/projects.html';
+    var projects = '../views/page/projects.html';
     var users = '../views/page/users.html';
     var github = '../views/page/github.html';
     var drive = '../views/page/drive.html';
@@ -34,7 +34,7 @@
     var milestones = '../views/page/milestones.html';
     var tasks = '../views/page/tasks.html';
     var user = '../views/page/users/overview.html';
-    var team = '../views/page/projects/overview.html';
+    var project = '../views/page/projects/overview.html';
 
     $urlRouterProvider
       .otherwise('/app/dashboard');
@@ -59,11 +59,11 @@
         resolve: load(['scripts/controllers/chart.js']),
       })
       /* Routing of general */
-      .state('app.teams', {
+      .state('app.projects', {
         url: '/projects',
-        templateUrl: teams,
+        templateUrl: projects,
         data: {
-          title: 'Teams',
+          title: 'Projects',
         },
         controller: 'ChartCtrl',
         resolve: load(['scripts/controllers/chart.js'])
@@ -131,11 +131,11 @@
         controller: 'ChartCtrl',
         resolve: load(['scripts/controllers/chart.js'])
       })      
-      .state('app.team', {
-          url: '/team',
-          templateUrl: team,
+      .state('app.project', {
+          url: '/project',
+          templateUrl: project,
           data: {
-            title: 'Team Overview: Team Gene',
+            title: 'Project Overview: Project Gene',
           },
           controller: 'ChartCtrl',
           resolve: load(['scripts/controllers/chart.js'])

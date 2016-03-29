@@ -123,7 +123,7 @@
 			          </div>
 			          <div class="clear">
 			            <h4 class="m-a-0 text-md"><a href>182 <span class="text-sm">Releases Tagged</span></a></h4>
-			            <small class="text-muted">53 Teams with No Tags</small>
+			            <small class="text-muted">53 Projects with No Tags</small>
 			          </div>
 			        </div>
 			    </div>
@@ -138,8 +138,8 @@
 			<table ui-jp="dataTable" ui-options="{
 				sAjaxSource: 'api/releases.json',
 				aoColumns: [
-				{ mData: 'team_id' },
-				{ mData: 'team_name' },
+				{ mData: 'project_id' },
+				{ mData: 'project_name' },
 				{ mData: 'tag' },
 				{ mData: 'repo' },
 				{ mData: 'date' }
@@ -147,8 +147,8 @@
 				}" class="table table-striped b-t b-b table-hover">
 				<thead>
 					<tr>
-						<th  style="width:15%">Team ID</th>
-						<th  style="width:30%">Team Name</th>
+						<th  style="width:15%">Project ID</th>
+						<th  style="width:30%">Project Name</th>
 						<th  style="width:25%">Release Tag</th>
 						<th  style="width:15%">Repository</th>
 						<th  style="width:15%">Date Released</th>

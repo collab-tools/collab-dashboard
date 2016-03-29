@@ -1,91 +1,91 @@
 { "aaData": [
 	{
-		"team_id": "A1",
-		"team_name": "Alpha",
+		"project_id": "A1",
+		"project_name": "Alpha",
 		"members": "4",
 		"last_active": "27/05/16",
 		"batch": "AY15/16-2"
 	},
 	{
-		"team_id": "A2",
-		"team_name": "Bravo",
+		"project_id": "A2",
+		"project_name": "Bravo",
 		"members": "3",
 		"last_active": "27/05/16",
 		"batch": "AY15/16-1"
 	},
 	{
-		"team_id": "A3",
-		"team_name": "Charlie",
+		"project_id": "A3",
+		"project_name": "Charlie",
 		"members": "4",
 		"last_active": "27/05/16",
 		"batch": "AY15/16-1"
 	},
 	{
-		"team_id": "A4",
-		"team_name": "Delta",
+		"project_id": "A4",
+		"project_name": "Delta",
 		"members": "4",
 		"last_active": "25/02/15",
 		"batch": "AY15/16-1"
 	},
 	{
-		"team_id": "B1",
-		"team_name": "Tango",
+		"project_id": "B1",
+		"project_name": "Tango",
 		"members": "4",
 		"last_active": "27/05/16",
 		"batch": "AY15/16-1"
 	},
 	{
-		"team_id": "B2",
-		"team_name": "Infamous",
+		"project_id": "B2",
+		"project_name": "Infamous",
 		"members": "4",
 		"last_active": "27/05/16",
 		"batch": "AY15/16-1"
 	},
 	{
-		"team_id": "B3",
-		"team_name": "Two Bit",
+		"project_id": "B3",
+		"project_name": "Two Bit",
 		"members": "4",
 		"last_active": "27/05/16",
 		"batch": "AY15/16-1"
 	},
 	{
-		"team_id": "B4",
-		"team_name": "Team Three",
+		"project_id": "B4",
+		"project_name": "project Three",
 		"members": "4",
 		"last_active": "27/05/16",
 		"batch": "AY15/16-1"
 	},
 	{
-		"team_id": "C1",
-		"team_name": "Team One",
+		"project_id": "C1",
+		"project_name": "project One",
 		"members": "4",
 		"last_active": "27/05/16",
 		"batch": "AY15/16-1"
 	},
 	{
-		"team_id": "C2",
-		"team_name": "Rollo",
+		"project_id": "C2",
+		"project_name": "Rollo",
 		"members": "4",
 		"last_active": "27/05/16",
 		"batch": "AY15/16-1"
 	},
 	{
-		"team_id": "C3",
-		"team_name": "Equinox",
+		"project_id": "C3",
+		"project_name": "Equinox",
 		"members": "4",
 		"last_active": "27/05/16",
 		"batch": "AY15/16-1"
 	},
 	{
-		"team_id": "C4",
-		"team_name": "Katt",
+		"project_id": "C4",
+		"project_name": "Katt",
 		"members": "4",
 		"last_active": "27/05/16",
 		"batch": "AY15/16-1"
 	},
 	{
-		"team_id": "D1",
-		"team_name": "Zox",
+		"project_id": "D1",
+		"project_name": "Zox",
 		"members": "4",
 		"last_active": "27/05/16",
 		"batch": "AY15/16-1"

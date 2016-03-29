@@ -1,91 +1,91 @@
 { "aaData": [
 	{
-		"team_id": "A1",
-		"team_name": "Alpha",
+		"project_id": "A1",
+		"project_name": "Alpha",
 		"tag": "Milestone 1",
 		"repo": "alpha/cs3202proj",
 		"date": "27/05/16 05:02:11"
 	},
 	{
-		"team_id": "A2",
-		"team_name": "Bravo",
+		"project_id": "A2",
+		"project_name": "Bravo",
 		"tag": "Milestone 1",
 		"repo": "bravo/cs3202proj",
 		"date": "27/05/16 05:02:11"
 	},
 	{
-		"team_id": "A3",
-		"team_name": "Charlie",
+		"project_id": "A3",
+		"project_name": "Charlie",
 		"tag": "Milestone 2",
 		"repo": "charlie/cs3202proj",
 		"date": "27/05/16 05:02:11"
 	},
 	{
-		"team_id": "A4",
-		"team_name": "Delta",
+		"project_id": "A4",
+		"project_name": "Delta",
 		"tag": "Milestone 1",
 		"repo": "delta/cs3202proj",
 		"date": "27/05/16 05:02:11"
 	},
 	{
-		"team_id": "B1",
-		"team_name": "Tango",
+		"project_id": "B1",
+		"project_name": "Tango",
 		"tag": "Milestone 1",
 		"repo": "tango/cs3202proj",
 		"date": "27/05/16 05:02:11"
 	},
 	{
-		"team_id": "B2",
-		"team_name": "Infamous",
+		"project_id": "B2",
+		"project_name": "Infamous",
 		"tag": "Milestone 1",
 		"repo": "infam/cs3202proj",
 		"date": "27/05/16 05:02:11"
 	},
 	{
-		"team_id": "B3",
-		"team_name": "Two Bit",
+		"project_id": "B3",
+		"project_name": "Two Bit",
 		"tag": "Milestone 1",
 		"repo": "2bit/cs3202proj",
 		"date": "27/05/16 05:02:11"
 	},
 	{
-		"team_id": "B4",
-		"team_name": "Team Three",
+		"project_id": "B4",
+		"project_name": "project Three",
 		"tag": "Milestone 1",
 		"repo": "three/cs3202proj",
 		"date": "27/05/16 05:02:11"
 	},
 	{
-		"team_id": "C1",
-		"team_name": "Team One",
+		"project_id": "C1",
+		"project_name": "project One",
 		"tag": "Milestone 1",
 		"repo": "one/cs3202proj",
 		"date": "27/05/16 05:02:11"
 	},
 	{
-		"team_id": "C2",
-		"team_name": "Rollo",
+		"project_id": "C2",
+		"project_name": "Rollo",
 		"tag": "Milestone 1",
 		"repo": "rollo/cs3202proj",
 		"date": "27/05/16 05:02:11"
 	},
 	{
-		"team_id": "C3",
-		"team_name": "Equinox",
+		"project_id": "C3",
+		"project_name": "Equinox",
 		"tag": "Milestone 1",
 		"repo": "eq/cs3202proj",
 		"date": "27/05/16 05:02:11"
 	},
 	{
-		"team_id": "C4",
-		"team_name": "Katt",
+		"project_id": "C4",
+		"project_name": "Katt",
 		"tag": "Milestone 1",
 		"repo": "ka/cs3202proj",
 		"date": "27/05/16 05:02:11"
 	},
 	{
-		"team_id": "D1",
-		"team_name": "Zox",
+		"project_id": "D1",
+		"project_name": "Zox",
 		"tag": "Milestone 1",
 		"repo": "zzoxx/cs3202proj",
 		"date": "27/05/16 05:02:11"
