@@ -6,10 +6,13 @@ const models = require('../../models');
 const ERROR_BAD_REQUEST = 'Unable to serve your content. Check your arguments.';
 
 function getOverview(req, res) {
+  req.checkParams('userId', ERROR_BAD_REQUEST).notEmpty();
+  req.checkQuery('projectId', ERROR_BAD_REQUEST).notEmpty();
+  req.checkQuery('range', ERROR_BAD_REQUEST).isInt();
+
   const projectId = req.query.projectId;
   const userId = req.params.userId;
   const dateRange = req.query.range || 7;
-  if (!userId || !projectId || !_.isInteger(dateRange)) res.boom.badRequest(ERROR_BAD_REQUEST);
   const convertedRange = moment(new Date()).subtract(dateRange, 'day')
       .format('YYYY-MM-DD HH:mm:ss');
 
@@ -49,6 +52,24 @@ function getOverview(req, res) {
       .then(response);
 }
 
-const tasksAPI = { getOverview };
+
+function getTasksAssigned(req, res) {
+  req.checkParams('userId', ERROR_BAD_REQUEST).notEmpty();
+  req.checkQuery('range', ERROR_BAD_REQUEST).isInt();
+  const userId = req.params.userId;
+  const projectId = req.query.projectId;
+  const dateRange = req.query.range || 7;
+  const convertedRange = moment(new Date()).subtract(dateRange, 'day')
+      .format('YYYY-MM-DD HH:mm:ss');
+
+  const response = (tasks) => {
+    return res.json(tasks);
+  };
+
+  return models.app.tasks.getTasksByAssignee(userId, projectId, convertedRange)
+      .then(response);
+}
+
+const tasksAPI = { getOverview, getTasksAssigned };
 
 export default tasksAPI;

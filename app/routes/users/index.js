@@ -5,7 +5,6 @@ import tasks from './tasks';
 import milestones from './milestones';
 import users from './users';
 import projects from './projects';
-
 import config from 'config';
 
 module.exports = function (express) {
@@ -24,7 +23,6 @@ module.exports = function (express) {
   // Google Drive Related
   // =========================================================
   usersRouter.get('/:userId/drive/overview', drive.getOverview);
-  usersRouter.get('/:userId/drive/files', drive.getFiles);
   usersRouter.get('/:userId/drive/revisions', drive.getRevisions);
 
   // Dev Mode Usage
@@ -39,12 +37,11 @@ module.exports = function (express) {
   // Tasks Related
   // =========================================================
   usersRouter.get('/:userId/tasks/overview', tasks.getOverview);
-  usersRouter.get('/:userId/tasks/', tasks.getTasks);
+  usersRouter.get('/:userId/tasks/', tasks.getTasksAssigned);
 
   // Milestones Related
   // =========================================================
   usersRouter.get('/:userId/milestones/overview', milestones.getOverview);
-  usersRouter.get('/:userId/milestones/', milestones.getMilestones);
 
   // User Retrieval Related
   // =========================================================

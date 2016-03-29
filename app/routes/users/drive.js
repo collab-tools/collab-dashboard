@@ -9,10 +9,10 @@ const ERROR_BAD_REQUEST = 'Unable to serve your content. Check your arguments.';
 const FOLDER_MIME = 'application/vnd.google-apps.folder';
 
 function getOverview(req, res) {
+  req.checkParams('userId', ERROR_BAD_REQUEST).notEmpty();
+  req.checkQuery('projectId', ERROR_BAD_REQUEST).notEmpty();
   const userId = req.params.userId;
   const projectId = req.query.projectId;
-  if (!userId) return res.boom.badRequest(ERROR_BAD_REQUEST);
-  if (!projectId) return res.boom.badRequest(ERROR_BAD_REQUEST);
   const dateRange = req.query.range || 7;
   const OAuth2 = google.auth.OAuth2;
   const oauthClient = new OAuth2(config.google_dev.client_id,
@@ -102,19 +102,19 @@ function getOverview(req, res) {
 
 
 function getRevisions(req, res) {
-
+  req.checkParams('userId', ERROR_BAD_REQUEST).notEmpty();
+  req.checkQuery('projectId', ERROR_BAD_REQUEST).notEmpty();
+  const userId = req.params.userId;
+  const projectId = req.query.projectId;
+  const dateRange = req.query.range || 7;
 }
 
 function getRevisionCount(req, res) {
-
-}
-
-function getFiles(req, res) {
-
-}
-
-function getFileCount(req, res) {
-
+  req.checkParams('userId', ERROR_BAD_REQUEST).notEmpty();
+  req.checkQuery('projectId', ERROR_BAD_REQUEST).notEmpty();
+  const userId = req.params.userId;
+  const projectId = req.query.projectId;
+  const dateRange = req.query.range || 7;
 }
 
 function oauth(req, res) {
@@ -145,7 +145,7 @@ function oauthCallback(req, res) {
 
 const driveAPI = {
   getOverview, getRevisions, getRevisionCount,
-  getFiles, getFileCount, oauth, oauthCallback
+  oauth, oauthCallback
 };
 
 export default driveAPI;

@@ -7,11 +7,12 @@ const models = require('../../models');
 const ERROR_BAD_REQUEST = 'Unable to serve your content. Check your arguments.';
 
 function getOverview(req, res) {
+  req.checkParams('userId', ERROR_BAD_REQUEST).notEmpty();
+  req.checkQuery('projectId', ERROR_BAD_REQUEST).notEmpty();
+
   const userId = req.params.userId;
   const projectId = req.query.projectId;
   const dateRange = req.query.range || 7;
-
-  if (!userId || !projectId) res.boom.badRequest(ERROR_BAD_REQUEST);
 
   // Access GitHub with user's token and retrieve relevant statistics
   // Dev Token for testing purposes
@@ -83,10 +84,11 @@ function getOverview(req, res) {
 }
 
 function getCommits(req, res) {
-  const userId = req.body.userid;
-  const timeRange = req.body.range;
-};
+  req.checkParams('userId', ERROR_BAD_REQUEST).notEmpty();
+  const userId = req.params.userid;
+  const timeRange = req.query.range;
+}
 
-const githubAPI = { getOverview };
+const githubAPI = { getOverview, getCommits };
 
 export default githubAPI;

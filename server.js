@@ -2,14 +2,16 @@
 // ====================================================
 const express = require('express');
 const app = express();
+const compression = require('compression');
 const path = require('path');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const config = require('config');
 const boom = require('express-boom-2');
+const validator = require('express-validator');
 require('./app/common/mixins')();
 
-// App Configurations
+// App & Middleware Configurations
 // ====================================================
 // body parser to grab information from HTTP POST requests
 app.use(bodyParser.urlencoded({
@@ -29,6 +31,12 @@ app.use((req, res, next) => {
 
 // log all API requests to console
 app.use(morgan('dev'));
+
+// compress all endpoint routes
+app.use(compression());
+
+// enable validator middle-ware for endpoints
+app.use(validator());
 
 // set static file location for front-end
 app.use(express.static(`${__dirname}/public/dist`));

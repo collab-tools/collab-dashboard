@@ -26,7 +26,7 @@
 
     var layout = '../views/layout/layout.html';
     var dashboard = '../views/dashboard/dashboard.html';
-    var teams = '../views/page/teams.html';
+    var teams = '../views/page/projects.html';
     var users = '../views/page/users.html';
     var github = '../views/page/github.html';
     var drive = '../views/page/drive.html';
@@ -34,7 +34,7 @@
     var milestones = '../views/page/milestones.html';
     var tasks = '../views/page/tasks.html';
     var user = '../views/page/users/overview.html';
-    var team = '../views/page/teams/overview.html';
+    var team = '../views/page/projects/overview.html';
 
     $urlRouterProvider
       .otherwise('/app/dashboard');
@@ -60,7 +60,7 @@
       })
       /* Routing of general */
       .state('app.teams', {
-        url: '/teams',
+        url: '/projects',
         templateUrl: teams,
         data: {
           title: 'Teams',

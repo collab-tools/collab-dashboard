@@ -8,6 +8,6 @@ module.exports = function (app, express) {
   // Configure app to load all the routers
   app.use('/api/admin', adminRouter);
   app.use('/api/global', globalRouter);
-  app.use('/api/teams', teamsRouter);
+  app.use('/api/projects', teamsRouter);
   app.use('/api/users', usersRouter);
 };

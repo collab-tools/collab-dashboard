@@ -5,6 +5,7 @@ const models = require('../../models');
 const ERROR_BAD_REQUEST = 'Unable to serve your content. Check your arguments.';
 
 function getUser(req, res) {
+  req.checkParams('userId', ERROR_BAD_REQUEST).notEmpty();
   const userId = req.params.userId;
   const errHandler = () => {
     res.boom.badRequest(ERROR_BAD_REQUEST);

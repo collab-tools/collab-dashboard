@@ -4,6 +4,10 @@ function getOverview(req, res) {
 
 }
 
-const tasksAPI = { getOverview };
+function getTasks(req, res) {
+
+}
+
+const tasksAPI = { getOverview, getTasks };
 
 export default tasksAPI;

@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define('tasks', {
     id: {
@@ -23,6 +25,11 @@ module.exports = function (sequelize, DataTypes) {
       },
       getTask(id) {
         return this.findById(id);
+      },
+      getTasksByAssignee(userId, projectId, range) {
+        const where = { assignee_id: userId, createdAt: { $gt: range } };
+        if (projectId) where.project_id = projectId;
+        return this.findAll(where);
       }
     }
   });
