@@ -41,11 +41,11 @@ module.exports = function (sequelize, DataTypes) {
     classMethods: {
       findByName(name) {
         const where = { name };
-        return this.findOne(where);
+        return this.findOne({ where });
       },
       findByRole(role) {
         const where = { role };
-        return this.findAll(where);
+        return this.findAll({ where });
       },
       addUser(payload) {
         const actualLoad = {

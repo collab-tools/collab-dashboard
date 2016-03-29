@@ -4,15 +4,19 @@ const moment = require('moment');
 const models = require('../../models');
 
 const ERROR_BAD_REQUEST = 'Unable to serve your content. Check your arguments.';
+const ERROR_MISSING_TEMPLATE = 'is a required parameter in GET request.';
 
 function getOverview(req, res) {
-  req.checkParams('userId', ERROR_BAD_REQUEST).notEmpty();
-  req.checkQuery('projectId', ERROR_BAD_REQUEST).notEmpty();
-  req.checkQuery('range', ERROR_BAD_REQUEST).isInt();
+  req.query.range = req.query.range || 7;
+  req.checkParams('userId', `userId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
+  req.checkQuery('projectId', `projectId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
+  req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
+  const errors = req.validationErrors();
+  if (errors) res.json(errors, 400);
 
   const projectId = req.query.projectId;
   const userId = req.params.userId;
-  const dateRange = req.query.range || 7;
+  const dateRange = req.query.range;
   const convertedRange = moment(new Date()).subtract(dateRange, 'day')
       .format('YYYY-MM-DD HH:mm:ss');
 
@@ -55,7 +59,11 @@ function getOverview(req, res) {
 
 function getTasksAssigned(req, res) {
   req.checkParams('userId', ERROR_BAD_REQUEST).notEmpty();
+  req.query.range = req.query.range || 7;
   req.checkQuery('range', ERROR_BAD_REQUEST).isInt();
+  const errors = req.validationErrors();
+  if (errors) res.json(errors, 400);
+
   const userId = req.params.userId;
   const projectId = req.query.projectId;
   const dateRange = req.query.range || 7;

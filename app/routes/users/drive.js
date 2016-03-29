@@ -6,14 +6,20 @@ const google = require('googleapis');
 const models = require('../../models');
 
 const ERROR_BAD_REQUEST = 'Unable to serve your content. Check your arguments.';
+const ERROR_MISSING_TEMPLATE = 'is a required parameter in GET request.';
 const FOLDER_MIME = 'application/vnd.google-apps.folder';
 
 function getOverview(req, res) {
-  req.checkParams('userId', ERROR_BAD_REQUEST).notEmpty();
-  req.checkQuery('projectId', ERROR_BAD_REQUEST).notEmpty();
+  req.checkParams('userId', `userId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
+  req.checkQuery('projectId', `projectId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
+  req.query.range = req.query.range || 7;
+  req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
+  const errors = req.validationErrors();
+  if (errors) res.json(errors, 400);
+
   const userId = req.params.userId;
   const projectId = req.query.projectId;
-  const dateRange = req.query.range || 7;
+  const dateRange = req.query.range;
   const OAuth2 = google.auth.OAuth2;
   const oauthClient = new OAuth2(config.google_dev.client_id,
       config.google_dev.client_secret, config.google_dev.redirect_uris[0]);
@@ -102,19 +108,27 @@ function getOverview(req, res) {
 
 
 function getRevisions(req, res) {
-  req.checkParams('userId', ERROR_BAD_REQUEST).notEmpty();
-  req.checkQuery('projectId', ERROR_BAD_REQUEST).notEmpty();
+  req.checkParams('userId', `userId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
+  req.checkQuery('projectId', `projectId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
+  const errors = req.validationErrors();
+  if (errors) res.json(errors, 400);
+
   const userId = req.params.userId;
   const projectId = req.query.projectId;
   const dateRange = req.query.range || 7;
 }
 
 function getRevisionCount(req, res) {
-  req.checkParams('userId', ERROR_BAD_REQUEST).notEmpty();
-  req.checkQuery('projectId', ERROR_BAD_REQUEST).notEmpty();
+  req.checkParams('userId', `userId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
+  req.checkQuery('projectId', `projectId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
+  req.query.range = req.query.range || 7;
+  req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
+  const errors = req.validationErrors();
+  if (errors) res.json(errors, 400);
+
   const userId = req.params.userId;
   const projectId = req.query.projectId;
-  const dateRange = req.query.range || 7;
+  const dateRange = req.query.range;
 }
 
 function oauth(req, res) {

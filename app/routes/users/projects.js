@@ -2,10 +2,14 @@
 const models = require('../../models');
 
 const ERROR_BAD_REQUEST = 'Unable to serve your content. Check your arguments.';
+const ERROR_MISSING_TEMPLATE = 'is a required parameter in GET request.';
 
 function getUserProjects(req, res) {
+  req.checkParams('userId', `userId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
+  const errors = req.validationErrors();
+  if (errors) res.json(errors, 400);
+
   const userId = req.params.userId;
-  if (!userId) return res.boom.badRequest(ERROR_BAD_REQUEST);
 
   const retrieveProjects = (user) => {
     if (!user) return res.boom.badRequest(ERROR_BAD_REQUEST);
@@ -22,9 +26,13 @@ function getUserProjects(req, res) {
 }
 
 function getUserProject(req, res) {
+  req.checkParams('userId', `userId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
+  req.checkParams('projectId', `projectId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
+  const errors = req.validationErrors();
+  if (errors) res.json(errors, 400);
+
   const userId = req.params.userId;
   const projectId = req.params.projectId;
-  if (!userId || !projectId) return res.boom.badRequest(ERROR_BAD_REQUEST);
 
   const response = (project) => {
     return res.json({ success: true, projects: project });

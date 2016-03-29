@@ -3,9 +3,13 @@ const _ = require('lodash');
 const models = require('../../models');
 
 const ERROR_BAD_REQUEST = 'Unable to serve your content. Check your arguments.';
+const ERROR_MISSING_TEMPLATE = 'is a required parameter in GET request.';
 
 function getUser(req, res) {
   req.checkParams('userId', ERROR_BAD_REQUEST).notEmpty();
+  const errors = req.validationErrors();
+  if (errors) res.json(errors, 400);
+
   const userId = req.params.userId;
   const errHandler = () => {
     res.boom.badRequest(ERROR_BAD_REQUEST);

@@ -16,12 +16,17 @@ module.exports = function (sequelize, DataTypes) {
     classMethods: {
       getByUserId(userId) {
         const where = { userId };
-        return this.findAll(where);
+        return this.findAll({ where });
       },
-      // range is optional.
       getByUserProject(userId, projectId, range) {
-        const where = !range ? { userId, projectId } : { userId, projectId, date: { $gt: range } };
-        return this.findAll(where);
+        const where = { userId, projectId };
+        if (range) where.date = { $gt: range };
+        return this.findAll({ where });
+      },
+      getByProject(projectId, range) {
+        const where = { projectId };
+        if (range) where.date = { $gt: range };
+        return this.findAll({ where });
       }
     }
   });

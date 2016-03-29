@@ -8,11 +8,11 @@ import config from 'config';
 
 module.exports = function (express) {
   const projectsRouter = express.Router();
-  const auth = require('express-jwt')({
-    secret: config.jwt_secret,
-    userProperty: 'auth'
-  });
-  projectsRouter.use(auth);
+  // const auth = require('express-jwt')({
+  //   secret: config.jwt_secret,
+  //   userProperty: 'auth'
+  // });
+  // projectsRouter.use(auth);
 
   // GitHub Related
   // =========================================================
@@ -39,7 +39,7 @@ module.exports = function (express) {
   projectsRouter.get('/:projectId/milestones/overview', milestones.getOverview);
   projectsRouter.get('/:projectId/milestones', milestones.getMilestones);
 
-  // Team Retrieval Related
+  // Projects Retrieval Related
   // =========================================================
   projectsRouter.get('/:projectId', projects.getProject);
   projectsRouter.get('/', projects.getProjects);

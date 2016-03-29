@@ -5,14 +5,19 @@ const moment = require('moment');
 const models = require('../../models');
 
 const ERROR_BAD_REQUEST = 'Unable to serve your content. Check your arguments.';
+const ERROR_MISSING_TEMPLATE = 'is a required parameter in GET request.';
 
 function getOverview(req, res) {
-  req.checkParams('userId', ERROR_BAD_REQUEST).notEmpty();
-  req.checkQuery('projectId', ERROR_BAD_REQUEST).notEmpty();
+  req.checkParams('userId', `userId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
+  req.checkQuery('projectId', `projectId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
+  req.query.range = req.query.range || 7;
+  req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
+  const errors = req.validationErrors();
+  if (errors) res.json(errors, 400);
 
   const userId = req.params.userId;
   const projectId = req.query.projectId;
-  const dateRange = req.query.range || 7;
+  const dateRange = req.query.range;
 
   // Access GitHub with user's token and retrieve relevant statistics
   // Dev Token for testing purposes
@@ -84,9 +89,14 @@ function getOverview(req, res) {
 }
 
 function getCommits(req, res) {
-  req.checkParams('userId', ERROR_BAD_REQUEST).notEmpty();
+  req.checkParams('userId', `userId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
+  req.query.range = req.query.range || 7;
+  req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
+  const errors = req.validationErrors();
+  if (errors) res.json(errors, 400);
+
   const userId = req.params.userid;
-  const timeRange = req.query.range;
+  const dateRange = req.query.range;
 }
 
 const githubAPI = { getOverview, getCommits };
