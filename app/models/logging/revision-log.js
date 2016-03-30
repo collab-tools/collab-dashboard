@@ -8,6 +8,7 @@ module.exports = function (sequelize, DataTypes) {
     },
     fileUUID: DataTypes.STRING,
     fileName: DataTypes.STRING,
+    fileMIME: DataTypes.STRING,
     date: DataTypes.DATE,
     userId: DataTypes.STRING,
     projectId: DataTypes.STRING
@@ -35,6 +36,19 @@ module.exports = function (sequelize, DataTypes) {
         const where = {};
         if (range) where.date = { $gt: range };
         return this.count({ where });
+      },
+      getRevisions(range) {
+        const where = {};
+        if (range) where.date = { $gt: range };
+        return this.findAll({ where });
+      },
+      getParticipationCount(range) {
+        const where = {};
+        if (range) where.date = { $gt: range };
+        return this.count({
+          where,
+          attributes: [[sequelize.literal('DISTINCT `userId`'), 'userId']]
+        });
       }
     }
   });

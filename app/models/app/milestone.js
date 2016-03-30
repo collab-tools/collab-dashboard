@@ -29,6 +29,11 @@ module.exports = function (sequelize, DataTypes) {
         const where = { projectId };
         if (range) where.createdAt = { $gt: range };
         return this.findAll({ where });
+      },
+      getMilestones(range) {
+        const where = {};
+        if (range) where.createdAt = { $gt: range };
+        return this.findAll({ where });
       }
     }
   });

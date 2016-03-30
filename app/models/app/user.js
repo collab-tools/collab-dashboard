@@ -27,6 +27,9 @@ module.exports = function (sequelize, DataTypes) {
       getUsers() {
         return this.findAll();
       },
+      getUsersCount() {
+        return this.count();
+      },
       getUserProject(id) {
         return this.findAll({
           where: { id },

@@ -7,8 +7,9 @@ module.exports = function (sequelize, DataTypes) {
       primaryKey: true
     },
     activity: DataTypes.CHAR,
-    fileName: DataTypes.STRING,
     fileUUID: DataTypes.STRING,
+    fileName: DataTypes.STRING,
+    fileMIME: DataTypes.STRING,
     date: DataTypes.DATE,
     userId: DataTypes.STRING,
     projectId: DataTypes.STRING
@@ -16,13 +17,22 @@ module.exports = function (sequelize, DataTypes) {
     underscored: true,
     classMethods: {
       getUniqueFiles(projectId, range) {
-        const where = { projectId, date: { $gt: range } };
+        const where = {};
+        if (projectId) where.projectId = projectId;
+        if (range) where.date = { $gt: range };
         return this.findAll({
           where,
           attributes: [
-            [sequelize.literal('DISTINCT `fileUUID`'), 'fileUUID'], 'fileName', 'activity',
+            [sequelize.literal('DISTINCT `fileUUID`'), 'fileUUID'], 'fileName', 'fileMIME',
             'date', 'userId', 'projectId', 'id'
           ]
+        });
+      },
+      getFile(fileUUID) {
+        const where = { fileUUID };
+        return this.findOne({
+          where,
+          attributes: ['fileUUID', 'fileName', 'fileMIME', 'date', 'userId', 'projectId', 'id']
         });
       }
     }

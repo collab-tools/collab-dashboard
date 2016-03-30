@@ -7,7 +7,8 @@ module.exports = function (sequelize, DataTypes) {
       primaryKey: true
     },
     date: DataTypes.DATE,
-    files: DataTypes.INTEGER,
+    commitUUID: DataTypes.STRING,
+    message: DataTypes.STRING,
     additions: DataTypes.INTEGER,
     deletions: DataTypes.INTEGER,
     userId: DataTypes.STRING,
@@ -15,7 +16,7 @@ module.exports = function (sequelize, DataTypes) {
   }, {
     underscored: true,
     classMethods: {
-      getProjectCommits(projectId, range){
+      getProjectCommits(projectId, range) {
         const where = { projectId };
         if (range) where.date = { $gt: range };
         return this.findAll({ where });
@@ -30,6 +31,15 @@ module.exports = function (sequelize, DataTypes) {
         const where = {};
         if (range) where.date = { $gt: range };
         return this.count({ where });
+      },
+      getCommit(commitUUID) {
+        const where = { commitUUID };
+        return this.findOne({ where });
+      },
+      getCommits(range) {
+        const where = {};
+        if (range) where.date = { $gt: range };
+        return this.findAll({ where });
       }
     }
   });

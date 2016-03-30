@@ -21,8 +21,9 @@ module.exports = function (express) {
   // Google Drive Related
   // =========================================================
   globalRouter.get('/drive/overview', drive.getOverview);
-  globalRouter.get('/drive/files/:revisionId', drive.getRevisions);
+  globalRouter.get('/drive/files/revisions', drive.getRevisions);
   globalRouter.get('/drive/files/:fileId', drive.getFile);
+  globalRouter.get('/drive/files/:fileId/revisions', drive.getFileRevisions);
 
   // Cloud IDE Related
   // =========================================================

@@ -49,6 +49,9 @@ function getCommits(req, res) {
       .then(response);
 }
 
+function getCommit(req, res) {
+
+}
 
 const githubAPI = { getOverview, getCommits };
 
