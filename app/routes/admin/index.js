@@ -62,7 +62,7 @@ function createAdmin(req, res) {
 
 module.exports = function (express) {
   const adminRouter = express.Router();
-  
+
   // Dashboard Administration Endpoints
   // =========================================================
   adminRouter.post('/authenticate', authenticate);

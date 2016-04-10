@@ -54,7 +54,8 @@ modelFiles.forEach(model => {
 
 // Synchronize all the defined model into the actual mySQL database
 // ========================================================================
-sequelize.sync().then(() => {}, error => {
+sequelize.sync().then(() => {
+}, error => {
   console.log(error);
 });
 
