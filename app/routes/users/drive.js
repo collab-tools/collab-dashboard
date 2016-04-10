@@ -1,13 +1,11 @@
 'use strict';
-const _ = require('lodash');
-const config = require('config');
 const Promise = require('bluebird');
-const google = require('googleapis');
+const moment = require('moment');
+
 const models = require('../../models');
 
 const ERROR_BAD_REQUEST = 'Unable to serve your content. Check your arguments.';
 const ERROR_MISSING_TEMPLATE = 'is a required parameter in GET request.';
-const FOLDER_MIME = 'application/vnd.google-apps.folder';
 
 function getOverview(req, res) {
   req.checkParams('userId', `userId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
@@ -15,151 +13,176 @@ function getOverview(req, res) {
   req.query.range = req.query.range || 7;
   req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
   const errors = req.validationErrors();
-  if (errors) res.json(errors, 400);
+  if (errors) res.boom.badRequest(errors);
 
   const userId = req.params.userId;
   const projectId = req.query.projectId;
   const dateRange = req.query.range;
-  const OAuth2 = google.auth.OAuth2;
-  const oauthClient = new OAuth2(config.google_dev.client_id,
-      config.google_dev.client_secret, config.google_dev.redirect_uris[0]);
-  const payload = { files: [], revisions: [] };
+  const convertedRange = moment(new Date()).subtract(dateRange, 'day')
+      .format('YYYY-MM-DD HH:mm:ss');
 
-  const retrieveInfo = () => {
-    return models.app.user.getUserById(userId)
-        .then(user => {
-          if (!user) return res.boom.badRequest(ERROR_BAD_REQUEST);
-          return oauthClient.setCredentials({ refresh_token: user.google_token });
-        })
-        .then(() => {
-          return models.app.project.findProjectById(projectId);
-        })
-        .then(project => {
-          if (!project) return res.boom.badRequest(ERROR_BAD_REQUEST);
-          return project.root_folder;
-        });
+
+  const retrieveFilesAndRevisions = (user) => {
+    const googleId = user.google_id;
+    const promiseArray = [
+      models.log['drive-log'].getUniqueFiles(projectId, googleId, convertedRange),
+      models.log['revision-log'].getUserRevisions(googleId, null, convertedRange)
+    ];
+    return Promise.all(promiseArray);
   };
 
-  const recTraverseFolder = (folder) => {
-    const drive = google.drive({ version: 'v3', auth: oauthClient });
-    const options = {
-      corpus: 'user',
-      pageSize: 10,
-      fields: 'nextPageToken, files(id, name, mimeType)',
-      q: `'${folder}' in parents`
+  const response = (query) => {
+    const payload = {
+      files: query[0],
+      revisions: query[1]
     };
-
-    return Promise.promisify(drive.files.list)(options)
-        .then(response => {
-          const children = [];
-          response.files.forEach(file => {
-            if (file.mimeType === FOLDER_MIME) children.push(recTraverseFolder(file.id));
-          });
-          return Promise
-              .all(children.map(promise => {
-                return promise.reflect();
-              }))
-              .then(() => {
-                payload.files = payload.files.concat(response.files);
-              });
-        });
-  };
-
-  const retrieveRevisions = () => {
-    const drive = google.drive({ version: 'v3', auth: oauthClient });
-    const Continue = {};
-    const again = () => Continue;
-    const repeat = fn => Promise.try(fn, again)
-        .then(val => val === Continue && repeat(fn) || val);
-
-    let start = 0;
-    const stop = payload.files.length;
-    return repeat(again => {
-      if (start < stop) {
-        const options = {
-          fileId: payload.files[start].id,
-          fields: 'kind, revisions'
-        };
-        return Promise.promisify(drive.revisions.list)(options)
-            .then((revisions) => {
-              payload.revisions = payload.revisions.concat(revisions);
-            }, () => {
-            })
-            .then(() => ++start)
-            .then(again);
-      }
-    });
-  };
-
-  const response = () => {
-    payload.success = true;
     res.json(payload);
   };
 
-  return retrieveInfo()
-      .then(recTraverseFolder)
-      .then(retrieveRevisions)
+  const errorHandler = () => {
+    res.boom.badRequest(ERROR_BAD_REQUEST);
+  };
+
+  return this.models.app.user.getUserById(userId)
+      .then(retrieveFilesAndRevisions)
       .then(response)
-      .catch(err => {
-        console.error(err);
-        res.boom.badRequest(ERROR_BAD_REQUEST);
-      });
+      .catch(errorHandler);
 }
 
-
-function getRevisions(req, res) {
-  req.checkParams('userId', `userId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
-  req.checkQuery('projectId', `projectId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
-  const errors = req.validationErrors();
-  if (errors) res.json(errors, 400);
-
-  const userId = req.params.userId;
-  const projectId = req.query.projectId;
-  const dateRange = req.query.range || 7;
-}
-
-function getRevisionCount(req, res) {
+function getFiles(req, res) {
   req.checkParams('userId', `userId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
   req.checkQuery('projectId', `projectId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
   req.query.range = req.query.range || 7;
   req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
   const errors = req.validationErrors();
-  if (errors) res.json(errors, 400);
+  if (errors) res.boom.badRequest(errors);
 
   const userId = req.params.userId;
   const projectId = req.query.projectId;
   const dateRange = req.query.range;
+  const convertedRange = moment(new Date()).subtract(dateRange, 'day')
+      .format('YYYY-MM-DD HH:mm:ss');
+
+  const retrieveFiles = (user) => {
+    const googleId = user.google_id;
+    return models.log['drive-log'].getUniqueFiles(projectId, googleId, convertedRange);
+  };
+
+  const response = (files) => {
+    res.json(files);
+  };
+
+  const errorHandler = () => {
+    res.boom.badRequest(ERROR_BAD_REQUEST);
+  };
+
+  return this.models.app.user.getUserById(userId)
+      .then(retrieveFiles)
+      .then(response)
+      .catch(errorHandler);
 }
 
-function oauth(req, res) {
-  const OAuth2 = google.auth.OAuth2;
-  const oauthClient = new OAuth2(config.google_dev.client_id,
-      config.google_dev.client_secret, config.google_dev.redirect_uris[0]);
-  const scopes = [
-    'https://www.googleapis.com/auth/drive.readonly',
-    'https://www.googleapis.com/auth/drive.metadata.readonly'
-  ];
-  const url = oauthClient.generateAuthUrl({
-    access_type: 'offline',
-    scope: scopes
-  });
-  res.json({ success: true, url });
+function getFilesCount(req, res) {
+  req.checkParams('userId', `userId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
+  req.checkQuery('projectId', `projectId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
+  req.query.range = req.query.range || 7;
+  req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
+  const errors = req.validationErrors();
+  if (errors) res.boom.badRequest(errors);
+
+  const userId = req.params.userId;
+  const projectId = req.query.projectId;
+  const dateRange = req.query.range;
+  const convertedRange = moment(new Date()).subtract(dateRange, 'day')
+      .format('YYYY-MM-DD HH:mm:ss');
+
+  const retrieveFiles = (user) => {
+    const googleId = user.google_id;
+    return models.log['drive-log'].getUniqueFiles(projectId, googleId, convertedRange);
+  };
+
+  const response = (files) => {
+    res.json({ count: files.length });
+  };
+
+  const errorHandler = () => {
+    res.boom.badRequest(ERROR_BAD_REQUEST);
+  };
+
+  return this.models.app.user.getUserById(userId)
+      .then(retrieveFiles)
+      .then(response)
+      .catch(errorHandler);
 }
 
-function oauthCallback(req, res) {
-  const OAuth2 = google.auth.OAuth2;
-  const oauthClient = new OAuth2(config.google_dev.client_id,
-      config.google_dev.client_secret, config.google_dev.redirect_uris[0]);
-  if (req.query.code) {
-    oauthClient.getToken(req.query.code, (err, test) => {
-      res.json({ success: true });
-    });
-  } else res.boom.badRequest(ERROR_BAD_REQUEST);
+function getRevisions(req, res) {
+  req.checkParams('userId', `userId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
+  req.checkQuery('projectId', `projectId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
+  req.query.range = req.query.range || 7;
+  req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
+  const errors = req.validationErrors();
+  if (errors) res.boom.badRequest(errors);
+
+  const userId = req.params.userId;
+  const projectId = req.query.projectId;
+  const dateRange = req.query.range;
+  const convertedRange = moment(new Date()).subtract(dateRange, 'day')
+      .format('YYYY-MM-DD HH:mm:ss');
+
+  const retrieveRevisions = (user) => {
+    const googleId = user.google_id;
+    return models.log['revision-log'].getUserRevisionsByProject(googleId, projectId, null, convertedRange);
+  };
+
+  const response = (revisions) => {
+    res.json(revisions);
+  };
+
+  const errorHandler = () => {
+    res.boom.badRequest(ERROR_BAD_REQUEST);
+  };
+
+  return this.models.app.user.getUserById(userId)
+      .then(retrieveRevisions)
+      .then(response)
+      .catch(errorHandler);
+}
+
+function getRevisionsCount(req, res) {
+  req.checkParams('userId', `userId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
+  req.checkQuery('projectId', `projectId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
+  req.query.range = req.query.range || 7;
+  req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
+  const errors = req.validationErrors();
+  if (errors) res.boom.badRequest(errors);
+
+  const userId = req.params.userId;
+  const projectId = req.query.projectId;
+  const dateRange = req.query.range;
+  const convertedRange = moment(new Date()).subtract(dateRange, 'day')
+      .format('YYYY-MM-DD HH:mm:ss');
+
+  const retrieveRevisions = (user) => {
+    const googleId = user.google_id;
+    return models.log['revision-log'].getUserRevisionsByProject(googleId, projectId, null, convertedRange);
+  };
+
+  const response = (revisions) => {
+    res.json({ count: revisions.length });
+  };
+
+  const errorHandler = () => {
+    res.boom.badRequest(ERROR_BAD_REQUEST);
+  };
+
+  return this.models.app.user.getUserById(userId)
+      .then(retrieveRevisions)
+      .then(response)
+      .catch(errorHandler);
 }
 
 const driveAPI = {
-  getOverview, getRevisions, getRevisionCount,
-  oauth, oauthCallback
+  getOverview, getRevisions, getRevisionsCount, getFiles, getFilesCount
 };
 
 export default driveAPI;

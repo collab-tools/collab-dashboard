@@ -1,4 +1,5 @@
 'use strict';
+const uuid = require('node-uuid');
 
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define('drive_log', {
@@ -11,14 +12,15 @@ module.exports = function (sequelize, DataTypes) {
     fileName: DataTypes.STRING,
     fileMIME: DataTypes.STRING,
     date: DataTypes.DATE,
-    userId: DataTypes.STRING,
+    googleId: DataTypes.STRING,
     projectId: DataTypes.STRING
   }, {
     underscored: true,
     classMethods: {
-      getUniqueFiles(projectId, range) {
+      getUniqueFiles(projectId, googleId, range) {
         const where = {};
         if (projectId) where.projectId = projectId;
+        if (googleId) where.googleId = googleId;
         if (range) where.date = { $gt: range };
         return this.findAll({
           where,
@@ -34,7 +36,15 @@ module.exports = function (sequelize, DataTypes) {
           where,
           attributes: ['fileUUID', 'fileName', 'fileMIME', 'date', 'userId', 'projectId', 'id']
         });
+      },
+      createLog(logInfo) {
+        logInfo.id = uuid.v4();
+        return this.create(logInfo);
       }
+    },
+    activityCode: {
+      CREATE: 'C',
+      DELETED: 'D'
     }
   });
 };

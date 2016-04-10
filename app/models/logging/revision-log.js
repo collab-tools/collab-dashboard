@@ -1,4 +1,5 @@
 'use strict';
+const uuid = require('node-uuid');
 
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define('revision_log', {
@@ -10,7 +11,7 @@ module.exports = function (sequelize, DataTypes) {
     fileName: DataTypes.STRING,
     fileMIME: DataTypes.STRING,
     date: DataTypes.DATE,
-    userId: DataTypes.STRING,
+    googleId: DataTypes.STRING,
     projectId: DataTypes.STRING
   }, {
     underscored: true,
@@ -26,8 +27,14 @@ module.exports = function (sequelize, DataTypes) {
         if (fileUUID) where.fileUUID = fileUUID;
         return this.findAll({ where });
       },
-      getUserRevisions(userId, fileUUID, range) {
-        const where = { userId };
+      getUserRevisions(googleId, fileUUID, range) {
+        const where = { googleId };
+        if (range) where.date = { $gt: range };
+        if (fileUUID) where.fileUUID = fileUUID;
+        return this.findAll({ where });
+      },
+      getUserRevisionsByProject(googleId, projectId, fileUUID, range) {
+        const where = { googleId, projectId };
         if (range) where.date = { $gt: range };
         if (fileUUID) where.fileUUID = fileUUID;
         return this.findAll({ where });
@@ -49,6 +56,10 @@ module.exports = function (sequelize, DataTypes) {
           where,
           attributes: [[sequelize.literal('DISTINCT `userId`'), 'userId']]
         });
+      },
+      createLog(logInfo) {
+        logInfo.id = uuid.v4();
+        return this.create(logInfo);
       }
     }
   });

@@ -18,6 +18,7 @@ const sequelize = new Sequelize(
 const modelFiles = [
   'admin',
   'commit-log',
+  'release-log',
   'drive-log',
   'milestone-log',
   'revision-log',

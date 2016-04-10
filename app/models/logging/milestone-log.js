@@ -1,4 +1,5 @@
 'use strict';
+const uuid = require('node-uuid');
 
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define('milestone_log', {
@@ -27,12 +28,15 @@ module.exports = function (sequelize, DataTypes) {
         const where = { projectId };
         if (range) where.date = { $gt: range };
         return this.findAll({ where });
+      },
+      createLog(logInfo) {
+        logInfo.id = uuid.v4();
+        return this.create(logInfo);
       }
+    },
+    activityCode: {
+      CREATE: 'C',
+      DONE: 'D'
     }
   });
 };
-
-/* Activity
- 1. Created
- 2. Updated
- */

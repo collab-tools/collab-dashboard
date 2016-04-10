@@ -1,4 +1,5 @@
 'use strict';
+const uuid = require('node-uuid');
 
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define('commit_log', {
@@ -7,11 +8,11 @@ module.exports = function (sequelize, DataTypes) {
       primaryKey: true
     },
     date: DataTypes.DATE,
-    commitUUID: DataTypes.STRING,
+    sha: DataTypes.STRING,
     message: DataTypes.STRING,
     additions: DataTypes.INTEGER,
     deletions: DataTypes.INTEGER,
-    userId: DataTypes.STRING,
+    githubLogin: DataTypes.STRING,
     projectId: DataTypes.STRING
   }, {
     underscored: true,
@@ -40,6 +41,10 @@ module.exports = function (sequelize, DataTypes) {
         const where = {};
         if (range) where.date = { $gt: range };
         return this.findAll({ where });
+      },
+      createLog(logInfo) {
+        logInfo.id = uuid.v4();
+        return this.create(logInfo);
       }
     }
   });
