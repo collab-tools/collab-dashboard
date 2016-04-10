@@ -19,7 +19,7 @@ module.exports = function (express) {
   // =========================================================
   usersRouter.get('/:userId/github/overview', github.getOverview);
   usersRouter.get('/:userId/github/commits', github.getCommits);
-  usersRouter.get('/:userId/github/releases', github.getReleases);
+  usersRouter.get('/:userId/github/commits/count', github.getCommitsCount);
 
   // Google Drive Related
   // =========================================================
@@ -28,11 +28,6 @@ module.exports = function (express) {
   usersRouter.get('/:userId/drive/revisions/count', drive.getRevisionsCount);
   usersRouter.get('/:userId/drive/files', drive.getFiles);
   usersRouter.get('/:userId/drive/files/count', drive.getFilesCount);
-
-  // Dev Mode Usage
-  // =========================================================
-  usersRouter.get('/drive/oauth', drive.oauth);
-  usersRouter.get('/drive/oauth/callback', drive.oauthCallback);
 
   // Cloud IDE Related
   // =========================================================

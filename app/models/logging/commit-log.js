@@ -22,11 +22,17 @@ module.exports = function (sequelize, DataTypes) {
         if (range) where.date = { $gt: range };
         return this.findAll({ where });
       },
-      getUserCommits(userId, projectId, range) {
-        const where = { userId };
+      getUserCommits(githubLogin, projectId, range) {
+        const where = { githubLogin };
         if (projectId) where.projectId = projectId;
         if (range) where.date = { $gt: range };
         return this.findAll({ where });
+      },
+      getUserCommitsCount(githubLogin, projectId, range) {
+        const where = { githubLogin };
+        if (projectId) where.projectId = projectId;
+        if (range) where.date = { $gt: range };
+        return this.count({ where });
       },
       getCommitsCount(range) {
         const where = {};

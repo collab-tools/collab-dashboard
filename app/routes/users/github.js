@@ -90,15 +90,70 @@ function getOverview(req, res) {
 
 function getCommits(req, res) {
   req.checkParams('userId', `userId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
+  req.checkQuery('projectId', `projectId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
   req.query.range = req.query.range || 7;
   req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
   const errors = req.validationErrors();
-  if (errors) res.json(errors, 400);
+  if (errors) res.boom.badRequest(errors);
 
-  const userId = req.params.userid;
+  const userId = req.params.userId;
+  const projectId = req.query.projectId;
   const dateRange = req.query.range;
+  const convertedRange = moment(new Date()).subtract(dateRange, 'day')
+      .format('YYYY-MM-DD HH:mm:ss');
+
+  const retrieveCommits = (user) => {
+    const githubLogin = user.github_login;
+    return models.log['commit-log'].getUserCommits(githubLogin, projectId, convertedRange);
+  };
+
+  const response = (commits) => {
+    res.json(commits);
+  };
+
+  const errorHandler = () => {
+    res.boom.badRequest(ERROR_BAD_REQUEST);
+  };
+
+  return this.models.app.user.getUserById(userId)
+      .then(retrieveCommits)
+      .then(response)
+      .catch(errorHandler);
 }
 
-const githubAPI = { getOverview, getCommits };
+function getCommitsCount(req, res) {
+  req.checkParams('userId', `userId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
+  req.checkQuery('projectId', `projectId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
+  req.query.range = req.query.range || 7;
+  req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
+  const errors = req.validationErrors();
+  if (errors) res.boom.badRequest(errors);
+
+  const userId = req.params.userId;
+  const projectId = req.query.projectId;
+  const dateRange = req.query.range;
+  const convertedRange = moment(new Date()).subtract(dateRange, 'day')
+      .format('YYYY-MM-DD HH:mm:ss');
+
+  const retrieveCommits = (user) => {
+    const githubLogin = user.github_login;
+    return models.log['commit-log'].getUserCommitsCount(githubLogin, projectId, convertedRange);
+  };
+
+  const response = (commits) => {
+    res.json(commits);
+  };
+
+  const errorHandler = () => {
+    res.boom.badRequest(ERROR_BAD_REQUEST);
+  };
+
+  return this.models.app.user.getUserById(userId)
+      .then(retrieveCommits)
+      .then(response)
+      .catch(errorHandler);
+}
+
+const githubAPI = { getOverview, getCommits, getCommitsCount };
 
 export default githubAPI;
