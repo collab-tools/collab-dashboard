@@ -44,17 +44,17 @@
       return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
     }
 
-    const layout = '../views/layout/layout.html';
-    const dashboard = '../views/dashboard/dashboard.html';
-    const projects = '../views/page/projects.html';
-    const users = '../views/page/users.html';
-    const github = '../views/page/github.html';
-    const drive = '../views/page/drive.html';
-    const cloud = '../views/page/cloud.html';
-    const milestones = '../views/page/milestones.html';
-    const tasks = '../views/page/tasks.html';
-    const user = '../views/page/users/overview.html';
-    const project = '../views/page/projects/overview.html';
+    const layout = './app/layout/layout.html';
+    const dashboard = './app/dashboard/dashboard.html';
+    const projects = './app/projects/projects.html';
+    const users = './app/users/users.html';
+    const github = './app/github/github.html';
+    const drive = './app/drive/drive.html';
+    const cloud = './app/cloud/cloud.html';
+    const milestones = './app/milestones/milestones.html';
+    const tasks = './app/tasks/tasks.html';
+    const userOverview = './app/users/overview.html';
+    const projectOverview = './app/projects/overview.html';
 
     $urlRouterProvider
       .otherwise('/app/dashboard');

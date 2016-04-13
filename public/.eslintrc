@@ -1,6 +1,10 @@
 {
   "extends": "angular",
   "rules": {
+    "angular/controller-name": [
+      2,
+      "/[a-zA-Z].*Ctrl/"
+    ],
     "no-use-before-define:": 0,
     "no-shadow": 0
   }
