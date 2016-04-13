@@ -1,9 +1,9 @@
 (function () {
   'use strict';
   angular
-      .module('ui.jp', ['ui.load'])
-      .value('uiJpConfig', {})
-      .directive('uiJp', uiJp);
+    .module('ui.jp', ['ui.load'])
+    .value('uiJpConfig', {})
+    .directive('uiJp', uiJp);
 
   uiJp.$inject = ['uiJpConfig', 'MODULE_CONFIG', 'uiLoad', '$timeout'];
 

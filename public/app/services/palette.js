@@ -371,8 +371,8 @@
 
     find: function (color) {
       var colors = color.split('-'),
-          color,
-          shade = 500;
+        color,
+        shade = 500;
 
       if (colors.length == 3) {
         color = colors[0] + '-' + colors[1];

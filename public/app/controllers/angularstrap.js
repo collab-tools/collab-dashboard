@@ -1,20 +1,20 @@
 (function () {
   'use strict';
   angular
-      .module('app')
-      .controller('AlertCtrl', AlertCtrl)
-      .controller('AsideCtrl', AsideCtrl)
-      .controller('ButtonCtrl', ButtonCtrl)
-      .controller('DropdownCtrl', DropdownCtrl)
-      .controller('CollapseCtrl', CollapseCtrl)
-      .controller('DatepickerCtrl', DatepickerCtrl)
-      .controller('TimepickerCtrl', TimepickerCtrl)
-      .controller('ModalCtrl', ModalCtrl)
-      .controller('SelectCtrl', SelectCtrl)
-      .controller('TabCtrl', TabCtrl)
-      .controller('TooltipCtrl', TooltipCtrl)
-      .controller('PopoverCtrl', PopoverCtrl)
-      .controller('TypeaheadCtrl', TypeaheadCtrl);
+    .module('app')
+    .controller('AlertCtrl', AlertCtrl)
+    .controller('AsideCtrl', AsideCtrl)
+    .controller('ButtonCtrl', ButtonCtrl)
+    .controller('DropdownCtrl', DropdownCtrl)
+    .controller('CollapseCtrl', CollapseCtrl)
+    .controller('DatepickerCtrl', DatepickerCtrl)
+    .controller('TimepickerCtrl', TimepickerCtrl)
+    .controller('ModalCtrl', ModalCtrl)
+    .controller('SelectCtrl', SelectCtrl)
+    .controller('TabCtrl', TabCtrl)
+    .controller('TooltipCtrl', TooltipCtrl)
+    .controller('PopoverCtrl', PopoverCtrl)
+    .controller('TypeaheadCtrl', TypeaheadCtrl);
 
   AlertCtrl.$inject = ['$scope', '$alert'];
   function AlertCtrl($scope, $alert) {
@@ -208,9 +208,9 @@
     $scope.getAddress = function (viewValue) {
       var params = { address: viewValue, sensor: false };
       return $http.get('http://maps.googleapis.com/maps/api/geocode/json', { params: params })
-          .then(function (res) {
-            return res.data.results;
-          });
+        .then(function (res) {
+          return res.data.results;
+        });
     };
   }
 })();

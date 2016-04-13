@@ -3,8 +3,8 @@
 (function () {
   'use strict';
   angular
-      .module('app')
-      .controller('ImgCropCtrl', ImgCrop);
+    .module('app')
+    .controller('ImgCropCtrl', ImgCrop);
 
   function ImgCrop($scope) {
     var vm = $scope;

@@ -1,8 +1,8 @@
 (function () {
   'use strict';
   angular
-      .module('ui.load', [])
-      .service('uiLoad', uiLoad);
+    .module('ui.load', [])
+    .service('uiLoad', uiLoad);
 
   uiLoad.$inject = ['$document', '$q', '$timeout'];
   function uiLoad($document, $q, $timeout) {

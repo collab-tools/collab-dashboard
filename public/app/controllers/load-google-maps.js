@@ -13,7 +13,7 @@ var loadGoogleMaps = (function ($) {
 
   var now = $.now(),
 
-      promise;
+    promise;
 
   return function (version, apiKey, language) {
 
@@ -25,19 +25,19 @@ var loadGoogleMaps = (function ($) {
     var deferred = $.Deferred(),
 
     //Declare a resolve function, pass google.maps for the done functions
-        resolve = function () {
-          deferred.resolve(window.google && google.maps ? google.maps : false);
-        },
+      resolve = function () {
+        deferred.resolve(window.google && google.maps ? google.maps : false);
+      },
 
     //global callback name
-        callbackName = "loadGoogleMaps_" + ( now++ ),
+      callbackName = "loadGoogleMaps_" + ( now++ ),
 
     // Default Parameters
-        params = $.extend(
-            { 'sensor': false }
-            , apiKey ? { "key": apiKey } : {}
-            , language ? { "language": language } : {}
-        );
+      params = $.extend(
+        { 'sensor': false }
+        , apiKey ? { "key": apiKey } : {}
+        , language ? { "language": language } : {}
+      );
     ;
 
     //If google.maps exists, then Google Maps API was probably loaded with the <script> tag

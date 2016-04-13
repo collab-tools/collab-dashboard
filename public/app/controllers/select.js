@@ -3,9 +3,9 @@
 (function () {
   'use strict';
   angular
-      .module('app')
-      .filter('propsFilter', propsFilter)
-      .controller('SelectCtrl', SelectCtrl);
+    .module('app')
+    .filter('propsFilter', propsFilter)
+    .controller('SelectCtrl', SelectCtrl);
 
   function propsFilter() {
     return filter;
@@ -133,8 +133,8 @@
     vm.refreshAddresses = function (address) {
       var params = { address: address, sensor: false };
       return $http.get(
-          'http://maps.googleapis.com/maps/api/geocode/json',
-          { params: params }
+        'http://maps.googleapis.com/maps/api/geocode/json',
+        { params: params }
       ).then(function (response) {
         vm.addresses = response.data.results;
       });

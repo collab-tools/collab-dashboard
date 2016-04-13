@@ -3,8 +3,8 @@
 (function () {
   'use strict';
   angular
-      .module('app')
-      .controller('TableCtrl', TableCtrl);
+    .module('app')
+    .controller('TableCtrl', TableCtrl);
 
   TableCtrl.$inject = ['$scope', '$timeout'];
 

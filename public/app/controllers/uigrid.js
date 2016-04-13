@@ -3,8 +3,8 @@
 (function () {
   'use strict';
   angular
-      .module('app')
-      .controller('UiGridCtrl', UiGridCtrl);
+    .module('app')
+    .controller('UiGridCtrl', UiGridCtrl);
   UiGridCtrl.$inject = ['$scope', 'uiGridConstants'];
   function UiGridCtrl($scope, uiGridConstants) {
     var vm = $scope;

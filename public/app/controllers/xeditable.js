@@ -3,8 +3,8 @@
 (function () {
   'use strict';
   angular
-      .module('app')
-      .controller('XeditableCtrl', XeditableCtrl);
+    .module('app')
+    .controller('XeditableCtrl', XeditableCtrl);
 
   XeditableCtrl.$inject = ['$scope', '$filter', '$http', 'editableOptions', 'editableThemes'];
 

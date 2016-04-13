@@ -1,42 +1,24 @@
-(function () {
-  'use strict';
-  angular
-      .module('ngStore', [])
-      .provider('ngStore', ngStoreProvider)
-      .factory('ngStoreFactory', ngStoreFactory);
+'use strict';
 
-  function ngStoreProvider() {
-    return {
-      $get: ['ngStoreFactory', function (ngStoreFactory) {
-        return {
-          model: function (name) {
-            var model = new ngStoreFactory(name);
-            return model;
-          }
-        };
-      }]
-    };
-  }
-
+(() => {
   function ngStoreFactory() {
-
     function Store(name, serializer) {
       if (!this.localStorage) {
-        throw "localStorage: Environment does not support localStorage."
+        throw 'localStorage: Environment does not support localStorage.';
       }
       this.name = name;
       this.serializer = serializer || {
-            serialize: function (item) {
-              return isObject(item) ? JSON.stringify(item) : item;
-            },
-            // fix for "illegal access" error on Android when JSON.parse is passed null
-            deserialize: function (data) {
-              return data && JSON.parse(data);
-            }
-          };
-      var store = this.localStorage().getItem(this.name);
+          serialize: (item) => {
+            return isObject(item) ? JSON.stringify(item) : item;
+          },
+          // fix for "illegal access" error on Android when JSON.parse is passed null
+          deserialize: (data) => {
+            return data && JSON.parse(data);
+          }
+        };
+      const store = this.localStorage().getItem(this.name);
       this.records = (store && store.split(",")) || [];
-    };
+    }
 
     Store.prototype = {
 
@@ -109,7 +91,7 @@
       // Clear localStorage for specific collection.
       _clear: function () {
         var local = this.localStorage(),
-            itemRe = new RegExp("^" + this.name + "-");
+          itemRe = new RegExp("^" + this.name + "-");
 
         // Remove id-tracking item (e.g., "foo").
         local.removeItem(this.name);
@@ -140,22 +122,38 @@
     // Generate four random hex digits.
     function S4() {
       return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
-    };
+    }
 
     // Generate a pseudo-GUID by concatenating random hexadecimal.
     function guid() {
       return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
-    };
+    }
 
     function isObject(item) {
       return item === Object(item);
     }
 
     function contains(array, item) {
-      var i = array.length;
+      let i = array.length;
       while (i--) if (array[i] === item) return true;
       return false;
     }
   }
 
+  function ngStoreProvider() {
+    return {
+      $get: ['ngStoreFactory', (NgStoreFactory) => {
+        return {
+          model: (name) => {
+            return new NgStoreFactory(name);
+          }
+        };
+      }]
+    };
+  }
+
+  angular
+    .module('ngStore', [])
+    .provider('ngStore', ngStoreProvider)
+    .factory('ngStoreFactory', ngStoreFactory);
 })();

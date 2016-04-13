@@ -3,8 +3,8 @@
 (function () {
   'use strict';
   angular
-      .module('app')
-      .controller('NGGridCtrl', NGGridCtrl);
+    .module('app')
+    .controller('NGGridCtrl', NGGridCtrl);
 
   NGGridCtrl.$inject = ['$scope', '$http'];
   function NGGridCtrl($scope, $http) {

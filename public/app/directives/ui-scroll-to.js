@@ -1,8 +1,8 @@
 (function () {
   'use strict';
   angular
-      .module('app')
-      .directive('uiScrollTo', uiScrollTo);
+    .module('app')
+    .directive('uiScrollTo', uiScrollTo);
 
   uiScrollTo.$inject = ['$location', '$anchorScroll'];
   function uiScrollTo($location, $anchorScroll) {

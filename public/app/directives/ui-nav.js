@@ -1,8 +1,8 @@
 (function () {
   'use strict';
   angular
-      .module('app')
-      .directive('uiNav', uiNav);
+    .module('app')
+    .directive('uiNav', uiNav);
   function uiNav() {
     var directive = {
       restrict: 'AC',

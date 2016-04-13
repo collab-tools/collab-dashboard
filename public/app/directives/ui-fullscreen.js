@@ -1,8 +1,8 @@
 (function () {
   'use strict';
   angular
-      .module('app')
-      .directive('uiFullscreen', uiFullscreen);
+    .module('app')
+    .directive('uiFullscreen', uiFullscreen);
 
   uiFullscreen.$inject = ['$ocLazyLoad', '$document'];
   function uiFullscreen($ocLazyLoad, $document) {

@@ -1,8 +1,8 @@
 (function () {
   'use strict';
   angular
-      .module('app')
-      .filter('fromNow', fromNow);
+    .module('app')
+    .filter('fromNow', fromNow);
 
   function fromNow() {
     return function (date) {

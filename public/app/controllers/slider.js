@@ -3,8 +3,8 @@
 (function () {
   'use strict';
   angular
-      .module('app')
-      .controller('SliderCtrl', SliderCtrl);
+    .module('app')
+    .controller('SliderCtrl', SliderCtrl);
 
   function SliderCtrl($scope) {
     var vm = $scope;

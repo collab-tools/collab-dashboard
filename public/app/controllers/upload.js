@@ -3,8 +3,8 @@
 (function () {
   'use strict';
   angular
-      .module('app')
-      .controller('UploadCtrl', UploadCtrl);
+    .module('app')
+    .controller('UploadCtrl', UploadCtrl);
 
   UploadCtrl.$inject = ['$scope', 'FileUploader'];
 

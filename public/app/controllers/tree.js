@@ -3,8 +3,8 @@
 (function () {
   'use strict';
   angular
-      .module('app')
-      .controller('TreeCtrl', TreeCtrl);
+    .module('app')
+    .controller('TreeCtrl', TreeCtrl);
 
   TreeCtrl.$inject = ['$scope', '$timeout'];
 

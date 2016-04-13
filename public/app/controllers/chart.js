@@ -3,8 +3,8 @@
 (function () {
   'use strict';
   angular
-      .module('app')
-      .controller('ChartCtrl', Chart);
+    .module('app')
+    .controller('ChartCtrl', Chart);
 
   function Chart($scope) {
     var vm = $scope;

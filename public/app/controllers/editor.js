@@ -3,8 +3,8 @@
 (function () {
   'use strict';
   angular
-      .module('app')
-      .controller('EditorCtrl', EditorCtrl);
+    .module('app')
+    .controller('EditorCtrl', EditorCtrl);
 
   function EditorCtrl($scope) {
     var vm = $scope;

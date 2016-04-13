@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "lint": "eslint server.js",
-    "start": "nodemon server.js -L --watch server.js --watch app --watch config --exec babel-node --presets es2015"
+    "start": "nodemon server.js -L --watch server.js --watch app --watch config --exec babel-node"
   },
   "repository": {
     "type": "git",

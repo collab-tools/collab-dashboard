@@ -6,10 +6,18 @@ module.exports = function (grunt) {
       tmp: ['.tmp'],
       js: ['dist/scripts']
     },
+    babel: {
+      options: {
+        sourceMap: true,
+        presets: ['babel-preset-es2015']
+      },
+      dist: {
+        files: { expand: true, cwd: 'app/', src: '**', dest: 'dist/app/' }
+      }
+    },
     copy: {
       dist: {
         files: [
-          { expand: true, cwd: 'app/', src: '**', dest: 'dist/app/' },
           { expand: true, cwd: 'assets/', src: ['**', '!**/scss/**'], dest: 'dist/assets/' },
           { expand: true, cwd: 'libs/', src: '**', dest: 'dist/libs/' }
         ]
@@ -34,7 +42,7 @@ module.exports = function (grunt) {
     watch: {
       sass: {
         files: ['assets/scss/*.scss'],
-        tasks: ['sass'],
+        tasks: ['sass']
       }
     },
     sass: {
@@ -80,6 +88,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('build', [
     'clean:dist',
+    'babel',
     'copy',
     'useminPrepare',
     'concat:generated',

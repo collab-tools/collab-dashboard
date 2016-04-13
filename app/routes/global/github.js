@@ -1,6 +1,7 @@
 'use strict';
 
 const _ = require('lodash');
+const moment = require('moment');
 const models = require('../../models');
 
 const ERROR_BAD_REQUEST = 'Unable to serve your content. Check your arguments.';
@@ -14,7 +15,7 @@ function getOverview(req, res) {
 
   const dateRange = req.query.range;
   const convertedRange = moment(new Date()).subtract(dateRange, 'day')
-      .format('YYYY-MM-DD HH:mm:ss');
+    .format('YYYY-MM-DD HH:mm:ss');
   const payload = {};
 
   const processRepos = (repos) => {
@@ -30,10 +31,10 @@ function getOverview(req, res) {
   };
 
   return models.app.project.getRepositories(convertedRange)
-      .then(processRepos)
-      .then(_.partial(models.log['commit-log'].getCommits(convertedRange)))
-      .then(getCommits)
-      .then(response);
+    .then(processRepos)
+    .then(_.partial(models.log['commit-log'].getCommits(convertedRange)))
+    .then(getCommits)
+    .then(response);
 }
 
 function getCommit(req, res) {
@@ -48,7 +49,7 @@ function getCommit(req, res) {
   };
 
   return models.log['commit-log'].getCommit(commitId)
-      .then(response);
+    .then(response);
 }
 
 const githubAPI = { getOverview, getCommit };

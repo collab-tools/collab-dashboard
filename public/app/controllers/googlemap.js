@@ -3,8 +3,8 @@
 (function () {
   'use strict';
   angular
-      .module('app')
-      .controller('GoogleMapCtrl', GoogleMap);
+    .module('app')
+    .controller('GoogleMapCtrl', GoogleMap);
 
   function GoogleMap($scope) {
     var vm = $scope;
