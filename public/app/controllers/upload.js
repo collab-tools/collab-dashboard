@@ -10,7 +10,7 @@
 
   function UploadCtrl($scope, FileUploader) {
     var uploader = $scope.uploader = new FileUploader({
-      url: 'scripts/controllers/upload.php'
+      url: 'controllers/upload.php'
     });
 
     // FILTERS

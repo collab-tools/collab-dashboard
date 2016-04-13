@@ -76,7 +76,7 @@
           title: 'Collab Dashboard'
         },
         controller: 'ChartCtrl',
-        resolve: load(['scripts/controllers/chart.js'])
+        resolve: load(['controllers/chart.js'])
       })
       .state('app.projects', {
         url: '/projects',
@@ -85,7 +85,7 @@
           title: 'Projects'
         },
         controller: 'ChartCtrl',
-        resolve: load(['scripts/controllers/chart.js'])
+        resolve: load(['controllers/chart.js'])
       })
       .state('app.users', {
         url: '/users',
@@ -94,7 +94,7 @@
           title: 'Users'
         },
         controller: 'ChartCtrl',
-        resolve: load(['scripts/controllers/chart.js'])
+        resolve: load(['controllers/chart.js'])
       })
       .state('app.github', {
         url: '/github',
@@ -103,7 +103,7 @@
           title: 'GitHub'
         },
         controller: 'ChartCtrl',
-        resolve: load(['scripts/controllers/chart.js'])
+        resolve: load(['controllers/chart.js'])
       })
       .state('app.drive', {
         url: '/drive',
@@ -112,7 +112,7 @@
           title: 'Google Drive'
         },
         controller: 'ChartCtrl',
-        resolve: load(['scripts/controllers/chart.js'])
+        resolve: load(['controllers/chart.js'])
       })
       .state('app.cloud', {
         url: '/cloud',
@@ -121,7 +121,7 @@
           title: 'Cloud IDE'
         },
         controller: 'ChartCtrl',
-        resolve: load(['scripts/controllers/chart.js'])
+        resolve: load(['controllers/chart.js'])
       })
       .state('app.tasks', {
         url: '/tasks',
@@ -130,7 +130,7 @@
           title: 'Tasks'
         },
         controller: 'ChartCtrl',
-        resolve: load(['scripts/controllers/chart.js'])
+        resolve: load(['controllers/chart.js'])
       })
       .state('app.milestones', {
         url: '/milestones',
@@ -139,7 +139,7 @@
           title: 'Milestones'
         },
         controller: 'ChartCtrl',
-        resolve: load(['scripts/controllers/chart.js'])
+        resolve: load(['controllers/chart.js'])
       })
       .state('app.user', {
         url: '/user',
@@ -148,7 +148,7 @@
           title: 'User Overview: Hooi Tong'
         },
         controller: 'ChartCtrl',
-        resolve: load(['scripts/controllers/chart.js'])
+        resolve: load(['controllers/chart.js'])
       })
       .state('app.project', {
         url: '/project',
@@ -157,7 +157,7 @@
           title: 'Project Overview: Project Gene'
         },
         controller: 'ChartCtrl',
-        resolve: load(['scripts/controllers/chart.js'])
+        resolve: load(['controllers/chart.js'])
       });
   }
 

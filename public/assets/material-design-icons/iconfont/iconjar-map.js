@@ -23,10 +23,10 @@ readLineHandle.on('line', function (line) {
   // Titleize the glyph name
   var codepoint = nameCodepointPair[1];
   var name = nameCodepointPair[0].toLowerCase().trim()
-      .replace(/[^0-9a-z]+/gi, ' ')
-      .replace(/\b[a-z]/g, function (char) {
-        return char.toUpperCase();
-      });
+    .replace(/[^0-9a-z]+/gi, ' ')
+    .replace(/\b[a-z]/g, function (char) {
+      return char.toUpperCase();
+    });
 
   // Assign the codepoint to the name for IconJar
   json.icons[codepoint] = { name: name };

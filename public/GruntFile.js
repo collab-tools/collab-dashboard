@@ -12,19 +12,20 @@ module.exports = function (grunt) {
         presets: ['babel-preset-es2015']
       },
       dist: {
-        files: { expand: true, cwd: 'app/', src: '**', dest: 'dist/app/' }
+        files: [{ expand: true, cwd: 'app/', src: '**/*.js', dest: 'dist/app/' }]
       }
     },
     copy: {
       dist: {
         files: [
+          { expand: true, cwd: 'app/', src: ['**', '!**/*.js'], dest: 'dist/app/' },
           { expand: true, cwd: 'assets/', src: ['**', '!**/scss/**'], dest: 'dist/assets/' },
           { expand: true, cwd: 'libs/', src: '**', dest: 'dist/libs/' }
         ]
       },
       js: {
         files: [
-          { src: 'dist/scripts/app.angular.js', dest: 'dist/app/scripts/app.angular.js' }
+          { src: 'dist/app.angular.js', dest: 'dist/app/app.angular.js' }
         ]
       },
       libs: {
@@ -53,7 +54,7 @@ module.exports = function (grunt) {
       }
     },
     useminPrepare: {
-      html: ['app/index.html']
+      html: ['dist/app/index.html']
     },
     usemin: {
       html: ['dist/app/index.html']
@@ -75,6 +76,7 @@ module.exports = function (grunt) {
   });
 
   grunt.loadNpmTasks('grunt-usemin');
+  grunt.loadNpmTasks('grunt-babel');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-uglify');

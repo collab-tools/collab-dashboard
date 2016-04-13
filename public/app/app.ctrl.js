@@ -21,7 +21,7 @@
     $scope.isIE = isIE();
     $scope.isMobile = isMobile();
     $scope.app = {
-      name: 'Collab Dashboard',
+      name: 'Collab',
       version: '0.0.1',
       color: {
         primary: '#0cc2aa',

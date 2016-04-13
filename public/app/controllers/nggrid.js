@@ -60,14 +60,14 @@
         var data;
         if (searchText) {
           var ft = searchText.toLowerCase();
-          $http.get('scripts/controllers/largeLoad.json').success(function (largeLoad) {
+          $http.get('controllers/largeLoad.json').success(function (largeLoad) {
             data = largeLoad.filter(function (item) {
               return JSON.stringify(item).toLowerCase().indexOf(ft) != -1;
             });
             vm.setPagingData(data, page, pageSize);
           });
         } else {
-          $http.get('scripts/controllers/largeLoad.json').success(function (largeLoad) {
+          $http.get('controllers/largeLoad.json').success(function (largeLoad) {
             vm.setPagingData(largeLoad, page, pageSize);
           });
         }

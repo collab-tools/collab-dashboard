@@ -1,13 +1,8 @@
-// code style: https://github.com/johnpapa/angular-styleguide 
+'use strict';
 
-(function () {
-  'use strict';
-  angular
-    .module('app')
-    .controller('ChartCtrl', Chart);
-
+(() => {
   function Chart($scope) {
-    var vm = $scope;
+    const vm = $scope;
 
     vm.p_p_1 = [{ data: 70, label: 'Free' }, { data: 30, label: 'Busy' }];
     vm.p_p_2 = [{ data: 75, label: 'Closed' }, { data: 25, label: 'Open' }];
@@ -71,7 +66,10 @@
       280.71,
       210.32,
       325.42
-    ]
+    ];
   }
 
+  angular
+    .module('app')
+    .controller('ChartCtrl', Chart);
 })();
