@@ -8,7 +8,7 @@ module.exports = function (sequelize, DataTypes) {
       primaryKey: true
     },
     date: DataTypes.DATE,
-    assets: DataTypes.JSON,
+    assets: DataTypes.STRING,
     tagName: DataTypes.STRING,
     body: DataTypes.STRING,
     projectId: DataTypes.STRING
@@ -34,6 +34,7 @@ module.exports = function (sequelize, DataTypes) {
         logInfo.id = uuid.v4();
         return this.create(logInfo);
       }
-    }
+    },
+    assetsDelimiter: ';'
   });
 };
