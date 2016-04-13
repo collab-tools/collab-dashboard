@@ -1,28 +1,26 @@
-// code style: https://github.com/johnpapa/angular-styleguide 
+'use strict';
 
-(function () {
-  'use strict';
+(() => {
   angular
     .module('app')
     .controller('ImgCropCtrl', ImgCrop);
 
   function ImgCrop($scope) {
-    var vm = $scope;
+    const vm = $scope;
     vm.myImage = '';
     vm.myCroppedImage = '';
-    vm.cropType = "circle";
+    vm.cropType = 'circle';
 
-    var handleFileSelect = function (evt) {
-      var file = evt.currentTarget.files[0];
-      var reader = new FileReader();
-      reader.onload = function (evt) {
-        vm.$apply(function (vm) {
-          vm.myImage = evt.target.result;
+    const handleFileSelect = function (evt) {
+      const file = evt.currentTarget.files[0];
+      const reader = new FileReader();
+      reader.onload = (nEvt) => {
+        vm.$apply((nVm) => {
+          nVm.myImage = nEvt.target.result;
         });
       };
       reader.readAsDataURL(file);
     };
     angular.element(document.querySelector('#fileInput')).on('change', handleFileSelect);
   }
-
 })();

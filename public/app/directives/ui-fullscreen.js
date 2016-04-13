@@ -1,4 +1,4 @@
-(function () {
+(() => {
   'use strict';
   angular
     .module('app')
@@ -6,15 +6,13 @@
 
   uiFullscreen.$inject = ['$ocLazyLoad', '$document'];
   function uiFullscreen($ocLazyLoad, $document) {
-    var directive = {
-      restrict: 'AC',
-      link: link
+    return {
+      restrict: 'AC', link
     };
-    return directive;
 
     function link(scope, el, attr) {
       el.addClass('hide');
-      $ocLazyLoad.load('../libs/jquery/screenfull/dist/screenfull.min.js').then(function () {
+      $ocLazyLoad.load('../libs/jquery/screenfull/dist/screenfull.min.js').then(() => {
         if (screenfull.enabled) {
           el.removeClass('hide');
         } else {
@@ -26,8 +24,8 @@
           screenfull.toggle(target);
         });
 
-        var body = angular.element($document[0].body);
-        $document.on(screenfull.raw.fullscreenchange, function () {
+        const body = angular.element($document[0].body);
+        $document.on(screenfull.raw.fullscreenchange, () => {
           if (screenfull.isFullscreen) {
             body.addClass('fullscreen');
           } else {

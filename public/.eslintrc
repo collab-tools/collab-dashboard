@@ -1,0 +1,10 @@
+{
+  "extends": "angular",
+  "rules": {
+    "angular/controller-name": [
+      2,
+      "/[A-Z].*Ctrl/"
+    ],
+    "no-use-before-define:": 0
+  }
+}

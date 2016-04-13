@@ -14,7 +14,8 @@
   background-clip: padding-box;
   border: $popover-border-width solid $popover-border-color;
   @include border-radius($border-radius-lg);
-  @include box-shadow(0 5px 10px rgba(0, 0, 0, .2));
+  @include box-shadow(0 5px 10px rgba(0,0,0,.2));
+
 
   // Popover directions
 
@@ -99,6 +100,7 @@
   }
 }
 
+
 // Offset the popover to account for the popover arrow
 .popover-title {
   padding: 8px 14px;
@@ -112,6 +114,7 @@
 .popover-content {
   padding: 9px 14px;
 }
+
 
 // Arrows
 //
@@ -128,11 +131,9 @@
     border-style: solid;
   }
 }
-
 .popover-arrow {
   border-width: $popover-arrow-outer-width;
 }
-
 .popover-arrow::after {
   content: "";
   border-width: $popover-arrow-width;
