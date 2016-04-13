@@ -2,14 +2,22 @@
   "name": "collab-dashboard",
   "version": "0.0.1",
   "description": "Analytical Dashboard for Collab",
-  "repository": "https://github.com/collab-tools/collab-dashboard",
+  "repository": {
+    "type": "git",
+    "url": "git+https://hooitong@github.com/collab-tools/collab-dashboard.git"
+  },
   "scripts": {
     "start": "node node_modules/http-server/bin/http-server -o "
   },
   "author": "Yeap Hooi Tong",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/collab-tools/collab-dashboard/issues"
+  },
+  "homepage": "https://github.com/collab-tools/collab-dashboard#readme",
   "dependencies": {},
   "devDependencies": {
-    "grunt": "^0.4.5",
+    "grunt": "^1.0.1",
     "grunt-assemble": "^0.4.0",
     "grunt-bump": "0.7.0",
     "grunt-contrib-clean": "^1.0.0",
@@ -19,9 +27,8 @@
     "grunt-contrib-htmlmin": "^1.0.0",
     "grunt-contrib-sass": "^1.0.0",
     "grunt-contrib-uglify": "^1.0.0",
-    "grunt-contrib-watch": "^0.6.1",
+    "grunt-contrib-watch": "^1.0.0",
     "grunt-sass": "^1.0.0",
-    "grunt-usemin": "^3.1.1",
-    "http-server": "^0.9.0"
+    "grunt-usemin": "^3.1.1"
   }
 }
