@@ -1,73 +1,73 @@
-.nav{
+.nav {
   border: inherit;
 }
 
-.nav-item{
+.nav-item {
   border: inherit;
 }
 
-.nav-link{
+.nav-link {
   border: inherit;
   position: relative;
 }
 
-.nav-md{
-  .nav-link{
+.nav-md {
+  .nav-link {
     padding: 0.5rem 1rem;
   }
 }
 
-.nav-sm{
-  .nav-link{
+.nav-sm {
+  .nav-link {
     padding: 0.25rem 0.75rem;
   }
 }
 
-.nav-xs{
-  .nav-link{
+.nav-xs {
+  .nav-link {
     padding: 0.15rem 0.5rem;
     font-size: 90%;
   }
 }
 
-.nav-rounded{
-  .nav-link{
+.nav-rounded {
+  .nav-link {
     border-radius: 2rem;
   }
 }
 
-.nav-tabs{
+.nav-tabs {
   border-bottom-width: 0;
   position: relative;
   z-index: 1;
-  .nav-link{
+  .nav-link {
     background: transparent !important;
     color: inherit !important;
     &.active,
     &.active:hover,
     &.active:focus,
     &:hover,
-    &:focus{
+    &:focus {
       border-color: $border-color;
       border-bottom-color: transparent;
     }
   }
 }
 
-.tab-content.tab-alt{
-  .tab-pane{
-    display:block;
+.tab-content.tab-alt {
+  .tab-pane {
+    display: block;
     height: 0;
     overflow: hidden;
-    &.active{
+    &.active {
       height: auto;
       overflow: visible;
     }
   }
 }
 
-.nav-justified{
-  .nav-item{
+.nav-justified {
+  .nav-item {
     display: table-cell;
     width: 1%;
     float: none !important;
@@ -75,16 +75,16 @@
   }
 }
 
-.nav-lists{
-  .nav-item{
-    border-bottom:1px solid $border-color;
+.nav-lists {
+  .nav-item {
+    border-bottom: 1px solid $border-color;
     background-clip: padding-box;
   }
 }
 
-.nav-active-border{
-  .nav-link{
-    &:before{
+.nav-active-border {
+  .nav-link {
+    &:before {
       content: '';
       position: absolute;
       @include transition(all 0.2s ease-in-out);
@@ -97,22 +97,22 @@
     }
     &:hover:before,
     &:focus:before,
-    &.active:before{
+    &.active:before {
       left: 0%;
       right: 0%;
       border-bottom-color: inherit;
     }
   }
-  &.top{
-    .nav-link:before{
+  &.top {
+    .nav-link:before {
       bottom: auto;
       top: 0;
     }
   }
-  &.left{
-    .nav-link{
+  &.left {
+    .nav-link {
       float: none;
-      &:before{
+      &:before {
         border-bottom-width: 0;
         right: auto;
         border-left-width: 3px;
@@ -124,15 +124,15 @@
       }
       &:hover:before,
       &:focus:before,
-      &.active:before{
+      &.active:before {
         top: 0%;
         bottom: 0%;
         border-left-color: inherit;
       }
     }
-    &.right{
-      .nav-link{
-        &:before{
+    &.right {
+      .nav-link {
+        &:before {
           left: auto;
           right: 0;
         }
@@ -141,9 +141,9 @@
   }
 }
 
-.breadcrumb{
+.breadcrumb {
   background-color: $min-black;
-  > li + li:before{
+  > li + li:before {
     content: '/ ';
   }
 }

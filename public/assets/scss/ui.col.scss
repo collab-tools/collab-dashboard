@@ -1,4 +1,4 @@
-.row-col{
+.row-col {
   display: table;
   table-layout: fixed;
   border-spacing: 0;
@@ -6,7 +6,7 @@
   height: 100%;
 
   > [class*="col-"],
-  > [class*=" col-"]{
+  > [class*=" col-"] {
     vertical-align: top;
     float: none;
     padding: 0;
@@ -19,7 +19,7 @@
   height: 100%;
 }
 
-.row-cell{
+.row-cell {
   display: table-cell;
   vertical-align: top;
 }
@@ -28,7 +28,7 @@
   position: relative;
   height: 100%;
   width: 100%;
-  -webkit-overflow-scrolling:touch;
+  -webkit-overflow-scrolling: touch;
   overflow: auto;
   .ie & {
     display: table-cell;
@@ -36,23 +36,26 @@
 }
 
 .row-inner {
-  position: absolute;  
+  position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
 }
 
-.v-m{
+.v-m {
   vertical-align: middle !important;
 }
-.v-t{
+
+.v-t {
   vertical-align: top !important;
 }
-.v-b{
+
+.v-b {
   vertical-align: bottom !important;
 }
-.v-c{
+
+.v-c {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
@@ -60,9 +63,9 @@
 }
 
 @include media-breakpoint-up(lg) {
-  .row-col{
+  .row-col {
     > [class*="col-lg"],
-    > [class*=" col-lg"]{
+    > [class*=" col-lg"] {
       display: table-cell;
       height: 100%;
     }
@@ -70,9 +73,9 @@
 }
 
 @include media-breakpoint-up(md) {
-  .row-col{
+  .row-col {
     > [class*="col-md"],
-    > [class*=" col-md"]{
+    > [class*=" col-md"] {
       display: table-cell;
       height: 100%;
     }
@@ -80,9 +83,9 @@
 }
 
 @include media-breakpoint-up(sm) {
-  .row-col{
+  .row-col {
     > [class*="col-sm"],
-    > [class*=" col-sm"]{
+    > [class*=" col-sm"] {
       display: table-cell;
       height: 100%;
     }
@@ -90,9 +93,9 @@
 }
 
 @include media-breakpoint-up(xs) {
-  .row-col{
+  .row-col {
     > [class*="col-xs"],
-    > [class*=" col-xs"]{
+    > [class*=" col-xs"] {
       display: table-cell;
       height: 100%;
     }
@@ -100,12 +103,12 @@
 }
 
 @include media-breakpoint-down(xs) {
-  .row-col-xs{
+  .row-col-xs {
     display: block;
-    .row-body{
+    .row-body {
       overflow: visible !important;
     }
-    .row-inner{
+    .row-inner {
       position: static;
     }
   }

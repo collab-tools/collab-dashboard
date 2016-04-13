@@ -1,13 +1,13 @@
 .pagination,
-.pager{
+.pager {
   .page-item,
   > li > a,
-  > li > span{
+  > li > span {
     color: inherit !important;
     background-color: transparent !important;
     border-color: $border-color !important;
     &:hover,
-    &:focus{
+    &:focus {
       border-color: $border-color;
       background-color: $min-black;
       color: inherit;
@@ -15,19 +15,19 @@
   }
   .page-item.active,
   > .active > a,
-  > .active > span{
+  > .active > span {
     color: $full-white !important;
     background-color: $primary !important;
     border-color: $primary !important;
   }
 }
 
-.pagination{
-  > li{
+.pagination {
+  > li {
     display: inline;
     list-style: none;
   }
-  > li > a{
+  > li > a {
     position: relative;
     float: left; // Collapse white-space
     padding: $pagination-padding-y $pagination-padding-x;

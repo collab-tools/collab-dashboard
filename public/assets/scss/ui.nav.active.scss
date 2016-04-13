@@ -1,10 +1,10 @@
 @mixin active-variant($parent, $bg, $color) {
-  .nav-active-#{$parent}{
-  	.nav-link.active,
-  	.nav > li.active > a{
-  		color: $color !important;
-		background-color: $bg !important;
-  	}
+  .nav-active-#{$parent} {
+    .nav-link.active,
+    .nav > li.active > a {
+      color: $color !important;
+      background-color: $bg !important;
+    }
   }
 }
 

@@ -1,29 +1,29 @@
-.md-check{
+.md-check {
   cursor: pointer;
   padding-left: 1.25rem;
   margin: 0;
   display: inline-block;
   position: relative;
-  input{
+  input {
     position: absolute;
     cursor: pointer;
     z-index: 1;
     opacity: 0;
     margin-left: -1.25rem;
-    &:checked + i:before{
+    &:checked + i:before {
       border-width: 0;
       background-color: inherit;
     }
-    &:checked + span .active{
+    &:checked + span .active {
       display: inherit;
     }
-    &[type="radio"] + i{
+    &[type="radio"] + i {
       &,
-      &:before{
+      &:before {
         border-radius: 50%;
       }
     }
-    &[type="checkbox"]:checked + i:after{
+    &[type="checkbox"]:checked + i:after {
       @include rotate(45deg);
       position: absolute;
       left: 6px;
@@ -36,7 +36,7 @@
       border-left: 0;
       content: ' ';
     }
-    &[type="radio"]:checked + i:after{
+    &[type="radio"]:checked + i:after {
       position: absolute;
       left: 6px;
       top: 6px;
@@ -49,17 +49,17 @@
     }
     &[disabled],
     fieldset[disabled] & {
-      & + i:before{
+      & + i:before {
         opacity: 0.5;
       }
     }
-    &[disabled]:checked{
-      & + i:before{
+    &[disabled]:checked {
+      & + i:before {
         opacity: 0.5;
       }
     }
   }
-  > i{
+  > i {
     width: 0;
     height: 18px;
     line-height: 1;
@@ -70,8 +70,8 @@
     vertical-align: middle;
     margin-right: 28px;
     position: relative;
-    &:before{
-      content:"";
+    &:before {
+      content: "";
       position: absolute;
       width: 18px;
       height: 100%;
@@ -79,7 +79,7 @@
       border-radius: 2px;
       @include transition(all 0.2s);
     }
-    &.no-icon:after{
+    &.no-icon:after {
       display: none !important;
     }
   }

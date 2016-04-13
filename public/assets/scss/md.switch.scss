@@ -1,9 +1,9 @@
-.md-switch{
+.md-switch {
   cursor: pointer;
   padding-left: 36px;
   margin: 0;
   min-height: 20px;
-  input{
+  input {
     position: absolute;
     cursor: pointer;
     width: 36px;
@@ -11,13 +11,13 @@
     z-index: 1;
     opacity: 0;
     margin-left: -36px;
-    &:checked{
-      + i{
-        &:before{
+    &:checked {
+      + i {
+        &:before {
           background: inherit;
           opacity: 0.5;
         }
-        &:after{
+        &:after {
           background: inherit;
           left: 16px;
         }
@@ -26,17 +26,17 @@
 
     &[disabled],
     fieldset[disabled] & {
-      & + i{
-        &:before{
-          background-color: rgba(0,0,0,0.12);
+      & + i {
+        &:before {
+          background-color: rgba(0, 0, 0, 0.12);
         }
-        &:after{
-          background-color: rgb(189,189,189);
+        &:after {
+          background-color: rgb(189, 189, 189);
         }
       }
     }
   }
-  i{
+  i {
     width: 0px;
     height: 18px;
     line-height: 1;
@@ -46,7 +46,7 @@
     vertical-align: middle;
     margin-right: 44px;
     position: relative;
-    &:before{
+    &:before {
       content: "";
       left: 1px;
       width: 34px;
@@ -54,10 +54,10 @@
       height: 14px;
       border-radius: 8px;
       position: absolute;
-      background-color: rgb(158,158,158);
+      background-color: rgb(158, 158, 158);
       @include transition(all 0.2s);
     }
-    &:after{
+    &:after {
       content: "";
       position: absolute;
       margin: 0;

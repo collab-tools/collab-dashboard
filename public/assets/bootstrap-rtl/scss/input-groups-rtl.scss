@@ -21,6 +21,7 @@
   @include border-right-radius($border-radius);
   @include border-left-radius(0);
 }
+
 .input-group-addon:first-child {
   border-left: 0px;
   border-right-style: solid;
@@ -36,8 +37,9 @@
   @include border-left-radius($border-radius);
   @include border-right-radius(0);
 }
+
 .input-group-btn:last-child > .btn:not(:last-child):not(.dropdown-toggle),
-.input-group-btn:first-child > .btn:not(:first-child){
+.input-group-btn:first-child > .btn:not(:first-child) {
   @include border-right-radius(0);
 }
 
