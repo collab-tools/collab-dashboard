@@ -1,5 +1,6 @@
-(function () {
+(() => {
   'use strict';
+  
   angular
     .module('ui.load', [])
     .service('uiLoad', uiLoad);
@@ -7,9 +8,9 @@
   uiLoad.$inject = ['$document', '$q', '$timeout'];
   function uiLoad($document, $q, $timeout) {
 
-    var loaded = [];
-    var promise = false;
-    var deferred = $q.defer();
+    const loaded = [];
+    let promise = false;
+    const deferred = $q.defer();
 
     /**
      * Chain loads the given sources
@@ -18,18 +19,18 @@
      */
     this.load = function (srcs) {
       srcs = angular.isArray(srcs) ? srcs : srcs.split(/\s+/);
-      var self = this;
+      const self = this;
       if (!promise) {
         promise = deferred.promise;
       }
-      angular.forEach(srcs, function (src) {
-        promise = promise.then(function () {
+      angular.forEach(srcs, (src) => {
+        promise = promise.then(() => {
           return src.indexOf('.css') >= 0 ? self.loadCSS(src) : self.loadScript(src);
         });
       });
       deferred.resolve();
       return promise;
-    }
+    };
 
     /**
      * Dynamically loads the given script
@@ -39,16 +40,16 @@
     this.loadScript = function (src) {
       if (loaded[src]) return loaded[src].promise;
 
-      var deferred = $q.defer();
-      var script = $document[0].createElement('script');
+      const deferred = $q.defer();
+      const script = $document[0].createElement('script');
       script.src = src;
-      script.onload = function (e) {
-        $timeout(function () {
+      script.onload = (e) => {
+        $timeout(() => {
           deferred.resolve(e);
         });
       };
-      script.onerror = function (e) {
-        $timeout(function () {
+      script.onerror = (e) => {
+        $timeout(() => {
           deferred.reject(e);
         });
       };
@@ -66,18 +67,18 @@
     this.loadCSS = function (href) {
       if (loaded[href]) return loaded[href].promise;
 
-      var deferred = $q.defer();
-      var style = $document[0].createElement('link');
+      const deferred = $q.defer();
+      const style = $document[0].createElement('link');
       style.rel = 'stylesheet';
       style.type = 'text/css';
       style.href = href;
-      style.onload = function (e) {
-        $timeout(function () {
+      style.onload = (e) => {
+        $timeout(() => {
           deferred.resolve(e);
         });
       };
-      style.onerror = function (e) {
-        $timeout(function () {
+      style.onerror = (e) => {
+        $timeout(() => {
           deferred.reject(e);
         });
       };

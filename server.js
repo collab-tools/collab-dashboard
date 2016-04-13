@@ -39,7 +39,9 @@ app.use(compression());
 app.use(validator());
 
 // set static file location for front-end
-app.use(express.static(`${__dirname}/public/dist`));
+const env = process.env.NODE_ENV || 'development';
+if (env === 'development') app.use(express.static(`${__dirname}/public`));
+else app.use(express.static(`${__dirname}/public/dist`));
 
 // API Routes
 // =====================================================

@@ -1,19 +1,19 @@
-(function () {
+(() => {
   'use strict';
   angular
     .module('app')
-    .directive("uiInclude", uiInclude);
+    .directive('uiInclude', uiInclude);
   uiInclude.$inject = ['$http', '$templateCache', '$compile'];
   function uiInclude($http, $templateCache, $compile) {
-    var directive = {
+    return {
       restrict: 'A',
-      link: link
+      link
     };
-    return directive;
+
     function link(scope, el, attr) {
-      var templateUrl = scope.$eval(attr.uiInclude);
+      const templateUrl = scope.$eval(attr.uiInclude);
       $http.get(templateUrl, { cache: $templateCache }).success(
-        function (tplContent) {
+        (tplContent) => {
           el.replaceWith($compile(tplContent)(scope));
         }
       );

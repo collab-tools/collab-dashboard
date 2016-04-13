@@ -1,6 +1,11 @@
 'use strict';
 
 (() => {
+  angular
+    .module('ngStore', [])
+    .provider('ngStore', ngStoreProvider)
+    .factory('ngStoreFactory', ngStoreFactory);
+  
   function ngStoreFactory() {
     function Store(name, serializer) {
       if (!this.localStorage) {
@@ -151,9 +156,4 @@
       }]
     };
   }
-
-  angular
-    .module('ngStore', [])
-    .provider('ngStore', ngStoreProvider)
-    .factory('ngStoreFactory', ngStoreFactory);
 })();
