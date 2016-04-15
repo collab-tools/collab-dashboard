@@ -1,6 +1,6 @@
 import github from './github';
 import drive from './drive';
-import ide from './ide';
+import cloud from './cloud';
 import tasks from './tasks';
 import milestones from './milestones';
 import projects from './projects';
@@ -27,7 +27,7 @@ module.exports = function (express) {
 
   // Cloud IDE Related
   // =========================================================
-  projectsRouter.get('/:projectId/ide/overview', ide.getOverview);
+  projectsRouter.get('/:projectId/cloud/overview', cloud.getOverview);
 
   // Tasks Related
   // =========================================================

@@ -1,6 +1,6 @@
 import github from './github';
 import drive from './drive';
-import ide from './ide';
+import cloud from './cloud';
 import tasks from './tasks';
 import milestones from './milestones';
 import config from 'config';
@@ -16,7 +16,10 @@ module.exports = function (express) {
   // GitHub Related
   // =========================================================
   globalRouter.get('/github/overview', github.getOverview);
-  globalRouter.get('/github/commit/:commitId', github.getCommit);
+  globalRouter.get('/github/commits/', github.getCommit);
+  globalRouter.get('/github/commits/:commitId', github.getCommit);
+  globalRouter.get('/github/releases', github.getReleases);
+  globalRouter.get('/github/releases/:releaseId', github.getRelease);
 
   // Google Drive Related
   // =========================================================
@@ -27,7 +30,7 @@ module.exports = function (express) {
 
   // Cloud IDE Related
   // =========================================================
-  globalRouter.get('/ide/overview', ide.getOverview);
+  globalRouter.get('/cloud/overview', cloud.getOverview);
 
   // Tasks Related
   // =========================================================

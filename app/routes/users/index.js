@@ -1,6 +1,6 @@
 import github from './github';
 import drive from './drive';
-import ide from './ide';
+import cloud from './cloud';
 import tasks from './tasks';
 import milestones from './milestones';
 import users from './users';
@@ -31,7 +31,7 @@ module.exports = function (express) {
 
   // Cloud IDE Related
   // =========================================================
-  usersRouter.get('/:userId/ide/overview', ide.getOverview);
+  usersRouter.get('/:userId/cloud/overview', cloud.getOverview);
 
   // Tasks Related
   // =========================================================
