@@ -2,18 +2,18 @@
 <div id="aside" class="app-aside modal fade nav-expand" ng-class="{'folded': app.setting.folded}">
     <div class="left navside black dk" layout="column">
         <div class="navbar no-radius">
-            <div ui-include="'../views/blocks/navbar.brand.html'"></div>
+            <div ui-include="'layout/navbar.brand.html'"></div>
         </div>
         <div flex-no-shrink>
-            <div ui-include="'../views/blocks/side.top.html'"></div>
+            <div ui-include="'layout/side.top.html'"></div>
         </div>
         <div flex class="hide-scroll">
             <nav class="scroll nav-stacked nav-active-{{app.setting.theme.primary}}">
-                <div ui-include="'../views/blocks/nav.html'"></div>
+                <div ui-include="'layout/nav.html'"></div>
             </nav>
         </div>
         <div flex-no-shrink>
-            <div ui-include="'../views/blocks/side.bottom.html'"></div>
+            <div ui-include="'layout/side.bottom.html'"></div>
         </div>
     </div>
 </div>
@@ -22,7 +22,7 @@
 <!-- content -->
 <div id="content" class="app-content box-shadow-z1" role="main">
     <div class="app-footer">
-        <div ui-include="'../views/blocks/footer.html'"></div>
+        <div ui-include="'layout/footer.html'"></div>
     </div>
     <div ui-view class="app-body" id="view"></div>
 </div>

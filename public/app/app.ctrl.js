@@ -1,5 +1,8 @@
 (() => {
   'use strict';
+  angular
+    .module('app')
+    .controller('AppCtrl', AppCtrl);
 
   function AppCtrl($scope, $localStorage, $location, $rootScope, $anchorScroll, $timeout, $window) {
     function isMobile() {
@@ -59,7 +62,4 @@
     '$anchorScroll', '$timeout', '$window'
   ];
 
-  angular
-    .module('app')
-    .controller('AppCtrl', AppCtrl);
 })();

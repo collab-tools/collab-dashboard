@@ -1,4 +1,4 @@
-(function () {
+(() => {
   'use strict';
   angular
     .module('app')
@@ -8,28 +8,27 @@
   function uiToggleClass($timeout, $document) {
     return {
       restrict: 'AC',
-      link: link
+      link
     };
 
     function link(scope, el, attr) {
-      el.on('click', function (e) {
+      el.on('click', (e) => {
         e.preventDefault();
-        var classes = attr.uiToggleClass.split(','),
-          targets = (attr.uiTarget && attr.uiTarget.split(',')) || (attr.target && attr.target.split(',')) || Array(el),
-          key = 0;
+        const classes = attr.uiToggleClass.split(',');
+        const targets = (attr.uiTarget && attr.uiTarget.split(',')) ||
+          (attr.target && attr.target.split(',')) || Array(el);
+        let key = 0;
 
-        angular.forEach(classes, function (_class) {
-          var target = $(targets[(targets.length && key)]),
-            current = $(target).attr('ui-class');
+        angular.forEach(classes, (_class) => {
+          const target = $(targets[(targets.length && key)]);
+          const current = $(target).attr('ui-class');
 
-          (current != _class) && target.removeClass($(target).attr('ui-class'));
+          if (current !== _class) target.removeClass($(target).attr('ui-class'));
           target.toggleClass(_class);
           $(target).attr('ui-class', _class);
-
           key++;
         });
         el.toggleClass('active');
-
       });
     }
   }

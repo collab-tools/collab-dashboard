@@ -1,6 +1,13 @@
 'use strict';
 
 (() => {
+  angular
+    .module('app')
+    .run(runBlock)
+    .config(config);
+
+  config.$inject = ['$stateProvider', '$urlRouterProvider', 'MODULE_CONFIG'];
+
   function runBlock($rootScope, $state, $stateParams) {
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
@@ -44,17 +51,17 @@
       return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
     }
 
-    const layout = './app/layout/layout.html';
-    const dashboard = './app/dashboard/dashboard.html';
-    const projects = './app/projects/projects.html';
-    const users = './app/users/users.html';
-    const github = './app/github/github.html';
-    const drive = './app/drive/drive.html';
-    const cloud = './app/cloud/cloud.html';
-    const milestones = './app/milestones/milestones.html';
-    const tasks = './app/tasks/tasks.html';
-    const userOverview = './app/users/overview.html';
-    const projectOverview = './app/projects/overview.html';
+    const layout = 'layout/layout.html';
+    const dashboard = 'dashboard/dashboard.html';
+    const projects = 'projects/global/projects.html';
+    const users = 'users/global/users.html';
+    const github = 'github/github.html';
+    const drive = 'drive/drive.html';
+    const cloud = 'cloud/cloud.html';
+    const milestones = 'milestones/milestones.html';
+    const tasks = 'tasks/tasks.html';
+    const userOverview = 'users/overview.html';
+    const projectOverview = 'projects/overview.html';
 
     $urlRouterProvider
       .otherwise('/app/dashboard');
@@ -75,8 +82,8 @@
         data: {
           title: 'Collab Dashboard'
         },
-        controller: 'ChartCtrl',
-        resolve: load(['controllers/chart.js'])
+        controller: 'dashboardCtrl',
+        resolve: load(['dashboard/dashboard.controller.js'])
       })
       .state('app.projects', {
         url: '/projects',
@@ -84,8 +91,8 @@
         data: {
           title: 'Projects'
         },
-        controller: 'ChartCtrl',
-        resolve: load(['controllers/chart.js'])
+        controller: 'projectsCtrl',
+        resolve: load(['projects/global/projects.controller.js'])
       })
       .state('app.users', {
         url: '/users',
@@ -93,8 +100,8 @@
         data: {
           title: 'Users'
         },
-        controller: 'ChartCtrl',
-        resolve: load(['controllers/chart.js'])
+        controller: 'usersCtrl',
+        resolve: load(['users/global/users.controller.js'])
       })
       .state('app.github', {
         url: '/github',
@@ -102,8 +109,8 @@
         data: {
           title: 'GitHub'
         },
-        controller: 'ChartCtrl',
-        resolve: load(['controllers/chart.js'])
+        controller: 'githubCtrl',
+        resolve: load(['github/github.controller.js'])
       })
       .state('app.drive', {
         url: '/drive',
@@ -111,8 +118,8 @@
         data: {
           title: 'Google Drive'
         },
-        controller: 'ChartCtrl',
-        resolve: load(['controllers/chart.js'])
+        controller: 'driveCtrl',
+        resolve: load(['drive/drive.controller.js'])
       })
       .state('app.cloud', {
         url: '/cloud',
@@ -120,8 +127,8 @@
         data: {
           title: 'Cloud IDE'
         },
-        controller: 'ChartCtrl',
-        resolve: load(['controllers/chart.js'])
+        controller: 'cloudCtrl',
+        resolve: load(['cloud/cloud.controller.js'])
       })
       .state('app.tasks', {
         url: '/tasks',
@@ -129,8 +136,8 @@
         data: {
           title: 'Tasks'
         },
-        controller: 'ChartCtrl',
-        resolve: load(['controllers/chart.js'])
+        controller: 'tasksCtrl',
+        resolve: load(['tasks/tasks.controller.js'])
       })
       .state('app.milestones', {
         url: '/milestones',
@@ -138,33 +145,26 @@
         data: {
           title: 'Milestones'
         },
-        controller: 'ChartCtrl',
-        resolve: load(['controllers/chart.js'])
+        controller: 'milestonesCtrl',
+        resolve: load(['milestones/milestones.controller.js'])
       })
       .state('app.user', {
         url: '/user',
-        templateUrl: user,
+        templateUrl: userOverview,
         data: {
           title: 'User Overview: Hooi Tong'
         },
-        controller: 'ChartCtrl',
-        resolve: load(['controllers/chart.js'])
+        controller: 'userOverviewCtrl',
+        resolve: load(['projects/global/overview.controller.js'])
       })
       .state('app.project', {
         url: '/project',
-        templateUrl: project,
+        templateUrl: projectOverview,
         data: {
           title: 'Project Overview: Project Gene'
         },
-        controller: 'ChartCtrl',
-        resolve: load(['controllers/chart.js'])
+        controller: 'projectOverviewCtrl',
+        resolve: load(['projects/global/overview.controller.js'])
       });
   }
-
-  config.$inject = ['$stateProvider', '$urlRouterProvider', 'MODULE_CONFIG'];
-
-  angular
-    .module('app')
-    .run(runBlock)
-    .config(config);
 })();

@@ -7,4 +7,8 @@
   function tasksCtrl($scope) {
 
   }
+
+  function getTasksOverview($http) {
+    return $http.get('/api/tasks/overview');
+  }
 })();
