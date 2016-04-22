@@ -68,7 +68,7 @@
         </div>
         <div class="table-responsive">
             <table ui-jp="dataTable" ui-options="{
-				sAjaxSource: 'api/projects.json',
+				sAjaxSource: 'projects/global/projects.json',
 				aoColumns: [
 				{ mData: 'project_id', mRender: function(data, type, full) {return '<a href=&quot;#/app/project&quot; ui-sref=&quot;app.project&quot;>' + data + '</a>'}},
 				{ mData: 'project_name' },

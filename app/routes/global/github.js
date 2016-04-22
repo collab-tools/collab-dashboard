@@ -52,6 +52,14 @@ function getCommit(req, res) {
     .then(response);
 }
 
-const githubAPI = { getOverview, getCommit };
+function getRelease(req, res) {
+
+}
+
+function getReleases(req, res) {
+  
+}
+
+const githubAPI = { getOverview, getCommit, getReleases, getRelease };
 
 export default githubAPI;

@@ -16,7 +16,6 @@ module.exports = function (express) {
   // GitHub Related
   // =========================================================
   globalRouter.get('/github/overview', github.getOverview);
-  globalRouter.get('/github/commits/', github.getCommit);
   globalRouter.get('/github/commits/:commitId', github.getCommit);
   globalRouter.get('/github/releases', github.getReleases);
   globalRouter.get('/github/releases/:releaseId', github.getRelease);

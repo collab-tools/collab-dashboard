@@ -60,8 +60,8 @@
     const cloud = 'cloud/cloud.html';
     const milestones = 'milestones/milestones.html';
     const tasks = 'tasks/tasks.html';
-    const userOverview = 'users/overview.html';
-    const projectOverview = 'projects/overview.html';
+    const userOverview = 'users/narrow/overview.html';
+    const projectOverview = 'projects/narrow/overview.html';
 
     $urlRouterProvider
       .otherwise('/app/dashboard');
@@ -155,7 +155,7 @@
           title: 'User Overview: Hooi Tong'
         },
         controller: 'userOverviewCtrl',
-        resolve: load(['projects/global/overview.controller.js'])
+        resolve: load(['users/narrow/overview.controller.js'])
       })
       .state('app.project', {
         url: '/project',
@@ -164,7 +164,7 @@
           title: 'Project Overview: Project Gene'
         },
         controller: 'projectOverviewCtrl',
-        resolve: load(['projects/global/overview.controller.js'])
+        resolve: load(['projects/narrow/overview.controller.js'])
       });
   }
 })();
