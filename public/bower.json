@@ -172,6 +172,9 @@
   "resolutions": {
     "angular-touch": "1.5.3",
     "angular": ">=1.2.0",
-    "fullcalendar": "~2.6.1"
+    "fullcalendar": "~2.6.1",
+    "jquery": ">=1.7.1",
+    "angular-ui-utils": "~3.0.0",
+    "echarts": "~3.1.6"
   }
 }
