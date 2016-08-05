@@ -175,6 +175,7 @@
     "fullcalendar": "~2.9.0",
     "jquery": ">=1.7.1",
     "angular-ui-utils": "~3.0.0",
-    "echarts": "~3.2.2"
+    "echarts": "~3.2.2",
+    "moment": ">= 2.6.0"
   }
 }
