@@ -1,7 +1,6 @@
 // Packages & Dependencies
 // ====================================================
 const express = require('express');
-const app = express();
 const compression = require('compression');
 const path = require('path');
 const bodyParser = require('body-parser');
@@ -14,6 +13,7 @@ require('./app/common/mixins')();
 // App & Middleware Configurations
 // ====================================================
 // body parser to grab information from HTTP POST requests
+const app = express();
 app.use(bodyParser.urlencoded({
   extended: true
 }));

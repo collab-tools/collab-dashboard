@@ -1,5 +1,3 @@
-'use strict';
-
 const _ = require('lodash');
 
 // Convert sequelize database instances to JSON format for processing
@@ -10,5 +8,7 @@ function toJSON(instances) {
 }
 
 module.exports = () => {
-  _.mixin({ toJSON });
+  _.mixin({
+    toJSON
+  });
 };
