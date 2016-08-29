@@ -1,0 +1,10 @@
+{
+  "database": {
+    "username": "",
+    "password": ""
+  },
+  "logging-database": {
+    "username": "",
+    "password": ""
+  }
+}
