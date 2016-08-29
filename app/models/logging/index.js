@@ -3,10 +3,10 @@ const config = require('config');
 
 // Setup Sequelize and Connection with Database
 // ======================================================
-const dbName = config.get('logging-database.name');
-const dbUsername = config.get('logging-database.username');
-const dbPassword = config.get('logging-database.password');
-const dbOptions = config.get('logging-database.options');
+const dbName = config.get('logging_database.name');
+const dbUsername = config.get('logging_database.username');
+const dbPassword = config.get('logging_database.password');
+const dbOptions = config.get('logging_database.options');
 
 const sequelize = new Sequelize(
     dbName,

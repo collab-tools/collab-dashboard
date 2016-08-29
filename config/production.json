@@ -1,6 +1,6 @@
 {
   "port": 4000,
-  "app-database": {
+  "app_database": {
     "name": "collab",
     "username": "",
     "password": "",
@@ -15,7 +15,7 @@
       "logging": false
     }
   },
-  "logging-database": {
+  "logging_database": {
     "name": "collab_logging",
     "username": "",
     "password": "",
