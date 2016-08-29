@@ -1,10 +1,11 @@
 {
-  "database": {
+  "app-database": {
     "username": "",
     "password": ""
   },
   "logging-database": {
     "username": "",
     "password": ""
-  }
+  },
+  "jwt_secret": ""
 }
