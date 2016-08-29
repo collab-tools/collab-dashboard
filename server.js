@@ -2,7 +2,6 @@
 // ====================================================
 const express = require('express');
 const compression = require('compression');
-const path = require('path');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const config = require('config');

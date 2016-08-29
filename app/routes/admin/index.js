@@ -1,5 +1,3 @@
-'use strict';
-
 const jwt = require('jsonwebtoken');
 const models = require('../../models');
 const config = require('config');
