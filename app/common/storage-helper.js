@@ -10,8 +10,8 @@ export default class storageHelper {
   constructor() {
     if (!storageInstance) {
       storageInstance = {
-        app: dbAppFactory(config('app-database')),
-        log: dbLogFactory(config('logging-database'))
+        app: dbAppFactory(config.get('app_database')),
+        log: dbLogFactory(config.get('logging_database'))
       };
     }
     return storageInstance;
