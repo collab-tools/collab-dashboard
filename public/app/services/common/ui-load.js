@@ -1,13 +1,11 @@
 (() => {
-  'use strict';
-  
   angular
     .module('ui.load', [])
     .service('uiLoad', uiLoad);
 
   uiLoad.$inject = ['$document', '$q', '$timeout'];
-  function uiLoad($document, $q, $timeout) {
 
+  function uiLoad($document, $q, $timeout) {
     const loaded = [];
     let promise = false;
     const deferred = $q.defer();

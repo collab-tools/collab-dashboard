@@ -1,5 +1,4 @@
 (() => {
-  'use strict';
   angular
     .module('app')
     .directive('uiScrollTo', uiScrollTo);

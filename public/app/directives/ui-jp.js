@@ -1,5 +1,4 @@
 (() => {
-  'use strict';
   angular
     .module('ui.jp', ['ui.load'])
     .value('uiJpConfig', {})
@@ -75,5 +74,4 @@
       }
     }
   }
-
 })();

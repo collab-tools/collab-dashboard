@@ -9,7 +9,7 @@ module.exports = function (grunt) {
     babel: {
       options: {
         sourceMap: true,
-        presets: ['babel-preset-es2015']
+        presets: ['es2015']
       },
       dist: {
         files: [{ expand: true, cwd: 'app/', src: '**/*.js', dest: 'dist/app/' }]
