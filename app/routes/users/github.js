@@ -1,8 +1,10 @@
-'use strict';
-const _ = require('lodash');
-const config = require('config');
-const moment = require('moment');
-const models = require('../../models');
+import _ from 'lodash';
+import config from 'config';
+import moment from 'moment';
+import octokat from 'octokat';
+import Storage from '../../common/storage-helper';
+
+const models = new Storage();
 
 const ERROR_BAD_REQUEST = 'Unable to serve your content. Check your arguments.';
 const ERROR_MISSING_TEMPLATE = 'is a required parameter in GET request.';
@@ -28,7 +30,7 @@ function getOverview(req, res) {
 
   // Setup GitHub wrapper to retrieve information from GitHub
   const octoConfig = { token };
-  const octo = require('octokat')(octoConfig);
+  const octo = octokat(octoConfig);
   const repo = octo.repos(mockOwner, mockProject);
   const overviewPayload = { success: true };
   let since = null; // Default - Everything

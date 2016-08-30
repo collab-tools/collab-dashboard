@@ -1,8 +1,8 @@
-'use strict';
+import _ from 'lodash';
+import moment from 'moment';
+import Storage from '../../common/storage-helper';
 
-const _ = require('lodash');
-const moment = require('moment');
-const models = require('../../models');
+const models = new Storage();
 
 const ERROR_BAD_REQUEST = 'Unable to serve your content. Check your arguments.';
 const ERROR_MISSING_TEMPLATE = 'is a required parameter in GET request.';
@@ -57,7 +57,7 @@ function getRelease(req, res) {
 }
 
 function getReleases(req, res) {
-  
+
 }
 
 const githubAPI = { getOverview, getCommit, getReleases, getRelease };

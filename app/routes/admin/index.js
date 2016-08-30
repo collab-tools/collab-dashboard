@@ -1,7 +1,8 @@
-const jwt = require('jsonwebtoken');
-const models = require('../../models');
-const config = require('config');
+import jwt from 'jsonwebtoken';
+import config from 'config';
+import Storage from '../../common/storage-helper';
 
+const models = new Storage();
 const ERROR_INVALID = 'Invalid username / password';
 const ERROR_ILLEGAL = 'Unauthorized access';
 

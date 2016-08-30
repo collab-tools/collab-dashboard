@@ -1,4 +1,4 @@
-const _ = require('lodash');
+import _ from 'lodash';
 
 // Convert sequelize database instances to JSON format for processing
 function toJSON(instances) {

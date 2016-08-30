@@ -1,18 +1,20 @@
+import config from 'config';
+import jwt from 'express-jwt';
 import github from './github';
 import drive from './drive';
 import cloud from './cloud';
 import tasks from './tasks';
 import milestones from './milestones';
 import projects from './projects';
-import config from 'config';
 
 module.exports = function (express) {
   const projectsRouter = express.Router();
-  // const auth = require('express-jwt')({
-  //   secret: config.jwt_secret,
-  //   userProperty: 'auth'
-  // });
-  // projectsRouter.use(auth);
+  const auth = jwt({
+    secret: config.jwt_secret,
+    userProperty: 'auth'
+  });
+
+  projectsRouter.use(auth);
 
   // GitHub Related
   // =========================================================
