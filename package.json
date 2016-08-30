@@ -23,6 +23,8 @@
     "bluebird": "^3.4.1",
     "body-parser": "^1.15.2",
     "boom": "^3.2.2",
+    "collab-db-application": "1.0.0",
+    "collab-db-logging": "1.0.0",
     "compression": "^1.6.2",
     "config": "^1.21.0",
     "express": "^4.14.0",
