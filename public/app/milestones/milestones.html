@@ -1,0 +1,156 @@
+<div class="p-a white lt box-shadow">
+    <div class="row">
+        <div class="col-sm-6">
+            <h4 class="m-b-0 _300">Milestones</h4>
+            <small class="text-muted">Collab Statistics on Milestones Usage</small>
+        </div>
+        <div class="col-sm-6 text-sm-right">
+            <div class="m-y-sm">
+                <span class="m-r-sm">Date Range</span>
+                <div class="btn-group dropdown">
+                    <button class="btn white btn-sm ">Last 7 Days</button>
+                    <button class="btn white btn-sm dropdown-toggle"
+                            data-toggle="dropdown"></button>
+                    <div class="dropdown-menu dropdown-menu-scale pull-right">
+                        <a class="dropdown-item" href>30 Days</a>
+                        <a class="dropdown-item" href>90 Days</a>
+                        <a class="dropdown-item" href>All-Time</a>
+                        <hr>
+                        <a class="dropdown-item" href>AY15/16 Semester I</a>
+                        <a class="dropdown-item" href>AY15/16 Semester II</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="padding">
+    <div class="row">
+        <div class="col-sm-6 col-md-6 col-lg-6">
+            <div class="box-color p-a purple">
+                <div class="pull-right m-l">
+					<span class="w-20 dker text-center rounded">
+						<i class="fa fa-flag-checkered"></i>
+					</span>
+                </div>
+                <div class="clear">
+                    <h4 class="m-a-0 text-md"><a href>1562 <span
+                            class="text-sm">Milestones Created</span></a></h4>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-6 col-lg-6">
+            <div class="box-color p-a blue-grey">
+                <div class="pull-right m-l">
+					<span class="w-20 dker text-center rounded">
+						<i class="fa fa-magic"></i>
+					</span>
+                </div>
+                <div class="clear">
+                    <h4 class="m-a-0 text-md"><a href>205 <span
+                            class="text-sm">Milestones Completed</span></a></h4>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-md-4">
+            <div class="box">
+                <div class="box-header">
+                    <h3>Milestones Composition</h3>
+                    <small>Recorded over the past 7 days</small>
+                </div>
+                <div class="box-body">
+                    <div class="p-y-md">
+                        <div ui-jp="plot" ui-refresh="app.color" ui-options="
+							{{p_p_2}},
+							{
+							series: { pie: { show: true, innerRadius: 0, stroke: { width: 2, color: '#fff' }, label: { show: true, threshold: 0.05 }, tilt: 0.5, startAngle: 30 } },
+							legend: {backgroundColor: 'transparent'},
+							colors: ['{{app.color.warn}}','{{app.color.info}}', '{{app.color.success}}'],
+							grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(120,120,120,0.5)' },
+							tooltip: true,
+							tooltipOpts: { content: '%s: %p.0%' }
+							}
+						" style="height:152px"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-8">
+            <div class="box dark">
+                <div class="box-header">
+                    <h3>Milestones Tracked</h3>
+                    <small>Mean time to complete</small>
+                </div>
+                <div class="box-body">
+                    <div ui-jp="plot" ui-refresh="app.color" ui-options="
+						[
+						{
+						data: {{p_b_1}},
+						bars: { show: true, barWidth: 0.25, lineWidth: 1, fillColor: { colors: [{ opacity: 0.8 }, { opacity: 1}] }, order:1 }
+						},
+						{
+						data: {{p_b_3}},
+						bars: { show: true, barWidth: 0.25, lineWidth: 1, fillColor: { colors: [{ opacity: 0.8 }, { opacity: 1}] }, order:2 }
+						}
+						],
+						{
+						colors: ['{{app.color.primary}}','{{app.color.warn}}'],
+						series: { shadowSize: 3 },
+						xaxis: { show: true, font: { color: '#ccc' }, position: 'bottom' },
+						yaxis:{ show: true, font: { color: '#ccc' }},
+						grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(120,120,120,0.5)' },
+						tooltip: true,
+						tooltipOpts: { content: '%x.0 is %y.4',  defaultTheme: false, shifts: { x: 0, y: -40 } }
+						}
+						" style="height:200px">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 col-md-4 col-lg-4">
+            <div class="box p-a">
+                <div class="pull-left m-r">
+                    <span ui-jp="sparkline" ui-refresh="app.color"
+                          ui-options="[34,66], {type:'pie', height:36, sliceColors:['{{app.color.light}}','{{app.color.primary}}']}"
+                          class="sparkline inline"></span>
+                </div>
+                <div class="clear">
+                    <h4 class="m-a-0 text-md"><a href>66% <span class="text-sm">Feature Utilization Rate</span></a>
+                    </h4>
+                    <small class="text-muted">5243 Unique Milestones Activities</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-4 col-lg-4">
+            <div class="box p-a dark">
+                <div class="pull-left m-r">
+                    <span class="m-y-sm inline" ui-jp="sparkline"
+                          ui-options="[[2,8],[4,6],[6,4],[8,2],[10,0],[8,2],[6,4],[4,6],[2,8]], {type:'bar', height:24, barWidth:4, barSpacing:2, stackedBarColor:['#FFF', 'rgba(255,255,255,0.2)']}"></span>
+                </div>
+                <div class="clear">
+                    <h4 class="m-a-0 text-md"><a href><span class="text-sm">Standard Deviation (Mean Time):</span>
+                        85.43</a></h4>
+                    <small class="text-muted">Max: 152 Hours Min: 53 Hours</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-4 col-lg-4">
+            <div class="box p-a">
+                <div class="pull-left m-r">
+					<span class="w-40 blue text-center rounded">
+						<i class="fa fa-check-square-o"></i>
+					</span>
+                </div>
+                <div class="clear">
+                    <h4 class="m-a-0 text-md"><a href>182 Hours <span class="text-sm">Completion Mean</span></a>
+                    </h4>
+                    <small class="text-muted">Based on 205 Completed Tasks</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

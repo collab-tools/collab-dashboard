@@ -1,0 +1,767 @@
+<div class="p-a white lt box-shadow">
+    <div class="row">
+        <div class="col-sm-6">
+            <h4 class="m-b-0 _300">Team Gene</h4>
+            <small class="text-muted">Statistics on Team Gene's Usage</small>
+        </div>
+        <div class="col-sm-6 text-sm-right">
+            <div class="m-y-sm">
+                <span class="m-r-sm">Date Range</span>
+                <div class="btn-group dropdown">
+                    <button class="btn white btn-sm ">Last 7 Days</button>
+                    <button class="btn white btn-sm dropdown-toggle"
+                            data-toggle="dropdown"></button>
+                    <div class="dropdown-menu dropdown-menu-scale pull-right">
+                        <a class="dropdown-item" href>30 Days</a>
+                        <a class="dropdown-item" href>90 Days</a>
+                        <a class="dropdown-item" href>All-Time</a>
+                        <hr>
+                        <a class="dropdown-item" href>AY15/16 Semester I</a>
+                        <a class="dropdown-item" href>AY15/16 Semester II</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="padding">
+    <div class="row grey m-b">
+        <div class="box-header">
+            <h2><i class="fa fa-github-square pull-left"></i>GitHub</h2>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <div class="row">
+                <div class="col-xs-6">
+                    <div class="box p-a">
+                        <div class="pull-left m-r">
+                            <i class="fa fa-upload text-2x text-danger m-y-sm"></i>
+                        </div>
+                        <div class="clear">
+                            <div class="text-muted">Commits (Master)</div>
+                            <h4 class="m-a-0 text-md _600"><a href>250</a></h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="box p-a">
+                        <div class="pull-left m-r p-r-sm">
+                            <i class="fa fa-clock-o text-2x text-accent m-y-sm"></i>
+                        </div>
+                        <div class="clear">
+                            <div class="text-muted">Mean Commit Time</div>
+                            <h4 class="m-a-0 text-md _600"><a href>62 Hours</a></h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="box p-a">
+                        <div class="pull-left m-r">
+                            <i class="fa fa-pencil-square-o text-2x text-success m-y-sm"></i>
+                        </div>
+                        <div class="clear">
+                            <div class="text-muted">Lines Added / Removed</div>
+                            <h4 class="m-a-0 text-md _600"><a href>750 / 2000</a></h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="box p-a">
+                        <div class="pull-left m-r">
+                            <i class="fa fa-bar-chart-o text-2x text-info m-y-sm"></i>
+                        </div>
+                        <div class="clear">
+                            <div class="text-muted">Commits Deviation</div>
+                            <h4 class="m-a-0 text-md _600"><a href>27 Hours</a></h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div class="row-col box-color text-center teal">
+                        <div class="row-cell p-a-2">
+                            Contribution Deviation
+                            <h4 class="m-a-0 text-md _600"><a href>5%</a></h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <div class="box">
+                <div class="box-header">
+                    <h3>Commit History</h3>
+                    <small>List of Commits (master) past 7 days</small>
+                </div>
+                <div class="box-body" style="overflow-y: auto; height:210px">
+                    <ul class="list inset">
+                        <li class="list-item">
+                            <a href class="list-left">
+								<span class="w-40 r-2x _600 text-lg">
+									#
+								</span>
+                            </a>
+                            <div class="list-body">
+                                <div class="m-y-sm pull-right">
+                                    <a href class="btn btn-xs white">View<i
+                                            class="pull-right fa fa-pencil"></i></a>
+                                </div>
+                                <div><a href><strong>Apple</strong> added new test cases</a></div>
+                                <div class="text-sm">
+                                    <span class="text-muted">on 25/1/16 05:24PM</span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-item">
+                            <a href class="list-left">
+								<span class="w-40 r-2x _600 text-lg">
+									#
+								</span>
+                            </a>
+                            <div class="list-body">
+                                <div class="m-y-sm pull-right">
+                                    <a href class="btn btn-xs white">View<i
+                                            class="pull-right fa fa-pencil"></i></a>
+                                </div>
+                                <div><a href><strong>Cindy</strong> migrated test cases to another folder</a></div>
+                                <div class="text-sm">
+                                    <span class="text-muted">on 23/1/16 02:54PM</span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-6">
+            <div class="box">
+                <div class="box-header">
+                    <h3>Commits</h3>
+                    <small>Commits (master) over time</small>
+                </div>
+                <div class="box-body">
+                    <div ui-jp="plot" ui-refresh="app.color" ui-options="
+						[
+						{
+						data: {{p_l_3}},
+						points: { show: true, radius: 3},
+						splines: { show: true, tension: 0.45, lineWidth: 0, fill: 0.4}
+						}
+						],
+						{
+						colors: ['white'],
+						series: { shadowSize: 3 },
+						xaxis: { show: true, font: { color: '#FFF' }, position: 'bottom' },
+						yaxis:{ show: true, font: { color: '#FFF' }, min:1},
+						grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(255,255,255,0.5)' },
+						tooltip: true,
+						tooltipOpts: { content: '%x.0 is %y.4',  defaultTheme: false, shifts: { x: 0, y: -40 } }
+						}
+						" style="height:335px">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-6">
+            <div class="row">
+                <div class="col-sm-6 col-md-6">
+                    <div class="box">
+                        <div class="box-header">
+                            <h3>Leon - 5%</h3>
+                        </div>
+                        <div class="box-body">
+                            <div ui-jp="plot" ui-refresh="app.color" ui-options="
+								[
+								{
+								data: {{p_l_3}},
+								points: { show: true, radius: 3},
+								splines: { show: true, tension: 0.45, lineWidth: 0, fill: 0.4}
+								}
+								],
+								{
+								colors: ['white'],
+								series: { shadowSize: 3 },
+								xaxis: { show: true, font: { color: '#FFF' }, position: 'bottom' },
+								yaxis:{ show: true, font: { color: '#FFF' }, min:1},
+								grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(255,255,255,0.5)' },
+								tooltip: true,
+								tooltipOpts: { content: '%x.0 is %y.4',  defaultTheme: false, shifts: { x: 0, y: -40 } }
+								}
+								" style="height:60px">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-6">
+                    <div class="box">
+                        <div class="box-header">
+                            <h3>Tom - 10%</h3>
+                        </div>
+                        <div class="box-body">
+                            <div ui-jp="plot" ui-refresh="app.color" ui-options="
+								[
+								{
+								data: {{p_l_3}},
+								points: { show: true, radius: 3},
+								splines: { show: true, tension: 0.45, lineWidth: 0, fill: 0.4}
+								}
+								],
+								{
+								colors: ['white'],
+								series: { shadowSize: 3 },
+								xaxis: { show: true, font: { color: '#FFF' }, position: 'bottom' },
+								yaxis:{ show: true, font: { color: '#FFF' }, min:1},
+								grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(255,255,255,0.5)' },
+								tooltip: true,
+								tooltipOpts: { content: '%x.0 is %y.4',  defaultTheme: false, shifts: { x: 0, y: -40 } }
+								}
+								" style="height:60px">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 col-md-6">
+                    <div class="box">
+                        <div class="box-header">
+                            <h3>Apple - 15%</h3>
+                        </div>
+                        <div class="box-body">
+                            <div ui-jp="plot" ui-refresh="app.color" ui-options="
+								[
+								{
+								data: {{p_l_3}},
+								points: { show: true, radius: 3},
+								splines: { show: true, tension: 0.45, lineWidth: 0, fill: 0.4}
+								}
+								],
+								{
+								colors: ['white'],
+								series: { shadowSize: 3 },
+								xaxis: { show: true, font: { color: '#FFF' }, position: 'bottom' },
+								yaxis:{ show: true, font: { color: '#FFF' }, min:1},
+								grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(255,255,255,0.5)' },
+								tooltip: true,
+								tooltipOpts: { content: '%x.0 is %y.4',  defaultTheme: false, shifts: { x: 0, y: -40 } }
+								}
+								" style="height:60px">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-6">
+                    <div class="box">
+                        <div class="box-header">
+                            <h3>Jake - 20%</h3>
+                        </div>
+                        <div class="box-body">
+                            <div ui-jp="plot" ui-refresh="app.color" ui-options="
+								[
+								{
+								data: {{p_l_3}},
+								points: { show: true, radius: 3},
+								splines: { show: true, tension: 0.45, lineWidth: 0, fill: 0.4}
+								}
+								],
+								{
+								colors: ['white'],
+								series: { shadowSize: 3 },
+								xaxis: { show: true, font: { color: '#FFF' }, position: 'bottom' },
+								yaxis:{ show: true, font: { color: '#FFF' }, min:1},
+								grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(255,255,255,0.5)' },
+								tooltip: true,
+								tooltipOpts: { content: '%x.0 is %y.4',  defaultTheme: false, shifts: { x: 0, y: -40 } }
+								}
+								" style="height:60px">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 col-md-6">
+                    <div class="box">
+                        <div class="box-header">
+                            <h3>Alex - 40%</h3>
+                        </div>
+                        <div class="box-body">
+                            <div ui-jp="plot" ui-refresh="app.color" ui-options="
+								[
+								{
+								data: {{p_l_3}},
+								points: { show: true, radius: 3},
+								splines: { show: true, tension: 0.45, lineWidth: 0, fill: 0.4}
+								}
+								],
+								{
+								colors: ['white'],
+								series: { shadowSize: 3 },
+								xaxis: { show: true, font: { color: '#FFF' }, position: 'bottom' },
+								yaxis:{ show: true, font: { color: '#FFF' }, min:1},
+								grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(255,255,255,0.5)' },
+								tooltip: true,
+								tooltipOpts: { content: '%x.0 is %y.4',  defaultTheme: false, shifts: { x: 0, y: -40 } }
+								}
+								" style="height:60px">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-6">
+                    <div class="box">
+                        <div class="box-header">
+                            <h3>Cindy - 10%</h3>
+                        </div>
+                        <div class="box-body">
+                            <div ui-jp="plot" ui-refresh="app.color" ui-options="
+								[
+								{
+								data: {{p_l_3}},
+								points: { show: true, radius: 3},
+								splines: { show: true, tension: 0.45, lineWidth: 0, fill: 0.4}
+								}
+								],
+								{
+								colors: ['white'],
+								series: { shadowSize: 3 },
+								xaxis: { show: true, font: { color: '#FFF' }, position: 'bottom' },
+								yaxis:{ show: true, font: { color: '#FFF' }, min:1},
+								grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(255,255,255,0.5)' },
+								tooltip: true,
+								tooltipOpts: { content: '%x.0 is %y.4',  defaultTheme: false, shifts: { x: 0, y: -40 } }
+								}
+								" style="height:60px">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row m-y white">
+        <div class="box-header">
+            <h2><i class="fa fa-google-plus-square pull-left"></i>Google Drive</h2>
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <div class="box">
+                <div class="box-header">
+                    <h3>Drive History</h3>
+                    <small>Changes made to shared folder</small>
+                </div>
+                <div class="box-body">
+                    <div class="box-body" style="overflow-y: auto; height:195px">
+                        <ul class="list inset">
+                            <li class="list-item">
+                                <a href class="list-left">
+                                    <i class="fa fa-pencil w-40 text-lg"></i>
+                                </a>
+                                <div class="list-body">
+                                    <div class="m-y-sm pull-right">
+                                        <a href class="btn btn-xs white">View<i
+                                                class="pull-right fa fa-pencil"></i></a>
+                                    </div>
+                                    <div><a href><strong>Leon</strong> made a revision to <strong>report.docx</strong></a>
+                                    </div>
+                                    <div class="text-sm">
+                                        <span class="text-muted">on 28/1/16 01:54PM</span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-item">
+                                <a href class="list-left">
+                                    <i class="fa fa-cloud-upload w-40 text-lg"></i>
+                                </a>
+                                <div class="list-body">
+                                    <div class="m-y-sm pull-right">
+                                        <a href class="btn btn-xs white">View<i
+                                                class="pull-right fa fa-pencil"></i></a>
+                                    </div>
+                                    <div><a href><strong>Jake</strong> added 1 new document: <strong>report.docx</strong></a>
+                                    </div>
+                                    <div class="text-sm">
+                                        <span class="text-muted">on 23/1/16 02:54PM</span>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <div class="row">
+                <div class="col-xs-6">
+                    <div class="box p-a">
+                        <div class="pull-left m-r">
+                            <i class="fa fa-upload text-2x text-danger m-y-sm"></i>
+                        </div>
+                        <div class="clear">
+                            <div class="text-muted">Files Uploaded</div>
+                            <h4 class="m-a-0 text-md _600"><a href>10</a></h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="box p-a">
+                        <div class="pull-left m-r p-r-sm">
+                            <i class="fa fa-clock-o text-2x text-accent m-y-sm"></i>
+                        </div>
+                        <div class="clear">
+                            <div class="text-muted">Mean Revision Time</div>
+                            <h4 class="m-a-0 text-md _600"><a href>108 Hours</a></h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="box p-a">
+                        <div class="pull-left m-r">
+                            <i class="fa fa-pencil-square-o text-2x text-success m-y-sm"></i>
+                        </div>
+                        <div class="clear">
+                            <div class="text-muted">Revisions Made</div>
+                            <h4 class="m-a-0 text-md _600"><a href>750</a></h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="box p-a">
+                        <div class="pull-left m-r">
+                            <i class="fa fa-bar-chart-o text-2x text-info m-y-sm"></i>
+                        </div>
+                        <div class="clear">
+                            <div class="text-muted">Revision Deviation</div>
+                            <h4 class="m-a-0 text-md _600"><a href>17 Hours</a></h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div class="row-col box-color text-center teal">
+                        <div class="row-cell p-a-2">
+                            Individual Revisions Deviation
+                            <h4 class="m-a-0 text-md _600 text-warning"><a href>80%</a></h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row grey m-y">
+        <div class="box-header">
+            <h2><i class="fa fa-cloud pull-left"></i>Cloud IDE</h2>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <div class="row">
+                <div class="col-xs-6">
+                    <div class="box p-a">
+                        <div class="pull-left m-r">
+                            <i class="fa fa-clock-o text-2x text-danger m-y-sm"></i>
+                        </div>
+                        <div class="clear">
+                            <div class="text-muted">Total Active Time</div>
+                            <h4 class="m-a-0 text-md _600"><a href>185 Hours</a></h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="box p-a">
+                        <div class="pull-left m-r">
+                            <i class="fa fa-bar-chart-o text-2x text-info m-y-sm"></i>
+                        </div>
+                        <div class="clear">
+                            <div class="text-muted">Session Deviation</div>
+                            <h4 class="m-a-0 text-md _600"><a href>20 Hours</a></h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="box p-a">
+                        <div class="pull-left m-r">
+                            <i class="fa fa-cloud-upload text-2x text-success m-y-sm"></i>
+                        </div>
+                        <div class="clear">
+                            <div class="text-muted">Commits Pushed from Cloud</div>
+                            <h4 class="m-a-0 text-md _600"><a href>140</a></h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="box p-a">
+                        <div class="pull-left m-r p-r-sm">
+                            <i class="fa fa-clock-o text-2x text-accent m-y-sm"></i>
+                        </div>
+                        <div class="clear">
+                            <div class="text-muted">Mean Session Time</div>
+                            <h4 class="m-a-0 text-md _600"><a href>4.1 Hours</a></h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div class="row-col box-color text-center teal">
+                        <div class="row-cell p-a-2">
+                            Commits from Cloud IDE
+                            <h4 class="m-a-0 text-md _600"><a href>65%</a></h4>
+                        </div>
+                        <div class="row-cell p-a-2 blue">
+                            Collaborative Coding Sessions
+                            <h4 class="m-a-0 text-md _600"><a href>40</a></h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <div class="box">
+                <div class="box-header">
+                    <h3>Commit History from Cloud</h3>
+                    <small>List of Commits (master) past 7 days</small>
+                </div>
+                <div class="box-body" style="overflow-y: auto; height:210px">
+                    <ul class="list inset">
+                        <li class="list-item">
+                            <a href class="list-left">
+								<span class="w-40 r-2x _600 text-lg">
+									#
+								</span>
+                            </a>
+                            <div class="list-body">
+                                <div class="m-y-sm pull-right">
+                                    <a href class="btn btn-xs white">View<i
+                                            class="pull-right fa fa-pencil"></i></a>
+                                </div>
+                                <div><a href><strong>Apple</strong> added new test cases</a></div>
+                                <div class="text-sm">
+                                    <span class="text-muted">on 23/1/16 02:54PM</span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-item">
+                            <a href class="list-left">
+								<span class="w-40 r-2x _600 text-lg">
+									#
+								</span>
+                            </a>
+                            <div class="list-body">
+                                <div class="m-y-sm pull-right">
+                                    <a href class="btn btn-xs white">View<i
+                                            class="pull-right fa fa-pencil"></i></a>
+                                </div>
+                                <div><a href><strong>Cindy</strong> migrated test cases to another folder</a></div>
+                                <div class="text-sm">
+                                    <span class="text-muted">on 23/1/16 02:54PM</span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row white m-y">
+        <div class="box-header">
+            <h2><i class="fa fa-tasks pull-left"></i>Tasks</h2>
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <div class="box">
+                <div class="box-header">
+                    <h3>Tasks History</h3>
+                    <small>History of Task Activities</small>
+                </div>
+                <div class="box-body">
+                    <div class="box-body" style="overflow-y: auto; height:195px">
+                        <ul class="list inset">
+                            <li class="list-item">
+                                <a href class="list-left">
+                                    <i class="fa fa-upload w-40 text-lg"></i>
+                                </a>
+                                <div class="list-body">
+                                    <div class="m-y-sm pull-right">
+                                        <a href class="btn btn-xs white">View<i
+                                                class="pull-right fa fa-pencil"></i></a>
+                                    </div>
+                                    <div><a href><strong>Tom</strong> added new task: "Lorem ipsum ...."</a></div>
+                                    <div class="text-sm">
+                                        <span class="text-muted">on 23/1/16 02:54PM</span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-item">
+                                <a href class="list-left">
+                                    <i class="fa fa-remove w-40 text-lg"></i>
+                                </a>
+                                <div class="list-body">
+                                    <div class="m-y-sm pull-right">
+                                        <a href class="btn btn-xs white">View<i
+                                                class="pull-right fa fa-pencil"></i></a>
+                                    </div>
+                                    <div><a href><strong>Alex</strong> changed task "Test Task" to <strong>Closed</strong></a>
+                                    </div>
+                                    <div class="text-sm">
+                                        <span class="text-muted">on 23/1/16 02:54PM</span>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <div class="row">
+                <div class="col-xs-6">
+                    <div class="box p-a">
+                        <div class="pull-left m-r">
+                            <i class="fa fa-tasks text-2x text-danger m-y-sm"></i>
+                        </div>
+                        <div class="clear">
+                            <div class="text-muted">Tasks Added</div>
+                            <h4 class="m-a-0 text-md _600"><a href>25</a></h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="box p-a">
+                        <div class="pull-left m-r">
+                            <i class="fa fa-users text-2x text-accent m-y-sm"></i>
+                        </div>
+                        <div class="clear">
+                            <div class="text-muted">Tasks Assigned</div>
+                            <h4 class="m-a-0 text-md _600"><a href>5</a></h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="box p-a">
+                        <div class="pull-left m-r">
+                            <i class="fa fa-close text-2x text-success m-y-sm"></i>
+                        </div>
+                        <div class="clear">
+                            <div class="text-muted">Tasks Closed</div>
+                            <h4 class="m-a-0 text-md _600"><a href>10</a></h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="box p-a">
+                        <div class="pull-left m-r">
+                            <i class="fa fa-clock-o text-2x text-info m-y-sm"></i>
+                        </div>
+                        <div class="clear">
+                            <div class="text-muted">Tasks Pending</div>
+                            <h4 class="m-a-0 text-md _600"><a href>2</a></h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div class="row-col box-color text-center teal">
+                        <div class="row-cell p-a-2">
+                            Tasks Assignee Deviation
+                            <h4 class="m-a-0 text-md _600"><a href>15%</a></h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row grey m-y">
+        <div class="box-header">
+            <h2><i class="fa fa-rocket pull-left"></i>Milestones</h2>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <div class="row">
+                <div class="col-xs-6">
+                    <div class="box p-a">
+                        <div class="pull-left m-r">
+                            <i class="fa fa-upload text-2x text-danger m-y-sm"></i>
+                        </div>
+                        <div class="clear">
+                            <div class="text-muted">Milestones Added</div>
+                            <h4 class="m-a-0 text-md _600"><a href>4</a></h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="box p-a">
+                        <div class="pull-left m-r">
+                            <i class="fa fa-bar-chart-o text-2x text-info m-y-sm"></i>
+                        </div>
+                        <div class="clear">
+                            <div class="text-muted">Milestone Deviation</div>
+                            <h4 class="m-a-0 text-md _600"><a href>5 Hours</a></h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="box p-a">
+                        <div class="pull-left m-r">
+                            <i class="fa fa-pencil-square-o text-2x text-success m-y-sm"></i>
+                        </div>
+                        <div class="clear">
+                            <div class="text-muted">Milestones Completed</div>
+                            <h4 class="m-a-0 text-md _600"><a href>2</a></h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="box p-a">
+                        <div class="pull-left m-r p-r-sm">
+                            <i class="fa fa-clock-o text-2x text-accent m-y-sm"></i>
+                        </div>
+                        <div class="clear">
+                            <div class="text-muted">Mean Milestone Completion</div>
+                            <h4 class="m-a-0 text-md _600"><a href>96 Hours</a></h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div class="row-col box-color text-center teal">
+                        <div class="row-cell p-a-2">
+                            Total (Current) Time on Project
+                            <h4 class="m-a-0 text-md _600"><a href>1205 Hours</a></h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <div class="box">
+                <div class="box-header">
+                    <h3>Milestones History</h3>
+                    <small>History of Milestone Activities</small>
+                </div>
+                <div class="box-body" style="overflow-y: auto; height:210px">
+                    <ul class="list inset">
+                        <li class="list-item">
+                            <a class="list-left">
+                                <i class="fa fa-rocket w-40 text-lg"></i>
+                            </a>
+                            <div class="list-body">
+                                <div class="m-y-sm pull-right">
+                                    <a href class="btn btn-xs white">View<i
+                                            class="pull-right fa fa-pencil"></i></a>
+                                </div>
+                                <div><a href><strong>Jake</strong> marked "Submit MS3" as <strong>Done</strong></a></div>
+                                <div class="text-sm">
+                                    <span class="text-muted">on 23/1/16 02:54PM</span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-item">
+                            <a class="list-left">
+                                <i class="fa fa-send w-40 text-lg"></i>
+                            </a>
+                            <div class="list-body">
+                                <div class="m-y-sm pull-right">
+                                    <a href class="btn btn-xs white">View<i
+                                            class="pull-right fa fa-pencil"></i></a>
+                                </div>
+                                <div><a href><strong>John</strong> created new milestone "Submit MS3"</a></div>
+                                <div class="text-sm">
+                                    <span class="text-muted">on 23/1/16 02:54PM</span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

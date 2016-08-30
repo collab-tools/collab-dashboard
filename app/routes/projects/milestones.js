@@ -1,8 +1,8 @@
-'use strict';
-const _ = require('lodash');
-const moment = require('moment');
-const models = require('../../models');
+import _ from 'lodash';
+import moment from 'moment';
+import Storage from '../../common/storage-helper';
 
+const models = new Storage();
 const ERROR_BAD_REQUEST = 'Unable to serve your content. Check your arguments.';
 const ERROR_MISSING_TEMPLATE = 'is a required parameter in GET request.';
 

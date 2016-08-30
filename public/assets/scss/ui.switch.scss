@@ -1,4 +1,4 @@
-.ui-switch{
+.ui-switch {
   cursor: pointer;
   position: relative;
   display: inline-block;
@@ -7,12 +7,12 @@
   border-radius: 30px;
   background-color: $success;
   margin: 0;
-  input{
+  input {
     position: absolute;
     opacity: 0;
-    &:checked{
-      + i{
-        &:before{
+    &:checked {
+      + i {
+        &:before {
           top: 50%;
           bottom: 50%;
           left: 50%;
@@ -20,14 +20,14 @@
           border-width: 0;
           border-radius: 5px;
         }
-        &:after{
+        &:after {
           margin-left: $switch-width - $switch-height + 1;
         }
       }
     }
   }
-  i{
-    &:before{
+  i {
+    &:before {
       content: "";
       position: absolute;
       top: -1px;
@@ -39,7 +39,7 @@
       border-radius: 30px;
       @include transition(all 0.2s);
     }
-    &:after{
+    &:after {
       content: "";
       position: absolute;
       background-color: #fff;
@@ -53,39 +53,39 @@
   }
 }
 
-.ui-switch-md{
+.ui-switch-md {
   width: $switch-md-width;
   height: $switch-md-height;
-  input{
-    &:checked{
-      + i{
-        &:after{
+  input {
+    &:checked {
+      + i {
+        &:after {
           margin-left: $switch-md-width - $switch-md-height + 1;
         }
       }
     }
   }
-  i{
-    &:after{
+  i {
+    &:after {
       width: $switch-md-height - 2;
     }
   }
 }
 
-.ui-switch-lg{
+.ui-switch-lg {
   width: $switch-lg-width;
   height: $switch-lg-height;
-  input{
-    &:checked{
-      + i{
-        &:after{
+  input {
+    &:checked {
+      + i {
+        &:after {
           margin-left: $switch-lg-width - $switch-lg-height + 1;
         }
       }
     }
   }
-  i{
-    &:after{
+  i {
+    &:after {
       width: $switch-lg-height - 2;
     }
   }

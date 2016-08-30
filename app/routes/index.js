@@ -1,9 +1,14 @@
+import adminFactory from './admin';
+import globalFactory from './global';
+import projectsFactory from './projects';
+import usersFactory from './users';
+
 module.exports = function (app, express) {
   // Get all four sub-routers and configure the app to use it
-  const adminRouter = require('./admin')(express);
-  const globalRouter = require('./global')(express);
-  const projectsRouter = require('./projects')(express);
-  const usersRouter = require('./users')(express);
+  const adminRouter = adminFactory(express);
+  const globalRouter = globalFactory(express);
+  const projectsRouter = projectsFactory(express);
+  const usersRouter = usersFactory(express);
 
   // Configure app to load all the routers
   app.use('/api/admin', adminRouter);

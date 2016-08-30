@@ -1,15 +1,15 @@
-.scrollable{
+.scrollable {
   overflow-x: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   &.hover {
     overflow-y: hidden;
-    > *{
+    > * {
       margin-top: -1px;
     }
     &:hover,
     &:focus,
-    &:active{
+    &:active {
       overflow: visible;
       overflow-y: auto;
     }
@@ -19,14 +19,16 @@
   }
 }
 
-.scroll-x, 
-.scroll-y{
-  overflow:hidden;
-  -webkit-overflow-scrolling:touch;
+.scroll-x,
+.scroll-y {
+  overflow: hidden;
+  -webkit-overflow-scrolling: touch;
 }
-.scroll-y{
-  overflow-y:auto;
+
+.scroll-y {
+  overflow-y: auto;
 }
-.scroll-x{
-  overflow-x:auto;
+
+.scroll-x {
+  overflow-x: auto;
 }

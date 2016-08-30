@@ -1,0 +1,12 @@
+{
+  "app_database": {
+    "username": "",
+    "password": ""
+  },
+  "logging_database": {
+    "username": "",
+    "password": ""
+  },
+  "jwt_secret": "",
+  "developer_mode": false
+}

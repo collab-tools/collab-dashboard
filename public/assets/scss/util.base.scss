@@ -1,86 +1,95 @@
-.pos-rlt{
+.pos-rlt {
   position: relative;
   z-index: 1;
 }
-.pos-abt{
+
+.pos-abt {
   position: absolute;
 }
-.pos-fix{
+
+.pos-fix {
   position: fixed !important;
 }
-.pos-stc{
+
+.pos-stc {
   position: static !important;
 }
 
-.block{
-  display:block;
-}
-.block.hide{
-  display: none;
-}
-.pull-none{
-  float: none;
-}
-.inline{
-  display:inline-block;
+.block {
+  display: block;
 }
 
-.inline-16{
+.block.hide {
+  display: none;
+}
+
+.pull-none {
+  float: none;
+}
+
+.inline {
+  display: inline-block;
+}
+
+.inline-16 {
   width: 16px;
   height: 16px;
 }
 
-.inline-24{
+.inline-24 {
   width: 24px;
   height: 24px;
 }
 
-.none{
+.none {
   display: none;
 }
-.active > .inline, 
-.active > .auto .inline{
+
+.active > .inline,
+.active > .auto .inline {
   display: none;
 }
-.active > .none, 
-.active > .auto .none{
+
+.active > .none,
+.active > .auto .none {
   display: inline-block;
 }
 
 .hide {
   display: none !important;
 }
+
 .show {
   display: block !important;
 }
 
-.pointer{
+.pointer {
   cursor: pointer;
 }
 
 .rounded,
-.circle{
+.circle {
   border-radius: 500px;
 }
 
-.clear{
-  display:block;
+.clear {
+  display: block;
   overflow: hidden;
 }
 
-.no-shadow{
+.no-shadow {
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
 }
 
 @include media-breakpoint-down(sm) {
-  .pos-stc-sm{
+  .pos-stc-sm {
     position: static !important;
   }
 }
 
 @include media-breakpoint-down(xs) {
-  .pos-stc-xs{
+  .pos-stc-xs {
     position: static !important;
   }
 }

@@ -1,37 +1,47 @@
-.no-radius{
+.no-radius {
   border-radius: 0 !important;
 }
-.no-r-t{
+
+.no-r-t {
   @include border-top-radius(0);
 }
-.no-r-r{
+
+.no-r-r {
   @include border-right-radius(0);
 }
-.no-r-b{
+
+.no-r-b {
   @include border-bottom-radius(0);
 }
-.no-r-l{
+
+.no-r-l {
   @include border-left-radius(0);
 }
 
-.r{
+.r {
   border-radius: $border-radius-base;
 }
-.r-t{
+
+.r-t {
   @include border-top-radius($border-radius-base);
 }
-.r-r{
+
+.r-r {
   @include border-right-radius($border-radius-base);
 }
-.r-b{
+
+.r-b {
   @include border-bottom-radius($border-radius-base);
 }
-.r-l{
+
+.r-l {
   @include border-left-radius($border-radius-base);
 }
-.r-2x{
+
+.r-2x {
   border-radius: $border-radius-base * 2;
 }
-.r-3x{
+
+.r-3x {
   border-radius: $border-radius-base * 3;
 }

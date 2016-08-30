@@ -1,4 +1,4 @@
-.avatar{
+.avatar {
   position: relative;
   display: inline-block;
   width: 40px;
@@ -6,74 +6,74 @@
   border-radius: 500px;
   white-space: nowrap;
   font-weight: bold;
-  img{
+  img {
     border-radius: 500px;
     width: 100%;
   }
-  i{
+  i {
     position: absolute;
     left: 0;
-    top:  0;
-    width:  10px;
+    top: 0;
+    width: 10px;
     height: 10px;
     margin: 1px;
-    border-width:  2px;
-    border-style:  solid;
+    border-width: 2px;
+    border-style: solid;
     border-radius: 100%;
-    &.right{
+    &.right {
       left: auto;
       right: 0;
     }
-    &.bottom{
+    &.bottom {
       left: auto;
       top: auto;
       bottom: 0;
       right: 0;
     }
-    &.left{
+    &.left {
       top: auto;
       bottom: 0;
     }
-    &.on{
+    &.on {
       background-color: $success;
     }
-    &.off{
+    &.off {
       background-color: $light;
     }
-    &.away{
+    &.away {
       background-color: $warning;
     }
-    &.busy{
+    &.busy {
       background-color: $danger;
     }
   }
-  &.w-32{
-    i{
+  &.w-32 {
+    i {
       margin: 0px;
     }
   }
-  &.w-48{
-    i{
+  &.w-48 {
+    i {
       margin: 2px;
     }
   }
-  &.w-56{
-    i{
+  &.w-56 {
+    i {
       margin: 3px;
     }
   }
-  &.w-64{
-    i{
+  &.w-64 {
+    i {
       margin: 4px;
     }
   }
-  &.w-96{
-    i{
+  &.w-96 {
+    i {
       margin: 9px;
     }
   }
-  &.w-128{
-    i{
+  &.w-128 {
+    i {
       margin: 14px;
     }
   }

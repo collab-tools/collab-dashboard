@@ -15,24 +15,24 @@ var readLineHandle = readLine.createInterface({
 });
 
 // Read each line by line from the file codepoints file
-var json = {icons: {}};
-readLineHandle.on('line', function(line) {
+var json = { icons: {} };
+readLineHandle.on('line', function (line) {
   // Match the name, space then any unicode after it
   var nameCodepointPair = line.split(' ');
 
   // Titleize the glyph name
   var codepoint = nameCodepointPair[1];
   var name = nameCodepointPair[0].toLowerCase().trim()
-      .replace(/[^0-9a-z]+/gi, ' ')
-      .replace(/\b[a-z]/g, function(char) {
-        return char.toUpperCase();
-      });
+    .replace(/[^0-9a-z]+/gi, ' ')
+    .replace(/\b[a-z]/g, function (char) {
+      return char.toUpperCase();
+    });
 
   // Assign the codepoint to the name for IconJar
-  json.icons[codepoint] = {name: name};
+  json.icons[codepoint] = { name: name };
 });
 
-readLineHandle.on('close', function() {
+readLineHandle.on('close', function () {
   // Once reading has finished here we can write the file
   fileSystem.writeFileSync(MAP_FILE_NAME, JSON.stringify(json));
 });

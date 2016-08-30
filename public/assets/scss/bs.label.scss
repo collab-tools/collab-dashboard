@@ -1,15 +1,15 @@
-.label{
+.label {
   padding: .25em .5em;
-  &.no-bg{
+  &.no-bg {
     background-color: transparent;
     color: inherit;
   }
-  font-weight: bold; 
+  font-weight: bold;
   background-color: $label-bg;
 }
 
-.label{
-  &.up{
+.label {
+  &.up {
     position: relative;
     top: -10px;
     min-width: 4px;
@@ -18,20 +18,20 @@
   }
 }
 
-.label-lg{
+.label-lg {
   font-size: 1.33rem;
   padding: 5px 9px;
 }
 
-.label-sm{
+.label-sm {
   padding: 1px 4px;
 }
 
-.label-xs{
+.label-xs {
   padding: 0px 3px;
 }
 
-.list-group-item.active > .label, 
-.nav-pills > .active > a > .label{
+.list-group-item.active > .label,
+.nav-pills > .active > a > .label {
   color: $dark-black;
 }

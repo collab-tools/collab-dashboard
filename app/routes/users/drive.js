@@ -1,8 +1,9 @@
-'use strict';
-const Promise = require('bluebird');
-const moment = require('moment');
+import Promise from 'bluebird';
+import moment from 'moment';
+import Storage from '../../common/storage-helper';
 
-const models = require('../../models');
+const models = new Storage();
+
 
 const ERROR_BAD_REQUEST = 'Unable to serve your content. Check your arguments.';
 const ERROR_MISSING_TEMPLATE = 'is a required parameter in GET request.';
@@ -131,7 +132,8 @@ function getRevisions(req, res) {
 
   const retrieveRevisions = (user) => {
     const googleId = user.google_id;
-    return models.log['revision-log'].getUserRevisionsByProject(googleId, projectId, null, convertedRange);
+    return models.log['revision-log'].getUserRevisionsByProject(googleId,
+      projectId, null, convertedRange);
   };
 
   const response = (revisions) => {
@@ -164,7 +166,8 @@ function getRevisionsCount(req, res) {
 
   const retrieveRevisions = (user) => {
     const googleId = user.google_id;
-    return models.log['revision-log'].getUserRevisionsByProject(googleId, projectId, null, convertedRange);
+    return models.log['revision-log'].getUserRevisionsByProject(googleId,
+      projectId, null, convertedRange);
   };
 
   const response = (revisions) => {

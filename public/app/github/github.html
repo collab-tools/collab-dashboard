@@ -1,0 +1,174 @@
+<div class="p-a white lt box-shadow">
+    <div class="row">
+        <div class="col-sm-6">
+            <h4 class="m-b-0 _300">GitHub</h4>
+            <small class="text-muted">Collab Statistics on GitHub Usage</small>
+        </div>
+        <div class="col-sm-6 text-sm-right">
+            <div class="m-y-sm">
+                <span class="m-r-sm">Date Range</span>
+                <div class="btn-group dropdown">
+                    <button class="btn white btn-sm ">Last 7 Days</button>
+                    <button class="btn white btn-sm dropdown-toggle"
+                            data-toggle="dropdown"></button>
+                    <div class="dropdown-menu dropdown-menu-scale pull-right">
+                        <a class="dropdown-item" href>30 Days</a>
+                        <a class="dropdown-item" href>90 Days</a>
+                        <a class="dropdown-item" href>All-Time</a>
+                        <hr>
+                        <a class="dropdown-item" href>AY15/16 Semester I</a>
+                        <a class="dropdown-item" href>AY15/16 Semester II</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="padding">
+    <div class="row">
+        <div class="col-sm-6 col-md-4 col-lg-4">
+            <div class="box-color p-a blue-grey">
+                <div class="pull-right m-l">
+					<span class="w-20 dker text-center rounded">
+						<i class="fa fa-github-alt"></i>
+					</span>
+                </div>
+                <div class="clear">
+                    <h4 class="m-a-0 text-md"><a href>192 <span
+                            class="text-sm">New Repositories</span></a></h4>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-4 col-lg-4">
+            <div class="box-color p-a brown">
+                <div class="pull-right m-l">
+					<span class="w-20 dker text-center rounded">
+						<i class="material-icons">&#xE566;</i>
+					</span>
+                </div>
+                <div class="clear">
+                    <h4 class="m-a-0 text-md"><a href>1502 <span
+                            class="text-sm">Commits Pushed</span></a></h4>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-4 col-lg-4">
+            <div class="box-color p-a light-green">
+                <div class="pull-right m-l">
+					<span class="w-20 dker text-center rounded">
+						<i class="material-icons">&#xE420;</i>
+					</span>
+                </div>
+                <div class="clear">
+                    <h4 class="m-a-0 text-md"><a href>520 <span class="text-sm">Issues Raised</span></a>
+                    </h4>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 col-md-6">
+            <div class="box">
+                <div class="box-header">
+                    <h3>Commits</h3>
+                    <small>Contributions to master logged over time</small>
+                </div>
+                <div class="box-body">
+                    <div ui-jp="plot" ui-refresh="app.color" ui-options="
+						[
+						{
+						data: {{p_l_3}},
+						points: { show: true, radius: 3},
+						splines: { show: true, tension: 0.45, lineWidth: 0, fill: 0.4}
+						}
+						],
+						{
+						colors: ['{{app.color.primary}}'],
+						series: { shadowSize: 3 },
+						xaxis: { show: true, font: { color: '#ccc' }, position: 'bottom' },
+						yaxis:{ show: true, font: { color: '#ccc' }, min:1},
+						grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(120,120,120,0.5)' },
+						tooltip: true,
+						tooltipOpts: { content: '%x.0 is %y.4',  defaultTheme: false, shifts: { x: 0, y: -40 } }
+						}
+						" style="height:162px">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box p-a">
+                        <div class="pull-left m-r">
+                            <span ui-jp="sparkline" ui-refresh="app.color"
+                                  ui-options="[44,56], {type:'pie', height:36, sliceColors:['{{app.color.light}}','{{app.color.primary}}']}"
+                                  class="sparkline inline"></span>
+                        </div>
+                        <div class="clear">
+                            <h4 class="m-a-0 text-md"><a href>56% <span class="text-sm">Feature Utilization Rate</span></a>
+                            </h4>
+                            <small class="text-muted">5243 Unique GitHub Activities</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div class="box p-a dark">
+                        <div class="pull-left m-r">
+                            <span class="m-y-sm inline" ui-jp="sparkline"
+                                  ui-options="[[2,8],[4,6],[6,4],[8,2],[10,0],[8,2],[6,4],[4,6],[2,8]], {type:'bar', height:24, barWidth:4, barSpacing:2, stackedBarColor:['#fff', 'rgba(255,255,255,0.2)']}"></span>
+                        </div>
+                        <div class="clear">
+                            <h4 class="m-a-0 text-md"><a href><span class="text-sm">Standard Deviation (Commits):</span>
+                                85.43</a></h4>
+                            <small class="text-muted">Max: 1255 (16/2/16) Min: 53 (22/2/16)</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div class="box p-a ">
+                        <div class="pull-left m-r">
+            			<span class="w-40 {{app.theme.warn}} text-center rounded">
+			              <i class="fa fa-tags"></i>
+			            </span>
+                        </div>
+                        <div class="clear">
+                            <h4 class="m-a-0 text-md"><a href>182 <span class="text-sm">Releases Tagged</span></a>
+                            </h4>
+                            <small class="text-muted">53 Projects with No Tags</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="box">
+        <div class="box-header">
+            <h2>Releases</h2>
+        </div>
+        <div class="table-responsive">
+            <table ui-jp="dataTable" ui-options="{
+				sAjaxSource: 'github/releases.json',
+				aoColumns: [
+				{ mData: 'project_id' },
+				{ mData: 'project_name' },
+				{ mData: 'tag' },
+				{ mData: 'repo' },
+				{ mData: 'date' }
+				]
+				}" class="table table-striped b-t b-b table-hover">
+                <thead>
+                <tr>
+                    <th style="width:15%">Project ID</th>
+                    <th style="width:30%">Project Name</th>
+                    <th style="width:25%">Release Tag</th>
+                    <th style="width:15%">Repository</th>
+                    <th style="width:15%">Date Released</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

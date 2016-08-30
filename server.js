@@ -1,9 +1,7 @@
 // Packages & Dependencies
 // ====================================================
 const express = require('express');
-const app = express();
 const compression = require('compression');
-const path = require('path');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const config = require('config');
@@ -14,6 +12,7 @@ require('./app/common/mixins')();
 // App & Middleware Configurations
 // ====================================================
 // body parser to grab information from HTTP POST requests
+const app = express();
 app.use(bodyParser.urlencoded({
   extended: true
 }));
@@ -25,7 +24,7 @@ app.use(boom());
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
-  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, \Authorization');
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization');
   next();
 });
 
@@ -39,7 +38,9 @@ app.use(compression());
 app.use(validator());
 
 // set static file location for front-end
-app.use(express.static(`${__dirname}/public/dist`));
+const env = process.env.NODE_ENV || 'development';
+if (env === 'development') app.use(express.static(`${__dirname}/public`));
+else app.use(express.static(`${__dirname}/public/dist`));
 
 // API Routes
 // =====================================================
