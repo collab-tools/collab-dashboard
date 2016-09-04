@@ -14,7 +14,13 @@
   config.$inject = ['$stateProvider', '$urlRouterProvider', 'MODULE_CONFIG'];
 
   function config($stateProvider, $urlRouterProvider, MODULE_CONFIG) {
-    const layout = 'layout/layout.html';
+    // Authentication Template
+    const authLayout = 'layout/layout.auth.html';
+    const login = 'authentication/login.html';
+    const recovery = 'authentication/recovery.html';
+
+    // App Templates
+    const appLayout = 'layout/layout.html';
     const dashboard = 'dashboard/dashboard.html';
     const projects = 'projects/global/projects.html';
     const users = 'users/global/users.html';
@@ -26,7 +32,8 @@
     const userOverview = 'users/narrow/overview.html';
     const projectOverview = 'projects/narrow/overview.html';
 
-    $urlRouterProvider.otherwise('/app/dashboard');
+    $urlRouterProvider.when('', '/app');
+    $urlRouterProvider.otherwise('/404/');
 
     $stateProvider
       .state('app', {
@@ -34,7 +41,7 @@
         url: '/app',
         views: {
           '': {
-            templateUrl: layout
+            templateUrl: appLayout
           }
         }
       })
@@ -137,6 +144,18 @@
         controller: 'projectOverviewCtrl',
         controllerAs: 'vm',
         resolve: load(['projects/narrow/overview.controller.js'])
+      })
+      .state('auth', {
+        url: '/auth',
+        templateUrl: authLayout
+      })
+      .state('auth.login', {
+        url: '/login',
+        templateUrl: login
+      })
+      .state('auth.recovery', {
+        url: '/recovery',
+        templateUrl: recovery
       });
 
     function load(srcs, callback) {

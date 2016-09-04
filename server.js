@@ -37,10 +37,10 @@ app.use(compression());
 // enable validator middle-ware for endpoints
 app.use(validator());
 
-// set static file location for front-end
-const env = process.env.NODE_ENV || 'development';
-if (env === 'development') app.use(express.static(`${__dirname}/public`));
-else app.use(express.static(`${__dirname}/public/dist`));
+// serve front-end static assets and angular application
+app.use(express.static(`${__dirname}/public/dist/app`));
+app.use('/assets', express.static(`${__dirname}/public/assets`));
+app.use('/libs', express.static(`${__dirname}/public/libs`));
 
 // API Routes
 // =====================================================
@@ -48,10 +48,9 @@ require('./app/routes')(app, express);
 
 // Catch-All Routing - Sends user to front-end
 // =====================================================
-app.get('*', (req, res) => {
-  res.redirect('/app');
+app.all('*', (req, res) => {
+  res.sendFile(`${__dirname}/public/dist/app/index.html`);
 });
-
 
 app.listen(config.get('port'));
 console.log(`Server Port opened at ${config.port}`);

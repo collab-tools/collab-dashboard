@@ -4,9 +4,9 @@
     <meta charset="utf-8"/>
     <title>Collab Dashboard - Analytics</title>
     <meta name="description" content="Analytics Admin Panel"/>
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <base href="/">
     <!-- Mobile Support -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-barstyle" content="black-translucent">
@@ -24,7 +24,7 @@
     <link rel="stylesheet" href="../assets/styles/font.css" type="text/css"/>
 </head>
 <body ng-app="app" ng-controller="AppCtrl" class="{{app.setting.bg}}"
-      ng-class="{'container': app.setting.boxed, 'ie': isIE,'smart': isSmart}">
+      ng-class="{'ie': isIE,'smart': isSmart}">
 <div class="app" ui-view></div>
 <!-- build:js app.angular.js -->
 <!-- jQuery -->
