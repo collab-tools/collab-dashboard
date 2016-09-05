@@ -9,7 +9,7 @@
   ];
 
   function AppCtrl($scope, $localStorage, $location, $rootScope, $anchorScroll, $timeout, $window) {
-    const vm = $scope;
+    const vm = this;
 
     vm.isIE = isIE();
     vm.isMobile = isSmartDevice();

@@ -32,8 +32,12 @@
     const userOverview = 'users/narrow/overview.html';
     const projectOverview = 'projects/narrow/overview.html';
 
-    $urlRouterProvider.when('', '/app');
-    $urlRouterProvider.otherwise('/404/');
+    // Misc Templates
+    const error404 = 'misc/404.html';
+
+    const defaultRoute = '/app/dashboard';
+    $urlRouterProvider.when('/', defaultRoute);
+    $urlRouterProvider.otherwise('/404');
 
     $stateProvider
       .state('app', {
@@ -146,16 +150,28 @@
         resolve: load(['projects/narrow/overview.controller.js'])
       })
       .state('auth', {
+        abstract: true,
         url: '/auth',
-        templateUrl: authLayout
+        views: {
+          '': {
+            templateUrl: authLayout
+          }
+        }
       })
       .state('auth.login', {
         url: '/login',
-        templateUrl: login
+        templateUrl: login,
+        controller: 'loginCtrl',
+        controllerAs: 'vm',
+        resolve: load(['authentication/login.controller.js'])
       })
       .state('auth.recovery', {
         url: '/recovery',
         templateUrl: recovery
+      })
+      .state('404', {
+        url: '/404',
+        templateUrl: error404
       });
 
     function load(srcs, callback) {
