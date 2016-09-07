@@ -3,16 +3,19 @@
     .module('app')
     .controller('loginCtrl', loginCtrl);
 
-  function loginCtrl($auth, $log) {
+  function loginCtrl($location, Auth) {
     const vm = this;
-    vm.handleLoginBtnClick = () => {
-      $auth.submitLogin(vm.loginForm)
-        .then((res) => {
-          $log.log(res);
-        })
-        .catch((res) => {
-          $log.error(res);
+
+    vm.requestLogin = () => {
+      Auth.login(vm.loginData.username, vm.loginData.password)
+        .success(() => {
+          $location.path('/app/dashboard');
         });
+    };
+
+    vm.requestLogout = () => {
+      Auth.logout();
+      $location.path('/auth/login');
     };
   }
 })();

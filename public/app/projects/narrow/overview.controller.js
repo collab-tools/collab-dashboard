@@ -1,11 +1,13 @@
 (() => {
-  'use strict';
   angular
     .module('app')
     .controller('projectOverviewCtrl', projectOverviewCtrl);
 
-  function projectOverviewCtrl($scope) {
-    const vm = $scope;
+  function projectOverviewCtrl() {
+    const vm = this;
+
+    vm.subtitle = 'Statistics on Team Gene\'s Usage';
+
     vm.p_p_1 = [{ data: 70, label: 'Free' }, { data: 30, label: 'Busy' }];
     vm.p_p_2 = [{ data: 75, label: 'Closed' }, { data: 25, label: 'Open' }];
     vm.p_p_3 = [{ data: 30, label: 'Server' }, { data: 70, label: 'Client' }];
