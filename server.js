@@ -39,7 +39,7 @@ app.use(validator());
 
 // serve front-end static assets and angular application
 app.use(express.static(`${__dirname}/public/dist/app`));
-app.use('/assets', express.static(`${__dirname}/public/assets`));
+app.use('/assets', express.static(`${__dirname}/public/dist/assets`));
 app.use('/libs', express.static(`${__dirname}/public/libs`));
 
 // API Routes
