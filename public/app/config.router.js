@@ -31,9 +31,11 @@
     const tasks = 'tasks/tasks.html';
     const userOverview = 'users/narrow/overview.html';
     const projectOverview = 'projects/narrow/overview.html';
+    const profile = 'profile/profile.html';
 
     // Misc Templates
     const error404 = 'misc/404.html';
+
 
     const defaultRoute = '/app/dashboard';
     $urlRouterProvider.when('/', defaultRoute);
@@ -148,6 +150,16 @@
         controller: 'projectOverviewCtrl',
         controllerAs: 'vm',
         resolve: load(['projects/narrow/overview.controller.js'])
+      })
+      .state('app.profile', {
+        url: '/profile',
+        templateUrl: profile,
+        data: {
+          title: 'Your Profile'
+        },
+        controller: 'profileCtrl',
+        controllerAs: 'vm',
+        resolve: load(['profile/profile.controller.js'])
       })
       .state('auth', {
         abstract: true,
