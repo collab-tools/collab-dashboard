@@ -3,19 +3,30 @@
     .module('app')
     .controller('loginCtrl', loginCtrl);
 
-  function loginCtrl($location, Auth) {
+  loginCtrl.$inject = ['$window', '$log', 'Auth'];
+  function loginCtrl($window, $log, auth) {
     const vm = this;
-
-    vm.requestLogin = () => {
-      Auth.login(vm.loginData.username, vm.loginData.password)
-        .success(() => {
-          $location.path('/app/dashboard');
-        });
+    vm.returnPage = '/app/dashboard';
+    vm.credentials = {
+      email: '',
+      password: ''
     };
 
-    vm.requestLogout = () => {
-      Auth.logout();
-      $location.path('/auth/login');
+    vm.onSubmit = () => {
+      if (!vm.credentials.username || !vm.credentials.password) {
+        return false;
+      }
+      return vm.requestLogin();
+    };
+
+    vm.requestLogin = () => {
+      auth.login(vm.credentials)
+      .error((err) => {
+        $log.error(err);
+      })
+      .then(() => {
+        $window.location.href = vm.returnPage;
+      });
     };
   }
 })();

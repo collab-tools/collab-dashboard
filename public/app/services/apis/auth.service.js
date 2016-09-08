@@ -1,82 +1,59 @@
 (() => {
   angular
     .module('app')
-    .factory('Auth', authFactory)
-    .factory('AuthToken', authTokenFactory)
-    .factory('AuthInterceptor', authInterceptorFactory);
+    .factory('Auth', authFactory);
 
-  authFactory.$inject = ['$http', '$q', 'AuthToken'];
+  authFactory.$inject = ['$window', '$http'];
 
-  function authFactory($http, $q, AuthToken) {
-    const urlBase = '/api/admin';
-    const authFactory = {};
+  function authFactory($window, $http) {
+    const saveToken = (token) => {
+      $window.localStorage['auth-token'] = token;
+    };
 
-    authFactory.login = (username, password) => {
-      return $http.post(`${urlBase}/authenticate`, { username, password })
-        .success((payload) => {
-          AuthToken.setToken(payload.token);
-          return payload;
+    const getToken = () => {
+      return $window.localStorage['auth-token'];
+    };
+
+    const isLoggedIn = () => {
+      const token = getToken();
+      if (token) {
+        const payload = angular.fromJson($window.atob(token.split('.')[1]));
+        // check if token is expired
+        return payload.exp > Date.now() / 1000;
+      }
+      return false;
+    };
+
+    const login = (user) => {
+      return $http.post('/api/admin/authenticate', user)
+        .success((data) => {
+          saveToken(data.token);
         });
     };
 
-    authFactory.logout = () => {
-      AuthToken.setToken();
+    const logout = () => {
+      $window.localStorage.removeItem('auth-token');
     };
 
-    authFactory.isLoggedIn = () => {
-      return !!AuthToken.getToken();
-    };
-
-    authFactory.getUser = () => {
-      if (AuthToken.getToken()) {
-        return $http.get(`${urlBase}/profile`);
-      }
-      return $q.reject({
-        message: 'User not logged in / have no token.'
-      });
-    };
-
-    return authFactory;
-  }
-
-  authTokenFactory.$inject = ['$window'];
-
-  function authTokenFactory($window) {
-    const authTokenFactory = {};
-    authTokenFactory.getToken = () => {
-      return $window.localStorage.getItem('token');
-    };
-
-    authTokenFactory.setToken = (token) => {
-      if (token) {
-        $window.localStorage.setItem('token', token);
-      } else {
-        $window.localStorage.removeItem('token');
-      }
-    };
-
-    return authTokenFactory;
-  }
-
-  authInterceptorFactory.$inject = ['$q', '$location', 'AuthToken'];
-
-  function authInterceptorFactory($q, $location, AuthToken) {
-    const interceptorFactory = {};
-
-    interceptorFactory.request = (config) => {
-      const token = AuthToken.getToken();
-      if (token) {
-        config.headers['x-access-token'] = token;
-      }
-      return config;
-    };
-
-    interceptorFactory.responseError = (res) => {
-      if (res.status === 403) {
-        $location.path('/auth/login');
+    const currentUser = () => {
+      if (isLoggedIn()) {
+        const token = getToken();
+        const payload = angular.fromJson($window.atob(token.split('.')[1]));
+        return {
+          name: payload.name
+        };
       }
 
-      return $q.reject(res);
+      return null;
+    };
+
+    return {
+      saveToken,
+      getToken,
+      isLoggedIn,
+      login,
+      logout,
+      currentUser
     };
   }
 })();

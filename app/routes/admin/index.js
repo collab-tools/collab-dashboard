@@ -5,6 +5,7 @@ import Storage from '../../common/storage-helper';
 const models = new Storage();
 const ERROR_INVALID = 'Invalid username / password';
 const ERROR_ILLEGAL = 'Unauthorized access';
+const JWT_EXPIRY_DAYS = 7;
 
 function checkDevAccess(devKey) {
   return devKey === config.developer_mode;
@@ -24,7 +25,14 @@ function authenticate(req, res) {
       const isValidated = user.comparePassword(givenPass);
       if (!isValidated) res.boom.unauthorized(ERROR_INVALID);
       else {
-        const payload = { name: user.name, username: user.username, role: user.role };
+        const expiry = new Date();
+        expiry.setDate(expiry.getDate() + JWT_EXPIRY_DAYS);
+        const payload = {
+          name: user.name,
+          username: user.username,
+          role: user.role,
+          exp: parseInt(expiry.getTime() / 1000, 10)
+        };
         const token = jwt.sign(payload, config.jwt_secret);
         res.json({ success: true, token });
       }

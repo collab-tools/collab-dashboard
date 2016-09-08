@@ -4,11 +4,24 @@
     .run(runBlock)
     .config(config);
 
-  runBlock.$inject = ['$rootScope', '$state', '$stateParams'];
+  runBlock.$inject = ['$rootScope', '$state', '$stateParams', '$location', 'Auth'];
 
-  function runBlock($rootScope, $state, $stateParams) {
+  function runBlock($rootScope, $state, $stateParams, $location, auth) {
+    const LOGIN_PATH = '/auth/login';
+    const DEFAULT_PATH = '/app/dashboard';
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
+    /* eslint-disable */
+    $rootScope.$on('$locationChangeStart', (event, next, current) => {
+      if (!auth.isLoggedIn() && $location.path() !== LOGIN_PATH ) {
+          event.preventDefault();
+          $location.path(LOGIN_PATH);
+      } else if (auth.isLoggedIn() && $location.path() === LOGIN_PATH) {
+          event.preventDefault();
+          $location.path(DEFAULT_PATH);
+      }
+    });
+    /* eslint-enable */
   }
 
   config.$inject = ['$stateProvider', '$urlRouterProvider', 'MODULE_CONFIG'];
@@ -17,7 +30,6 @@
     // Authentication Template
     const authLayout = 'layout/layout.auth.html';
     const login = 'authentication/login.html';
-    const recovery = 'authentication/recovery.html';
 
     // App Templates
     const appLayout = 'layout/layout.html';
@@ -35,7 +47,6 @@
 
     // Misc Templates
     const error404 = 'misc/404.html';
-
 
     const defaultRoute = '/app/dashboard';
     $urlRouterProvider.when('/', defaultRoute);
@@ -176,10 +187,6 @@
         controller: 'loginCtrl',
         controllerAs: 'vm',
         resolve: load(['authentication/login.controller.js'])
-      })
-      .state('auth.recovery', {
-        url: '/recovery',
-        templateUrl: recovery
       })
       .state('404', {
         url: '/404',

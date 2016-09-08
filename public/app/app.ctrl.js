@@ -5,10 +5,12 @@
 
   AppCtrl.$inject = [
     '$scope', '$localStorage', '$location', '$rootScope',
-    '$anchorScroll', '$timeout', '$window'
+    '$anchorScroll', '$timeout', '$window', 'Auth'
   ];
 
-  function AppCtrl($scope, $localStorage, $location, $rootScope, $anchorScroll, $timeout, $window) {
+  function AppCtrl($scope, $localStorage, $location, $rootScope, $anchorScroll,
+    $timeout, $window, auth) {
+
     const vm = $scope;
 
     vm.isIE = isIE();
@@ -29,6 +31,11 @@
         dark: '#2e3e4e',
         black: '#2a2b3c'
       }
+    };
+
+    vm.logout = function () {
+      auth.logout();
+      $location.path('/auth/login');
     };
 
     $scope.$on('$stateChangeSuccess', openPage);
