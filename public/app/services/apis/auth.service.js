@@ -1,17 +1,22 @@
 (() => {
   angular
     .module('app')
-    .factory('Auth', authFactory);
+    .factory('Auth', authFactory)
+    .factory('AuthInterceptor, authInterceptorFactory');
 
-  authFactory.$inject = ['$window', '$http'];
+  authFactory.$inject = ['$window', '$localStorage', '$sessionStorage', '$http'];
 
-  function authFactory($window, $http) {
-    const saveToken = (token) => {
-      $window.localStorage['auth-token'] = token;
+  function authFactory($window, $localStorage, $sessionStorage, $http) {
+    const saveToken = (token, isLocal) => {
+      if (isLocal) {
+        $localStorage['auth-token'] = token;
+      } else {
+        $sessionStorage['auth-token'] = token;
+      }
     };
 
     const getToken = () => {
-      return $window.localStorage['auth-token'];
+      return $localStorage['auth-token'] || $sessionStorage['auth-token'];
     };
 
     const isLoggedIn = () => {
@@ -24,15 +29,16 @@
       return false;
     };
 
-    const login = (user) => {
+    const login = (user, isLocal) => {
       return $http.post('/api/admin/authenticate', user)
         .success((data) => {
-          saveToken(data.token);
+          saveToken(data.token, isLocal);
         });
     };
 
     const logout = () => {
-      $window.localStorage.removeItem('auth-token');
+      delete $localStorage['auth-token'];
+      delete $sessionStorage['auth-token'];
     };
 
     const currentUser = () => {
@@ -40,7 +46,8 @@
         const token = getToken();
         const payload = angular.fromJson($window.atob(token.split('.')[1]));
         return {
-          name: payload.name
+          name: payload.name,
+          role: payload.role
         };
       }
 
@@ -54,6 +61,33 @@
       login,
       logout,
       currentUser
+    };
+  }
+
+  authInterceptorFactory.$inject = ['$q', '$location', 'Auth'];
+
+  function authInterceptorFactory($q, $location, Auth) {
+    const request = (config) => {
+      const token = Auth.getToken();
+      config.headers = config.headers || {};
+      if (token) {
+        config.headers.Authorization = `Bearer: ${token}`;
+      }
+
+      return config;
+    };
+
+    const responseError = (response) => {
+      if (response.status === 403 || response.status === 401) {
+        $location.path('/auth/login');
+      }
+
+      return $q.reject(response);
+    };
+
+    return {
+      request,
+      responseError
     };
   }
 })();
