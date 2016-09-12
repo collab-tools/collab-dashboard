@@ -186,7 +186,7 @@
         templateUrl: login,
         controller: 'loginCtrl',
         controllerAs: 'vm',
-        resolve: load(['authentication/login.controller.js'])
+        resolve: load(['ui.bootstrap', 'authentication/login.controller.js'])
       })
       .state('404', {
         url: '/404',

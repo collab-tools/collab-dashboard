@@ -10,9 +10,9 @@
 
   function AppCtrl($scope, $localStorage, $location, $rootScope, $anchorScroll,
     $timeout, $window, auth) {
-
     const vm = $scope;
 
+    vm.currentUser = auth.currentUser();
     vm.isIE = isIE();
     vm.isMobile = isSmartDevice();
     vm.app = {
