@@ -13,6 +13,16 @@
     const vm = $scope;
 
     vm.currentUser = auth.currentUser();
+
+    // TODO: Revamp to include dynamic ranges
+    vm.dateRange = [
+      { display: 'Last 7 Days', days: 7 },
+      { display: 'Last 30 Days', days: 30 },
+      { display: 'Last 90 Days', days: 90 },
+      { display: 'All Time', days: 1000 }
+    ];
+    vm.dateRange.selected = vm.dateRange[0];
+
     vm.isIE = isIE();
     vm.isMobile = isSmartDevice();
     vm.app = {

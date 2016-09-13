@@ -1,22 +1,15 @@
 <div class="p-a white lt box-shadow">
   <div class="row">
-    <div class="col-sm-6">
-      <div class="v-m text-md _300">{{vm.subtitle}}</div>
-    </div>
-    <div class="col-sm-6 text-sm-right">
-      <span class="m-r-sm">Date Range</span>
-      <div class="btn-group dropdown m-r">
-        <button class="btn white btn-sm ">Last 7 Days</button>
-        <button class="btn white btn-sm dropdown-toggle" data-toggle="dropdown"></button>
-        <div class="dropdown-menu dropdown-menu-scale pull-right">
-          <a class="dropdown-item" href>30 Days</a>
-          <a class="dropdown-item" href>90 Days</a>
-          <a class="dropdown-item" href>All-Time</a>
-          <hr>
-          <a class="dropdown-item" href>AY15/16 Semester I</a>
-          <a class="dropdown-item" href>AY15/16 Semester II</a>
-        </div>
-      </div>
-    </div>
-  </div>
+		<div class="col-sm-6 col-md-6">
+			<div class="m-t-xs text-md _300">{{vm.subtitle}}</div>
+		</div>
+		<div class="col-sm-3 col-sm-offset-3 col-xl-2 col-xl-offset-4">
+      <ui-select ng-model="dateRange.selected" theme="bootstrap" class="p-r pull-right">
+        <ui-select-match class="ui-select-match" placeholder="Date Range">{{$select.selected.display}}</ui-select-match>
+        <ui-select-choices class="ui-select-choices" repeat="range in dateRange">
+          <div ng-bind-html="range.display"></div>
+        </ui-select-choices>
+      </ui-select>
+		</div>
+	</div>
 </div>

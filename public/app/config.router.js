@@ -70,7 +70,7 @@
         },
         controller: 'dashboardCtrl',
         controllerAs: 'vm',
-        resolve: load(['dashboard/dashboard.controller.js'])
+        resolve: load(['ui.select', 'dashboard/dashboard.controller.js'])
       })
       .state('app.projects', {
         url: '/projects',

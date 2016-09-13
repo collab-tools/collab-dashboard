@@ -3,12 +3,14 @@
     .module('app')
     .controller('tasksCtrl', tasksCtrl);
 
-  function tasksCtrl() {
+  tasksCtrl.$inject = ['$log', 'Tasks'];
+  function tasksCtrl($log, Tasks) {
     const vm = this;
-    
-  }
 
-  function getTasksOverview($http) {
-    return $http.get('/api/tasks/overview');
+    Tasks.getOverview()
+      .success((payload) => {
+        vm.overview = payload;
+      })
+      .error($log.log);
   }
 })();
