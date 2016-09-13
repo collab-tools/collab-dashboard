@@ -1,9 +1,11 @@
 (() => {
-  'use strict';
   angular
     .module('app')
     .controller('cloudCtrl', cloudCtrl);
 
-  function cloudCtrl($scope) {
+  function cloudCtrl() {
+    const vm = this;
+
+    vm.subtitle = 'Collab Statistics on IDE Usage';
   }
 })();

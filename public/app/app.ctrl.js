@@ -5,11 +5,23 @@
 
   AppCtrl.$inject = [
     '$scope', '$localStorage', '$location', '$rootScope',
-    '$anchorScroll', '$timeout', '$window'
+    '$anchorScroll', '$timeout', '$window', 'Auth'
   ];
 
-  function AppCtrl($scope, $localStorage, $location, $rootScope, $anchorScroll, $timeout, $window) {
+  function AppCtrl($scope, $localStorage, $location, $rootScope, $anchorScroll,
+    $timeout, $window, auth) {
     const vm = $scope;
+
+    vm.currentUser = auth.currentUser();
+
+    // TODO: Revamp to include dynamic ranges
+    vm.dateRange = [
+      { display: 'Last 7 Days', days: 7 },
+      { display: 'Last 30 Days', days: 30 },
+      { display: 'Last 90 Days', days: 90 },
+      { display: 'All Time', days: 1000 }
+    ];
+    vm.dateRange.selected = vm.dateRange[0];
 
     vm.isIE = isIE();
     vm.isMobile = isSmartDevice();
@@ -29,6 +41,11 @@
         dark: '#2e3e4e',
         black: '#2a2b3c'
       }
+    };
+
+    vm.logout = function () {
+      auth.logout();
+      $location.path('/auth/login');
     };
 
     $scope.$on('$stateChangeSuccess', openPage);

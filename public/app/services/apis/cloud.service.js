@@ -1,14 +1,18 @@
 (() => {
   angular
     .module('app')
-    .factory('Cloud', ($http) => {
-      const urlBase = '/api/global/cloud';
-      const cloudFactory = {};
+    .factory('Cloud', cloudFactory);
 
-      cloudFactory.getOverview = (range) => {
-        return $http.get(`${urlBase}/overview?range=${range}`);
-      };
+  cloudFactory.$inject = ['$http'];
 
-      return cloudFactory;
-    });
+  function cloudFactory($http) {
+    const urlBase = '/api/global/cloud';
+    const cloudFactory = {};
+
+    cloudFactory.getOverview = (range) => {
+      return $http.get(`${urlBase}/overview?range=${range}`);
+    };
+
+    return cloudFactory;
+  }
 })();

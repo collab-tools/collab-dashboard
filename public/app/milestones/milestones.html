@@ -1,28 +1,5 @@
-<div class="p-a white lt box-shadow">
-    <div class="row">
-        <div class="col-sm-6">
-            <h4 class="m-b-0 _300">Milestones</h4>
-            <small class="text-muted">Collab Statistics on Milestones Usage</small>
-        </div>
-        <div class="col-sm-6 text-sm-right">
-            <div class="m-y-sm">
-                <span class="m-r-sm">Date Range</span>
-                <div class="btn-group dropdown">
-                    <button class="btn white btn-sm ">Last 7 Days</button>
-                    <button class="btn white btn-sm dropdown-toggle"
-                            data-toggle="dropdown"></button>
-                    <div class="dropdown-menu dropdown-menu-scale pull-right">
-                        <a class="dropdown-item" href>30 Days</a>
-                        <a class="dropdown-item" href>90 Days</a>
-                        <a class="dropdown-item" href>All-Time</a>
-                        <hr>
-                        <a class="dropdown-item" href>AY15/16 Semester I</a>
-                        <a class="dropdown-item" href>AY15/16 Semester II</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<div flex-no-shrink>
+  <div ui-include="'layout/header.sub.html'"></div>
 </div>
 <div class="padding">
     <div class="row">
@@ -63,7 +40,7 @@
                 <div class="box-body">
                     <div class="p-y-md">
                         <div ui-jp="plot" ui-refresh="app.color" ui-options="
-							{{p_p_2}},
+							{{vm.p_p_2}},
 							{
 							series: { pie: { show: true, innerRadius: 0, stroke: { width: 2, color: '#fff' }, label: { show: true, threshold: 0.05 }, tilt: 0.5, startAngle: 30 } },
 							legend: {backgroundColor: 'transparent'},
@@ -87,11 +64,11 @@
                     <div ui-jp="plot" ui-refresh="app.color" ui-options="
 						[
 						{
-						data: {{p_b_1}},
+						data: {{vm.p_b_1}},
 						bars: { show: true, barWidth: 0.25, lineWidth: 1, fillColor: { colors: [{ opacity: 0.8 }, { opacity: 1}] }, order:1 }
 						},
 						{
-						data: {{p_b_3}},
+						data: {{vm.p_b_3}},
 						bars: { show: true, barWidth: 0.25, lineWidth: 1, fillColor: { colors: [{ opacity: 0.8 }, { opacity: 1}] }, order:2 }
 						}
 						],

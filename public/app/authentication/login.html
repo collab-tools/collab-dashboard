@@ -1,0 +1,34 @@
+<div class="center-block w-xxl w-auto-xs p-y-md">
+  <div class="navbar">
+    <div class="pull-center">
+      <div ui-include="'layout/navbar.brand.html'"></div>
+    </div>
+  </div>
+  <div class="alert alert-warning alert-dismissible fade in" role="alert" ng-show="vm.hasError">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+    <strong>Something went wrong!</strong> Check your credentials and try again.
+  </div>
+  <div class="p-a-md box-color r box-shadow-z1 text-color m-a">
+    <div class="m-b text-sm">
+      Sign in with {{app.name}} Dashboard
+    </div>
+    <form name="form" ng-submit="vm.onSubmit()">
+      <div class="md-form-group float-label">
+        <input id="name" type="text" class="md-input" ng-model="vm.credentials.username" required>
+        <label for="name">Username</label>
+      </div>
+      <div class="md-form-group float-label">
+        <input id="password" type="password" class="md-input" ng-model="vm.credentials.password" required>
+        <label for="password">Password</label>
+      </div>
+      <div class="m-b-md">
+        <label class="md-check">
+          <input type="checkbox" ng-model="vm.isLocal"><i class="primary"></i> Keep me signed in
+        </label>
+      </div>
+      <button type="submit" class="btn primary btn-block p-x-md">Sign in</button>
+    </form>
+  </div>
+</div>

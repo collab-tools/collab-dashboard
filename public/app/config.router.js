@@ -4,17 +4,35 @@
     .run(runBlock)
     .config(config);
 
-  runBlock.$inject = ['$rootScope', '$state', '$stateParams'];
+  runBlock.$inject = ['$rootScope', '$state', '$stateParams', '$location', 'Auth'];
 
-  function runBlock($rootScope, $state, $stateParams) {
+  function runBlock($rootScope, $state, $stateParams, $location, auth) {
+    const LOGIN_PATH = '/auth/login';
+    const DEFAULT_PATH = '/app/dashboard';
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
+    /* eslint-disable */
+    $rootScope.$on('$locationChangeStart', (event, next, current) => {
+      if (!auth.isLoggedIn() && $location.path() !== LOGIN_PATH ) {
+          event.preventDefault();
+          $location.path(LOGIN_PATH);
+      } else if (auth.isLoggedIn() && $location.path() === LOGIN_PATH) {
+          event.preventDefault();
+          $location.path(DEFAULT_PATH);
+      }
+    });
+    /* eslint-enable */
   }
 
   config.$inject = ['$stateProvider', '$urlRouterProvider', 'MODULE_CONFIG'];
 
   function config($stateProvider, $urlRouterProvider, MODULE_CONFIG) {
-    const layout = 'layout/layout.html';
+    // Authentication Template
+    const authLayout = 'layout/layout.auth.html';
+    const login = 'authentication/login.html';
+
+    // App Templates
+    const appLayout = 'layout/layout.html';
     const dashboard = 'dashboard/dashboard.html';
     const projects = 'projects/global/projects.html';
     const users = 'users/global/users.html';
@@ -25,8 +43,14 @@
     const tasks = 'tasks/tasks.html';
     const userOverview = 'users/narrow/overview.html';
     const projectOverview = 'projects/narrow/overview.html';
+    const profile = 'profile/profile.html';
 
-    $urlRouterProvider.otherwise('/app/dashboard');
+    // Misc Templates
+    const error404 = 'misc/404.html';
+
+    const defaultRoute = '/app/dashboard';
+    $urlRouterProvider.when('/', defaultRoute);
+    $urlRouterProvider.otherwise('/404');
 
     $stateProvider
       .state('app', {
@@ -34,7 +58,7 @@
         url: '/app',
         views: {
           '': {
-            templateUrl: layout
+            templateUrl: appLayout
           }
         }
       })
@@ -46,7 +70,7 @@
         },
         controller: 'dashboardCtrl',
         controllerAs: 'vm',
-        resolve: load(['dashboard/dashboard.controller.js'])
+        resolve: load(['ui.select', 'dashboard/dashboard.controller.js'])
       })
       .state('app.projects', {
         url: '/projects',
@@ -137,6 +161,36 @@
         controller: 'projectOverviewCtrl',
         controllerAs: 'vm',
         resolve: load(['projects/narrow/overview.controller.js'])
+      })
+      .state('app.profile', {
+        url: '/profile',
+        templateUrl: profile,
+        data: {
+          title: 'Your Profile'
+        },
+        controller: 'profileCtrl',
+        controllerAs: 'vm',
+        resolve: load(['profile/profile.controller.js'])
+      })
+      .state('auth', {
+        abstract: true,
+        url: '/auth',
+        views: {
+          '': {
+            templateUrl: authLayout
+          }
+        }
+      })
+      .state('auth.login', {
+        url: '/login',
+        templateUrl: login,
+        controller: 'loginCtrl',
+        controllerAs: 'vm',
+        resolve: load(['ui.bootstrap', 'authentication/login.controller.js'])
+      })
+      .state('404', {
+        url: '/404',
+        templateUrl: error404
       });
 
     function load(srcs, callback) {

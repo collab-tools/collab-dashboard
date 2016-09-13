@@ -1,5 +1,4 @@
-<!-- aside -->
-<div id="aside" class="app-aside modal fade nav-expand" ng-class="{'folded': app.setting.folded}">
+<div id="side" class="app-aside modal fade nav-expand" ng-class="{'folded': app.setting.folded}">
     <div class="left navside black dk" layout="column">
         <div class="navbar no-radius">
             <div ui-include="'layout/navbar.brand.html'"></div>
@@ -17,13 +16,13 @@
         </div>
     </div>
 </div>
-<!-- / aside -->
 
-<!-- content -->
 <div id="content" class="app-content box-shadow-z1" role="main">
+    <div class="app-header white box-shadow">
+        <div ui-include="'layout/header.html'"></div>
+    </div>
     <div class="app-footer">
         <div ui-include="'layout/footer.html'"></div>
     </div>
     <div ui-view class="app-body" id="view"></div>
 </div>
-<!-- / content -->

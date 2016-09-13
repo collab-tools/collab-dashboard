@@ -5,7 +5,6 @@
     'ngSanitize',
     'ngTouch',
     'ngStorage',
-    'ngStore',
     'ui.router',
     'ui.utils',
     'ui.load',

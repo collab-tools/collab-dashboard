@@ -16,8 +16,7 @@
       module: true,
       serie: true,
       files: [
-        '../libs/angular/angular-bootstrap/ui-bootstrap-tpls.min.js',
-        '../libs/angular/angular-bootstrap/ui-bootstrap-tpls.js'
+        '../libs/angular/angular-bootstrap/ui-bootstrap-tpls.min.js'
       ]
     }, {
       name: 'ui.select',

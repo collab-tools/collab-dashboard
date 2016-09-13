@@ -1,11 +1,12 @@
 (() => {
-  'use strict';
   angular
     .module('app')
     .controller('dashboardCtrl', dashboardCtrl);
 
-  function dashboardCtrl($scope) {
-    const vm = $scope;
+  function dashboardCtrl() {
+    const vm = this;
+
+    vm.subtitle = 'Here are some of the statistics when you are away...';
 
     vm.p_p_1 = [{ data: 70, label: 'Free' }, { data: 30, label: 'Busy' }];
     vm.p_p_2 = [{ data: 75, label: 'Closed' }, { data: 25, label: 'Open' }];

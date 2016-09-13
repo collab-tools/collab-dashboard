@@ -1,18 +1,22 @@
 (() => {
   angular
     .module('app')
-    .factory('Milestones', ($http) => {
-      const urlBase = '/api/global/milestones';
-      const milestonesFactory = {};
+    .factory('Milestones', milestonesFactory);
 
-      milestonesFactory.getOverview = (range) => {
-        return $http.get(`${urlBase}/overview?range=${range}`);
-      };
+  milestonesFactory.$inject = ['$http'];
 
-      milestonesFactory.getMilestone = (milestoneId) => {
-        return $http.get(`${urlBase}/milestones/${milestoneId}`);
-      };
+  function milestonesFactory($http) {
+    const urlBase = '/api/global/milestones';
+    const milestonesFactory = {};
 
-      return milestonesFactory;
-    });
+    milestonesFactory.getOverview = (range) => {
+      return $http.get(`${urlBase}/overview?range=${range}`);
+    };
+
+    milestonesFactory.getMilestone = (milestoneId) => {
+      return $http.get(`${urlBase}/milestones/${milestoneId}`);
+    };
+
+    return milestonesFactory;
+  }
 })();

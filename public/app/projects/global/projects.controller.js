@@ -1,11 +1,13 @@
 (() => {
-  'use strict';
   angular
     .module('app')
     .controller('projectsCtrl', projectsCtrl);
 
-  function projectsCtrl($scope) {
-    const vm = $scope;
+  function projectsCtrl() {
+    const vm = this;
+
+    vm.subtitle = 'Here you can browse and search for Projects';
+
     vm.p_p_1 = [{ data: 70, label: 'Free' }, { data: 30, label: 'Busy' }];
     vm.p_p_2 = [{ data: 75, label: 'Closed' }, { data: 25, label: 'Open' }];
     vm.p_p_3 = [{ data: 30, label: 'Server' }, { data: 70, label: 'Client' }];

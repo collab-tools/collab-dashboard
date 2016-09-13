@@ -1,30 +1,34 @@
 (() => {
   angular
     .module('app')
-    .factory('Github', ($http) => {
-      const urlBase = '/api/global/github';
-      const githubFactory = {};
+    .factory('Github', githubFactory);
 
-      githubFactory.getOverview = (range) => {
-        return $http.get(`${urlBase}/overview?range=${range}`);
-      };
+  githubFactory.$inject = ['$http'];
 
-      githubFactory.getCommit = (commitId) => {
-        return $http.get(`${urlBase}/commits/${commitId}`);
-      };
+  function githubFactory($http) {
+    const urlBase = '/api/global/github';
+    const githubFactory = {};
 
-      githubFactory.getCommits = (range) => {
-        return $http.get(`${urlBase}/commits?range=${range}`);
-      };
+    githubFactory.getOverview = (range) => {
+      return $http.get(`${urlBase}/overview?range=${range}`);
+    };
 
-      githubFactory.getRelease = (releaseId) => {
-        return $http.get(`${urlBase}/release/${releaseId}`);
-      };
+    githubFactory.getCommit = (commitId) => {
+      return $http.get(`${urlBase}/commits/${commitId}`);
+    };
 
-      githubFactory.getReleases = (range) => {
-        return $http.get(`${urlBase}/releases?range=${range}`);
-      };
+    githubFactory.getCommits = (range) => {
+      return $http.get(`${urlBase}/commits?range=${range}`);
+    };
 
-      return githubFactory;
-    });
+    githubFactory.getRelease = (releaseId) => {
+      return $http.get(`${urlBase}/release/${releaseId}`);
+    };
+
+    githubFactory.getReleases = (range) => {
+      return $http.get(`${urlBase}/releases?range=${range}`);
+    };
+
+    return githubFactory;
+  }
 })();
