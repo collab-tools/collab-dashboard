@@ -1,12 +1,58 @@
 (() => {
   angular
     .module('app')
+    .factory('AuthToken', authTokenFactory)
     .factory('Auth', authFactory)
-    .factory('AuthInterceptor, authInterceptorFactory');
+    .factory('AuthInterceptor', authInterceptorFactory);
 
-  authFactory.$inject = ['$window', '$localStorage', '$sessionStorage', '$http'];
+  authFactory.$inject = ['$window', '$http', 'AuthToken'];
 
-  function authFactory($window, $localStorage, $sessionStorage, $http) {
+  function authFactory($window, $http, AuthToken) {
+    const isLoggedIn = () => {
+      const token = AuthToken.getToken();
+      if (token) {
+        const payload = angular.fromJson($window.atob(token.split('.')[1]));
+        // check if token is expired
+        return payload.exp > Date.now() / 1000;
+      }
+      return false;
+    };
+
+    const login = (user, isLocal) => {
+      return $http.post('/api/admin/authenticate', user)
+        .success((data) => {
+          AuthToken.saveToken(data.token, isLocal);
+        });
+    };
+
+    const logout = () => {
+      AuthToken.deleteToken();
+    };
+
+    const currentUser = () => {
+      if (isLoggedIn()) {
+        const token = AuthToken.getToken();
+        const payload = angular.fromJson($window.atob(token.split('.')[1]));
+        return {
+          name: payload.name,
+          role: payload.role
+        };
+      }
+
+      return null;
+    };
+
+    return {
+      isLoggedIn,
+      login,
+      logout,
+      currentUser
+    };
+  }
+
+  authTokenFactory.$inject = ['$localStorage', '$sessionStorage'];
+
+  function authTokenFactory($localStorage, $sessionStorage) {
     const saveToken = (token, isLocal) => {
       if (isLocal) {
         $localStorage['auth-token'] = token;
@@ -19,59 +65,26 @@
       return $localStorage['auth-token'] || $sessionStorage['auth-token'];
     };
 
-    const isLoggedIn = () => {
-      const token = getToken();
-      if (token) {
-        const payload = angular.fromJson($window.atob(token.split('.')[1]));
-        // check if token is expired
-        return payload.exp > Date.now() / 1000;
-      }
-      return false;
-    };
-
-    const login = (user, isLocal) => {
-      return $http.post('/api/admin/authenticate', user)
-        .success((data) => {
-          saveToken(data.token, isLocal);
-        });
-    };
-
-    const logout = () => {
+    const deleteToken = () => {
       delete $localStorage['auth-token'];
       delete $sessionStorage['auth-token'];
-    };
-
-    const currentUser = () => {
-      if (isLoggedIn()) {
-        const token = getToken();
-        const payload = angular.fromJson($window.atob(token.split('.')[1]));
-        return {
-          name: payload.name,
-          role: payload.role
-        };
-      }
-
-      return null;
     };
 
     return {
       saveToken,
       getToken,
-      isLoggedIn,
-      login,
-      logout,
-      currentUser
+      deleteToken
     };
   }
 
-  authInterceptorFactory.$inject = ['$q', '$location', 'Auth'];
+  authInterceptorFactory.$inject = ['$q', '$location', 'AuthToken'];
 
-  function authInterceptorFactory($q, $location, Auth) {
+  function authInterceptorFactory($q, $location, AuthToken) {
     const request = (config) => {
-      const token = Auth.getToken();
+      const token = AuthToken.getToken();
       config.headers = config.headers || {};
       if (token) {
-        config.headers.Authorization = `Bearer: ${token}`;
+        config.headers.Authorization = `Bearer ${token}`;
       }
 
       return config;
