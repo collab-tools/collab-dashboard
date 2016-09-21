@@ -10,35 +10,66 @@ function getOverview(req, res) {
   req.query.range = req.query.range || 7;
   req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
   const errors = req.validationErrors();
-  if (errors) res.json(errors, 400);
+  if (errors) return res.status(400).json(errors);
 
   const dateRange = req.query.range;
-  const convertedRange = moment(new Date()).subtract(dateRange, 'day')
-      .format('YYYY-MM-DD HH:mm:ss');
+  const convertedRange = moment(new Date())
+    .subtract(dateRange, 'day')
+    .format('YYYY-MM-DD HH:mm:ss');
   const response = (milestones) => {
-    if (!milestones) return res.boom.badRequest(ERROR_BAD_REQUEST);
-    return res.json(milestones);
+    if (milestones == null) return res.boom.badRequest(ERROR_BAD_REQUEST);
+    const payload = { milestones };
+    return res.json(payload);
   };
 
   return models.app.milestone.getMilestones(convertedRange)
-      .then(response);
+    .then(response);
+}
+
+function getMilestones(req, res) {
+  req.query.range = req.query.range || 7;
+  req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
+  if (req.query.count !== undefined) req.checkQuery('count', ERROR_BAD_REQUEST).isBoolean();
+  const errors = req.validationErrors();
+  if (errors) return res.status(400).json(errors);
+
+  const dateRange = req.query.range;
+  const convertedRange = moment(new Date())
+    .subtract(dateRange, 'day')
+    .format('YYYY-MM-DD HH:mm:ss');
+  const evalQuery = () => {
+    if (req.query.count) return models.app.milestone.getCount(convertedRange);
+    return models.app.milestone.getMilestones(convertedRange);
+  };
+  const response = (data) => {
+    if (data == null) return res.boom.badRequest(ERROR_BAD_REQUEST);
+    const payload = (req.query.count) ? { count: data } : { milestones: data };
+    return res.json(payload);
+  };
+
+  return evalQuery()
+    .then(response);
 }
 
 function getMilestone(req, res) {
   req.checkParams('milestoneId', `milestoneId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
   const errors = req.validationErrors();
-  if (errors) res.json(errors, 400);
+  if (errors) return res.status(400).json(errors);
 
   const milestoneId = req.params.milestoneId;
   const response = (milestone) => {
-    if (!milestone) res.boom.badRequest(ERROR_BAD_REQUEST);
+    if (milestone == null) res.boom.badRequest(ERROR_BAD_REQUEST);
     res.json(milestone);
   };
 
   return models.app.milestone.getMilestone(milestoneId)
-      .then(response);
+    .then(response);
 }
 
-const milestonesAPI = { getOverview, getMilestone };
+const milestonesAPI = {
+  getOverview,
+  getMilestones,
+  getMilestone
+};
 
 export default milestonesAPI;
