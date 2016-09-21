@@ -1,7 +1,6 @@
 html {
   background-color: $html-bg;
 }
-
 body {
   color: $text-color;
   font-size: $font-size;
@@ -19,11 +18,14 @@ a {
   cursor: pointer;
   outline: 0;
 }
-
 a:hover,
 a:focus {
   color: $hover-color;
   text-decoration: none;
+}
+
+button{
+  color: inherit;
 }
 
 pre {
@@ -32,62 +34,66 @@ pre {
   border-color: $border-color;
 }
 
-blockquote {
+blockquote{
   border-color: $border-color;
 }
 
-small {
+small{
   font-size: 90%;
 }
 
-sup {
-  position: relative;
-  top: -1em;
+sup{
+  position: relative; 
+  top: -1em; 
   font-size: 75%
 }
 
-.pull-center {
+.pull-center{
   position: absolute;
   left: 50%;
 }
 
-.close {
+.close{
   font-size: 1.3rem;
 }
 
-.img-responsive {
+.img-responsive{
   width: 100%;
   height: auto;
 }
 
-.text-center {
+.text-center{
   text-align: center;
 }
 
-.text-left {
+.text-left{
   text-align: left;
 }
 
-.text-right {
+.text-right{
   text-align: right;
 }
 
-.pull-left {
+.pull-left{
   float: left;
 }
 
-.pull-right {
+.pull-right{
   float: right;
 }
 
-@include media-breakpoint-down(sm) {
-  .pull-none-sm {
+.center-block{
+  margin: 0 auto;
+}
+
+@include media-breakpoint-down(sm){
+  .pull-none-sm{
     float: none !important;
   }
 }
 
-@include media-breakpoint-down(xs) {
-  .pull-none-xs {
+@include media-breakpoint-down(xs){
+  .pull-none-xs{
     float: none !important;
   }
 }

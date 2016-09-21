@@ -1,34 +1,41 @@
-.scrollable {
+.scrollable{
   overflow-x: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   &.hover {
-    overflow-y: hidden;
-    > * {
+    &,
+    > .row-inner{
+      overflow-y: hidden;
+    }
+    > *{
       margin-top: -1px;
     }
     &:hover,
     &:focus,
-    &:active {
+    &:active{
       overflow: visible;
       overflow-y: auto;
+      > .row-inner{
+        overflow-y: auto;
+      }
     }
   }
   .smart & {
-    overflow-y: auto !important;
+    &,
+    > .row-inner{
+      overflow-y: auto !important;
+    }
   }
 }
 
-.scroll-x,
-.scroll-y {
-  overflow: hidden;
-  -webkit-overflow-scrolling: touch;
+.scroll-x, 
+.scroll-y{
+  overflow:hidden;
+  -webkit-overflow-scrolling:touch;
 }
-
-.scroll-y {
-  overflow-y: auto;
+.scroll-y{
+  overflow-y:auto;
 }
-
-.scroll-x {
-  overflow-x: auto;
+.scroll-x{
+  overflow-x:auto;
 }
