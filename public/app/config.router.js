@@ -140,7 +140,7 @@
         },
         controller: 'milestonesCtrl',
         controllerAs: 'vm',
-        resolve: load(['milestones/milestones.controller.js'])
+        resolve: load(['moment', 'milestones/milestones.controller.js'])
       })
       .state('app.user', {
         url: '/user',

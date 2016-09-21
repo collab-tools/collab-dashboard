@@ -16,13 +16,13 @@ function getOverview(req, res) {
   const convertedRange = moment(new Date())
     .subtract(dateRange, 'day')
     .format('YYYY-MM-DD HH:mm:ss');
-  const response = (milestones) => {
-    if (milestones == null) return res.boom.badRequest(ERROR_BAD_REQUEST);
-    const payload = { milestones };
-    return res.json(payload);
+  const response = (data) => {
+    if (data == null) return res.boom.badRequest(ERROR_BAD_REQUEST);
+    return res.json({ count: data.count, activities: data.rows });
   };
 
-  return models.app.milestone.getMilestones(convertedRange)
+  return models.log.milestone_log
+    .getByRange(convertedRange)
     .then(response);
 }
 
