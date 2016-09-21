@@ -2,57 +2,66 @@
   <div ui-include="'layout/header.sub.html'"></div>
 </div>
 <div class="padding">
-    <div class="row">
-        <div class="col-sm-6 col-md-4 col-lg-4">
-            <div class="box-color p-a pink">
-                <div class="pull-right m-l">
-					<span class="w-20 dker text-center rounded">
-						<i class="fa fa-github-alt"></i>
-					</span>
-                </div>
-                <div class="clear">
-                    <h4 class="m-a-0 text-md"><a href>1562 <span
-                            class="text-sm">Tasks Created</span></a></h4>
-                </div>
-            </div>
+  <div class="row">
+    <div class="col-sm-6 col-md-4 col-lg-4">
+      <div class="box-color p-a pink">
+        <div class="pull-right m-l">
+          <span class="w-20 dker text-center rounded">
+            <i class="fa fa-github-alt"></i>
+          </span>
         </div>
-        <div class="col-sm-6 col-md-4 col-lg-4">
-            <div class="box-color p-a light-blue">
-                <div class="pull-right m-l">
-					<span class="w-20 dker text-center rounded">
-						<i class="material-icons">&#xE566;</i>
-					</span>
-                </div>
-                <div class="clear">
-                    <h4 class="m-a-0 text-md"><a href>2052 <span
-                            class="text-sm">Tasks Pending</span></a></h4>
-                </div>
-            </div>
+        <div class="clear">
+          <h4 class="m-a-0 text-md">
+            <a href>1562
+              <span class="text-sm">Tasks Created</span>
+            </a>
+          </h4>
         </div>
-        <div class="col-sm-6 col-md-4 col-lg-4">
-            <div class="box-color p-a indigo">
-                <div class="pull-right m-l">
-					<span class="w-20 dker text-center rounded">
-						<i class="material-icons">&#xE420;</i>
-					</span>
-                </div>
-                <div class="clear">
-                    <h4 class="m-a-0 text-md"><a href>205 <span
-                            class="text-sm">Tasks Completed</span></a></h4>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
-    <div class="row">
-        <div class="col-sm-12 col-md-4">
-            <div class="box">
-                <div class="box-header">
-                    <h3>Task Acitvities Composition</h3>
-                    <small>Recorded over the past 7 days</small>
-                </div>
-                <div class="box-body">
-                    <div class="p-y-md">
-                        <div ui-jp="plot" ui-refresh="app.color" ui-options="
+    <div class="col-sm-6 col-md-4 col-lg-4">
+      <div class="box-color p-a light-blue">
+        <div class="pull-right m-l">
+          <span class="w-20 dker text-center rounded">
+            <i class="material-icons">&#xE566;</i>
+          </span>
+        </div>
+        <div class="clear">
+          <h4 class="m-a-0 text-md">
+            <a href>2052
+              <span class="text-sm">Tasks Pending</span>
+            </a>
+          </h4>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-4 col-lg-4">
+      <div class="box-color p-a indigo">
+        <div class="pull-right m-l">
+          <span class="w-20 dker text-center rounded">
+            <i class="material-icons">&#xE420;</i>
+          </span>
+        </div>
+        <div class="clear">
+          <h4 class="m-a-0 text-md">
+            <a href>205
+              <span class="text-sm">Tasks Completed</span>
+            </a>
+          </h4>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12 col-md-4">
+      <div class="box">
+        <div class="box-header">
+          <h3>Task Acitvities Composition</h3>
+          <small>Recorded over the past 7 days</small>
+        </div>
+        <div class="box-body">
+          <div class="p-y-md">
+            <div ui-jp="plot" ui-refresh="app.color" ui-options="
 							{{vm.p_p_6}},
 							{
 							series: { pie: { show: true, innerRadius: 0, stroke: { width: 2, color: '#fff' }, label: { show: true, threshold: 0.05 }, tilt: 0.5, startAngle: 30 } },
@@ -63,18 +72,18 @@
 							tooltipOpts: { content: '%s: %p.0%' }
 							}
 						" style="height:152px"></div>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
-        <div class="col-sm-12 col-md-8">
-            <div class="box dark">
-                <div class="box-header">
-                    <h3>Tasks Tracked</h3>
-                    <small>Mean time to complete</small>
-                </div>
-                <div class="box-body">
-                    <div ui-jp="plot" ui-refresh="app.color" ui-options="
+      </div>
+    </div>
+    <div class="col-sm-12 col-md-8">
+      <div class="box dark">
+        <div class="box-header">
+          <h3>Tasks Tracked</h3>
+          <small>Mean time to complete</small>
+        </div>
+        <div class="box-body">
+          <div ui-jp="plot" ui-refresh="app.color" ui-options="
 						[
 						{
 						data: {{vm.p_b_6}},
@@ -94,53 +103,58 @@
 						tooltip: true,
 						tooltipOpts: { content: '%x.0 is %y.4',  defaultTheme: false, shifts: { x: 0, y: -40 } }
 						}
-						" style="height:200px">
-                    </div>
-                </div>
-            </div>
+						" style="height:200px"></div>
         </div>
+      </div>
     </div>
-    <div class="row">
-        <div class="col-sm-6 col-md-4 col-lg-4">
-            <div class="box p-a dark">
-                <div class="pull-left m-r">
-                    <span ui-jp="sparkline" ui-refresh="app.color"
-                          ui-options="[44,56], {type:'pie', height:36, sliceColors:['{{app.color.light}}','{{app.color.dark}}']}"
-                          class="sparkline inline"></span>
-                </div>
-                <div class="clear">
-                    <h4 class="m-a-0 text-md"><a href>56% <span class="text-sm">Feature Utilization Rate</span></a>
-                    </h4>
-                    <small class="text-muted">5243 Unique Tasks Activities</small>
-                </div>
-            </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-6 col-md-4 col-lg-4">
+      <div class="box p-a dark">
+        <div class="pull-left m-r">
+          <span ui-jp="sparkline" ui-refresh="app.color" ui-options="[44,56], {type:'pie', height:36, sliceColors:['{{app.color.light}}','{{app.color.dark}}']}" class="sparkline inline"></span>
         </div>
-        <div class="col-sm-6 col-md-4 col-lg-4">
-            <div class="box p-a">
-                <div class="pull-left m-r">
-                    <span class="m-y-sm inline" ui-jp="sparkline"
-                          ui-options="[[2,8],[4,6],[6,4],[8,2],[10,0],[8,2],[6,4],[4,6],[2,8]], {type:'bar', height:24, barWidth:4, barSpacing:2, stackedBarColor:['#000', 'rgba(255,255,255,0.2)']}"></span>
-                </div>
-                <div class="clear">
-                    <h4 class="m-a-0 text-md"><a href><span class="text-sm">Standard Deviation (Mean Time):</span>
-                        3.43</a></h4>
-                    <small class="text-muted">Max: 42 Hours Min: 11 Hours</small>
-                </div>
-            </div>
+        <div class="clear">
+          <h4 class="m-a-0 text-md">
+            <a href>56%
+              <span class="text-sm">Feature Utilization Rate</span>
+            </a>
+          </h4>
+          <small class="text-muted">5243 Unique Tasks Activities</small>
         </div>
-        <div class="col-sm-6 col-md-4 col-lg-4">
-            <div class="box p-a dark">
-                <div class="pull-left m-r">
-					<span class="w-40 grey-300 text-center rounded">
-						<i class="fa fa-check-square-o"></i>
-					</span>
-                </div>
-                <div class="clear">
-                    <h4 class="m-a-0 text-md"><a href>182 Hours <span class="text-sm">Completion Mean</span></a>
-                    </h4>
-                    <small class="text-muted">Based on 205 Completed Tasks</small>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
+    <div class="col-sm-6 col-md-4 col-lg-4">
+      <div class="box p-a">
+        <div class="pull-left m-r">
+          <span class="m-y-sm inline" ui-jp="sparkline" ui-options="[[2,8],[4,6],[6,4],[8,2],[10,0],[8,2],[6,4],[4,6],[2,8]], {type:'bar', height:24, barWidth:4, barSpacing:2, stackedBarColor:['#000', 'rgba(255,255,255,0.2)']}"></span>
+        </div>
+        <div class="clear">
+          <h4 class="m-a-0 text-md">
+            <a href>
+              <span class="text-sm">Standard Deviation (Mean Time):</span>
+              3.43</a>
+          </h4>
+          <small class="text-muted">Max: 42 Hours Min: 11 Hours</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-4 col-lg-4">
+      <div class="box p-a dark">
+        <div class="pull-left m-r">
+          <span class="w-40 grey-300 text-center rounded">
+            <i class="fa fa-check-square-o"></i>
+          </span>
+        </div>
+        <div class="clear">
+          <h4 class="m-a-0 text-md">
+            <a href>182 Hours
+              <span class="text-sm">Completion Mean</span>
+            </a>
+          </h4>
+          <small class="text-muted">Based on 205 Completed Tasks</small>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
