@@ -9,7 +9,7 @@ const ERROR_MISSING_TEMPLATE = 'is a required parameter in GET request.';
 function getUser(req, res) {
   req.checkParams('userId', ERROR_BAD_REQUEST).notEmpty();
   const errors = req.validationErrors();
-  if (errors) res.json(errors, 400);
+  if (errors) return res.status(400).json(errors);
 
   const userId = req.params.userId;
   const errHandler = () => {

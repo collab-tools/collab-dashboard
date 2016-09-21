@@ -11,7 +11,7 @@ function getProject(req, res) {
   req.checkParams('projectId', `projectId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
   req.checkQuery('getUser', `range ${ERROR_MISSING_TEMPLATE}`).isBoolean();
   const errors = req.validationErrors();
-  if (errors) res.json(errors, 400);
+  if (errors) return res.status(400).json(errors);
 
   const projectId = req.body.projectId;
   const getUser = req.query.getUser;
@@ -32,7 +32,7 @@ function getProjects(req, res) {
   req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
   req.checkQuery('getUser', `range ${ERROR_MISSING_TEMPLATE}`).isBoolean();
   const errors = req.validationErrors();
-  if (errors) res.json(errors, 400);
+  if (errors) return res.status(400).json(errors);
 
   const dateRange = req.query.range;
   const convertedRange = moment(new Date()).subtract(dateRange, 'day')
@@ -53,7 +53,7 @@ function getProjectsCount(req, res) {
   req.query.range = req.query.range || 7;
   req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
   const errors = req.validationErrors();
-  if (errors) res.json(errors, 400);
+  if (errors) return res.status(400).json(errors);
 
   const dateRange = req.query.range;
   const convertedRange = moment(new Date()).subtract(dateRange, 'day')

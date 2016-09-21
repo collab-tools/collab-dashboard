@@ -7,7 +7,7 @@ const ERROR_MISSING_TEMPLATE = 'is a required parameter in GET request.';
 function getUserProjects(req, res) {
   req.checkParams('userId', `userId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
   const errors = req.validationErrors();
-  if (errors) res.json(errors, 400);
+  if (errors) return res.status(400).json(errors);
 
   const userId = req.params.userId;
 
@@ -29,7 +29,7 @@ function getUserProject(req, res) {
   req.checkParams('userId', `userId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
   req.checkParams('projectId', `projectId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
   const errors = req.validationErrors();
-  if (errors) res.json(errors, 400);
+  if (errors) return res.status(400).json(errors);
 
   const userId = req.params.userId;
   const projectId = req.params.projectId;

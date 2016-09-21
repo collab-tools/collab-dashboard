@@ -37,11 +37,13 @@ module.exports = function (express) {
   // Tasks Related
   // =========================================================
   globalRouter.get('/tasks/overview', tasks.getOverview);
+  globalRouter.get('/tasks', tasks.getTasks);
   globalRouter.get('/tasks/:taskId', tasks.getTask);
 
   // Milestones Related
   // =========================================================
   globalRouter.get('/milestones/overview', milestones.getOverview);
+  globalRouter.get('/milestones', milestones.getMilestones);
   globalRouter.get('/milestones/:milestoneId', milestones.getMilestone);
 
   return globalRouter;

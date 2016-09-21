@@ -11,7 +11,7 @@ function getOverview(req, res) {
   req.query.range = req.query.range || 7;
   req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
   const errors = req.validationErrors();
-  if (errors) res.json(errors, 400);
+  if (errors) return res.status(400).json(errors);
 
   const dateRange = req.query.range;
   const convertedRange = moment(new Date()).subtract(dateRange, 'day')
@@ -37,10 +37,14 @@ function getOverview(req, res) {
     .then(response);
 }
 
+function getCommits(req, res) {
+
+}
+
 function getCommit(req, res) {
   req.checkParams('commitId', `commitId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
   const errors = req.validationErrors();
-  if (errors) res.json(errors, 400);
+  if (errors) return res.status(400).json(errors);
 
   const commitId = req.params.commitId;
   const response = (commit) => {

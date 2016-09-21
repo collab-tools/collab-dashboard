@@ -13,7 +13,7 @@ function getOverview(req, res) {
   req.checkQuery('projectId', `projectId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
   req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
   const errors = req.validationErrors();
-  if (errors) res.json(errors, 400);
+  if (errors) return res.status(400).json(errors);
 
   const projectId = req.query.projectId;
   const userId = req.params.userId;
@@ -63,7 +63,7 @@ function getTasksAssigned(req, res) {
   req.query.range = req.query.range || 7;
   req.checkQuery('range', ERROR_BAD_REQUEST).isInt();
   const errors = req.validationErrors();
-  if (errors) res.json(errors, 400);
+  if (errors) return res.status(400).json(errors);
 
   const userId = req.params.userId;
   const projectId = req.query.projectId;
