@@ -171,7 +171,7 @@
   },
   "resolutions": {
     "angular-touch": "1.5.3",
-    "bootstrap": ">=2.3",
+    "bootstrap": "4.0.0-alpha.4",
     "fullcalendar": "~2.7.1",
     "jquery": "~2.1.4",
     "moment": ">=2.10.5",
