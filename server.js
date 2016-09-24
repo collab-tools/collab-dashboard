@@ -1,12 +1,16 @@
 // Packages & Dependencies
 // ====================================================
-const express = require('express');
-const compression = require('compression');
-const bodyParser = require('body-parser');
-const morgan = require('morgan');
-const config = require('config');
-const boom = require('express-boom-2');
-const validator = require('express-validator');
+import express from 'express';
+import compression from 'compression';
+import bodyParser from 'body-parser';
+import morgan from 'morgan';
+import config from 'config';
+import boom from 'express-boom-2';
+import validator from 'express-validator';
+import winston from 'winston';
+import winstonRotate from 'winston-daily-rotate-file';
+import fs from 'fs';
+
 require('./app/common/mixins')();
 
 // App & Middleware Configurations
@@ -37,6 +41,36 @@ app.use(compression());
 // enable validator middle-ware for endpoints
 app.use(validator());
 
+// configure logger to use as default error handler
+const tsFormat = () => (new Date()).toLocaleTimeString();
+const logDir = 'logs';
+if (!fs.existsSync(logDir)) { fs.mkdirSync(logDir); }
+winston.remove(winston.transports.Console);
+
+// default transport for console with timestamp and color coding
+winston.add(winston.transports.Console, {
+  timestamp: tsFormat,
+  colorize: true
+});
+
+// file transport for debug messages
+winston.add(winstonRotate, {
+  name: 'debug-transport',
+  filename: `${logDir}/debug.log`,
+  timestamp: tsFormat,
+  level: 'debug'
+});
+
+// file transport for system messages
+winston.add(winstonRotate, {
+  name: 'system-transport',
+  filename: `${logDir}/system.log`,
+  timestamp: tsFormat,
+  level: 'info'
+});
+
+winston.info('Debugging tool initialized.');
+
 // serve front-end static assets and angular application
 app.use(express.static(`${__dirname}/public/dist/app`));
 app.use('/assets', express.static(`${__dirname}/public/dist/assets`));
@@ -53,4 +87,4 @@ app.all('*', (req, res) => {
 });
 
 app.listen(config.get('port'));
-console.log(`Server Port opened at ${config.port}`);
+winston.info(`Server Port opened at ${config.port}`);

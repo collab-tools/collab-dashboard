@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import moment from 'moment';
+import winston from 'winston';
 import Storage from '../../common/storage-helper';
 
 const models = new Storage();
@@ -14,8 +15,9 @@ function getOverview(req, res) {
   if (errors) return res.status(400).json(errors);
 
   const dateRange = req.query.range;
-  const convertedRange = moment(new Date()).subtract(dateRange, 'day')
-      .format('YYYY-MM-DD HH:mm:ss');
+  const convertedRange = moment(new Date())
+    .subtract(dateRange, 'day')
+    .format('YYYY-MM-DD HH:mm:ss');
   const payload = {};
 
   const processActiveUsers = (activeUsers) => {
@@ -38,15 +40,15 @@ function getOverview(req, res) {
     res.json(payload);
   };
 
-  return models.log['revision-log'].getParticipationCount(convertedRange)
-      .then(processActiveUsers)
-      .then(models.log['drive-log'].getUniqueFiles)
-      .then(processFiles)
-      .then(_.partial(models.log['revision-log'].getParticipationCount, convertedRange))
-      .then(processRevisionsCount)
-      .then(models.app.user.getUsersCount)
-      .then(processUsersCount)
-      .then(response);
+  return models.log.revision_log.getParticipationCount(convertedRange)
+    .then(processActiveUsers)
+    .then(models.log.drive_log.getUniqueFiles)
+    .then(processFiles)
+    .then(_.partial(models.log.revision_log.getParticipationCount, convertedRange))
+    .then(processRevisionsCount)
+    .then(models.app.user.getUsersCount)
+    .then(processUsersCount)
+    .then(response);
 }
 
 function getRevisions(req, res) {
@@ -57,7 +59,7 @@ function getRevisions(req, res) {
 
   const dateRange = req.query.range;
   const convertedRange = moment(new Date()).subtract(dateRange, 'day')
-      .format('YYYY-MM-DD HH:mm:ss');
+    .format('YYYY-MM-DD HH:mm:ss');
 
   const response = (commit) => {
     if (!commit) res.boom.badRequest(ERROR_BAD_REQUEST);
@@ -65,7 +67,7 @@ function getRevisions(req, res) {
   };
 
   return models.log['revision-log'].getRevisions(convertedRange)
-      .then(response);
+    .then(response);
 }
 
 function getFileRevisions(req, res) {
@@ -78,14 +80,14 @@ function getFileRevisions(req, res) {
   const fileId = req.params.fileId;
   const dateRange = req.query.range;
   const convertedRange = moment(new Date()).subtract(dateRange, 'day')
-      .format('YYYY-MM-DD HH:mm:ss');
+    .format('YYYY-MM-DD HH:mm:ss');
   const response = (revisions) => {
     if (!revisions) res.boom.badRequest(ERROR_BAD_REQUEST);
     res.json(revisions);
   };
 
   return models.log['revision-log'].getFileRevisions(fileId, convertedRange)
-      .then(response);
+    .then(response);
 }
 
 function getFile(req, res) {
@@ -100,7 +102,7 @@ function getFile(req, res) {
   };
 
   return models.log['drive-log'].getFile(fileId)
-      .then(response);
+    .then(response);
 }
 
 const driveAPI = { getOverview, getRevisions, getFileRevisions, getFile };
