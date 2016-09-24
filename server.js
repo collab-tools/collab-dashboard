@@ -5,7 +5,7 @@ import compression from 'compression';
 import bodyParser from 'body-parser';
 import morgan from 'morgan';
 import config from 'config';
-import boom from 'express-boom-2';
+import boom from 'boom';
 import validator from 'express-validator';
 import winston from 'winston';
 import winstonRotate from 'winston-daily-rotate-file';
@@ -21,8 +21,6 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 app.use(bodyParser.json());
-
-app.use(boom());
 
 // configure app to handle CORS requests
 app.use((req, res, next) => {
@@ -41,6 +39,22 @@ app.use(compression());
 // enable validator middle-ware for endpoints
 app.use(validator());
 
+// serve front-end static assets and angular application
+app.use(express.static(`${__dirname}/public/dist/app`));
+app.use('/assets', express.static(`${__dirname}/public/dist/assets`));
+app.use('/libs', express.static(`${__dirname}/public/libs`));
+
+// API Routes
+// =====================================================
+require('./app/routes')(app, express);
+
+// Catch-All Routing - Sends user to front-end
+// =====================================================
+app.all('*', (req, res) => {
+  res.sendFile(`${__dirname}/public/dist/app/index.html`);
+});
+
+
 // configure logger to use as default error handler
 const tsFormat = () => (new Date()).toLocaleTimeString();
 const logDir = 'logs';
@@ -50,7 +64,8 @@ winston.remove(winston.transports.Console);
 // default transport for console with timestamp and color coding
 winston.add(winston.transports.Console, {
   timestamp: tsFormat,
-  colorize: true
+  colorize: true,
+  level: 'debug'
 });
 
 // file transport for debug messages
@@ -71,20 +86,25 @@ winston.add(winstonRotate, {
 
 winston.info('Debugging tool initialized.');
 
-// serve front-end static assets and angular application
-app.use(express.static(`${__dirname}/public/dist/app`));
-app.use('/assets', express.static(`${__dirname}/public/dist/assets`));
-app.use('/libs', express.static(`${__dirname}/public/libs`));
+// configure express error handler middleware
+const ERROR_BAD_REQUEST = 'Unable to serve your content. Check your arguments.';
+const logErrors = (err, req, res, next) => {
+  if (err.isBoom) {
+    winston.debug(`Status Code: ${err.output.statusCode} | Data: ${JSON.stringify(err.data)} | ${err.stack}`);
+    next(err);
+  } else {
+    winston.error(err);
+    next(boom.badRequest(ERROR_BAD_REQUEST));
+  }
+};
 
-// API Routes
-// =====================================================
-require('./app/routes')(app, express);
+// eslint-disable-next-line no-unused-vars
+const errorHandler = (err, req, res, next) => {
+  res.status(err.output.statusCode).json(err.output.payload);
+};
 
-// Catch-All Routing - Sends user to front-end
-// =====================================================
-app.all('*', (req, res) => {
-  res.sendFile(`${__dirname}/public/dist/app/index.html`);
-});
+app.use(logErrors);
+app.use(errorHandler);
 
 app.listen(config.get('port'));
 winston.info(`Server Port opened at ${config.port}`);

@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import boom from 'boom';
 import moment from 'moment';
 import Storage from '../../common/storage-helper';
 
@@ -7,14 +8,15 @@ const models = new Storage();
 const ERROR_BAD_REQUEST = 'Unable to serve your content. Check your arguments.';
 const ERROR_MISSING_TEMPLATE = 'is a required parameter in GET request.';
 
-function getOverview(req, res) {
+function getOverview(req, res, next) {
   req.query.range = req.query.range || 7;
   req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
   const errors = req.validationErrors();
-  if (errors) return res.status(400).json(errors);
+  if (errors) return next(boom.badRequest(errors));
 
   const dateRange = req.query.range;
-  const convertedRange = moment(new Date()).subtract(dateRange, 'day')
+  const convertedRange = moment(new Date())
+    .subtract(dateRange, 'day')
     .format('YYYY-MM-DD HH:mm:ss');
   const payload = {};
 
@@ -22,48 +24,50 @@ function getOverview(req, res) {
     payload.repos = repos;
   };
 
-  const getCommits = (commits) => {
+  const processCommits = (commits) => {
     payload.commits = commits;
   };
 
   const response = () => {
-    res.json(payload);
+    res.status(200).json(payload);
   };
 
   return models.app.project.getRepositories(convertedRange)
     .then(processRepos)
-    .then(_.partial(models.log['commit-log'].getCommits(convertedRange)))
-    .then(getCommits)
-    .then(response);
+    .then(_.partial(models.log.commit_log.getCommits(convertedRange)))
+    .then(processCommits)
+    .then(response)
+    .catch(next);
 }
 
-function getCommits(req, res) {
+function getCommits(req, res, next) {
 
 }
 
-function getCommit(req, res) {
+function getCommit(req, res, next) {
   req.checkParams('commitId', `commitId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
   const errors = req.validationErrors();
-  if (errors) return res.status(400).json(errors);
+  if (errors) return next(boom.badRequest(errors));
 
   const commitId = req.params.commitId;
   const response = (commit) => {
-    if (!commit) res.boom.badRequest(ERROR_BAD_REQUEST);
-    res.json(commit);
+    if (_.isNil(commit)) return next(boom.badRequest(ERROR_BAD_REQUEST));
+    res.status(200).json(commit);
   };
 
-  return models.log['commit-log'].getCommit(commitId)
-    .then(response);
+  return models.log.commit_log.getCommit(commitId)
+    .then(response)
+    .catch(next);
 }
 
-function getRelease(req, res) {
-
-}
-
-function getReleases(req, res) {
+function getRelease(req, res, next) {
 
 }
 
-const githubAPI = { getOverview, getCommit, getReleases, getRelease };
+function getReleases(req, res, next) {
+
+}
+
+const githubAPI = { getOverview, getCommits, getCommit, getReleases, getRelease };
 
 export default githubAPI;
