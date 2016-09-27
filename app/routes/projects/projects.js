@@ -22,8 +22,8 @@ function getProject(req, res, next) {
     res.status(200).json(project);
   };
 
-  let retrievalFunc = models.app.projects.findProjectById;
-  if (getUser) retrievalFunc = models.app.projects.getProjectWithMembers;
+  let retrievalFunc = models.app.project.findProjectById;
+  if (getUser) retrievalFunc = models.app.project.getProjectWithMembers;
 
   return retrievalFunc(projectId)
     .then(response)
@@ -48,8 +48,8 @@ function getProjects(req, res, next) {
     res.status(200).json(projects);
   };
 
-  let retrievalFunc = models.app.projects.getProjects;
-  if (getUser) retrievalFunc = models.app.projects.getProjectsWithMembers;
+  let retrievalFunc = models.app.project.getProjects;
+  if (getUser) retrievalFunc = models.app.project.getProjectsWithMembers;
 
   return retrievalFunc(convertedRange)
     .then(response)
@@ -70,7 +70,7 @@ function getProjectsCount(req, res, next) {
     if (_.isNil(projectsCount)) return next(boom.badRequest(ERROR_BAD_REQUEST));
     res.status(200).json(projectsCount);
   };
-  return models.app.getProjectsCount(convertedRange)
+  return models.app.project.getProjectsCount(convertedRange)
     .then(response)
     .catch(next);
 }

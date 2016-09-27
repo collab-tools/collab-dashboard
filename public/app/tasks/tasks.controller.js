@@ -37,7 +37,7 @@
       if (vm.doneCompleted.length !== vm.startCompleted.length) $log.error('Something went wrong.');
       else {
         // Compute time difference for each task
-        vm.completionTimes = _.map(_.zip(vm.startCompleted, vm.doneCompleted), activityPair => {
+        vm.completionTimes = _.map(_.zip(vm.startCompleted, vm.doneCompleted), (activityPair) => {
           const startDate = moment(activityPair[0], 'YYYY-MM-DD HH:mm:ss');
           const endDate = moment(activityPair[1], 'YYYY-MM-DD HH:mm:ss');
           return endDate.diff(startDate, 'minutes');

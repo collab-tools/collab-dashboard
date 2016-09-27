@@ -63,6 +63,7 @@ winston.remove(winston.transports.Console);
 
 // default transport for console with timestamp and color coding
 winston.add(winston.transports.Console, {
+  prettyPrint: true,
   timestamp: tsFormat,
   colorize: true,
   level: 'debug'
@@ -90,7 +91,7 @@ winston.info('Debugging tool initialized.');
 const ERROR_BAD_REQUEST = 'Unable to serve your content. Check your arguments.';
 const logErrors = (err, req, res, next) => {
   if (err.isBoom) {
-    winston.debug(`Status Code: ${err.output.statusCode} | Data: ${JSON.stringify(err.data)} | ${err.stack}`);
+    winston.debug(`Status Code: ${err.output.statusCode} | ${err.stack}`, err.data);
     next(err);
   } else {
     winston.error(err);
