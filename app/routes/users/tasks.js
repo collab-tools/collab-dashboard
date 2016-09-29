@@ -54,7 +54,7 @@ function getOverview(req, res, next) {
     res.status(200).json(payload);
   };
 
-  return models.log.task_log.getByUserProject(userId, projectId, convertedRange)
+  return models.log.task_log.getByProject(userId, projectId, convertedRange)
     .then(processLogs)
     .then(response)
     .catch(next);

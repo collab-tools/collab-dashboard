@@ -18,36 +18,30 @@ function getOverview(req, res, next) {
   const convertedRange = moment(new Date())
     .subtract(dateRange, 'day')
     .format('YYYY-MM-DD HH:mm:ss');
-  const payload = {};
 
-  const processActiveUsers = (activeUsers) => {
-    payload.activeUsers = activeUsers;
-  };
-
-  const processRevisionsCount = (revisionsCount) => {
-    payload.uniqueRevisions = revisionsCount;
-  };
-
-  const processFiles = (files) => {
+  const processPayload = ([activeUsersCount, revisions, files, usersCount]) => {
+    const payload = {};
+    payload.activeUsersCount = activeUsersCount;
+    payload.revisions = revisions;
     payload.files = files;
+    payload.usersCount = usersCount;
+    return payload;
   };
 
-  const processUsersCount = (count) => {
-    payload.users = count;
-  };
-
-  const response = () => {
+  const response = (payload) => {
+    if (_.isNil(payload)) return next(boom.badRequest(ERROR_BAD_REQUEST));
     res.status(200).json(payload);
   };
 
-  return models.log.revision_log.getParticipationCount(convertedRange)
-    .then(processActiveUsers)
-    .then(models.log.drive_log.getUniqueFiles)
-    .then(processFiles)
-    .then(_.partial(models.log.revision_log.getParticipationCount, convertedRange))
-    .then(processRevisionsCount)
-    .then(models.app.user.getUsersCount)
-    .then(processUsersCount)
+  const retrievalFunctions = [
+    models.log.revision_log.getParticipationCount(convertedRange),
+    models.log.revision_log.getRevisions(convertedRange),
+    models.log.drive_log.getUniqueFiles(null, null, convertedRange),
+    models.app.user.getUsersCount(convertedRange)
+  ];
+
+  return Promise.all(retrievalFunctions)
+    .then(processPayload)
     .then(response)
     .catch(next);
 }

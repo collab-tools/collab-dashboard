@@ -18,8 +18,8 @@
     vm.subtitle = 'Collab Statistics on Tasks Usage';
 
     const processActivities = (response) => {
-      vm.activities = response.activities;
-      vm.activityCount = response.count;
+      vm.activities = response.data.activities;
+      vm.activityCount = response.data.count;
 
       // Count tasks created, pending, completed
       vm.created = _.filter(vm.activities, { activity: 'C' });
