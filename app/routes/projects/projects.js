@@ -22,10 +22,10 @@ function getProject(req, res, next) {
     res.status(200).json(project);
   };
 
-  let retrievalFunc = models.app.project.findProjectById;
-  if (getUser) retrievalFunc = models.app.project.getProjectWithMembers;
+  let retrievalFunc = 'findProjectById';
+  if (getUser) retrievalFunc = 'getProjectWithMembers';
 
-  return retrievalFunc(projectId)
+  return models.app.project[retrievalFunc](projectId)
     .then(response)
     .catch(next);
 }
@@ -48,10 +48,10 @@ function getProjects(req, res, next) {
     res.status(200).json(projects);
   };
 
-  let retrievalFunc = models.app.project.getProjects;
-  if (getUser) retrievalFunc = models.app.project.getProjectsWithMembers;
+  let retrievalFunc = 'getProjects';
+  if (getUser) retrievalFunc = 'getProjectsWithMembers';
 
-  return retrievalFunc(convertedRange)
+  return models.app.project[retrievalFunc](convertedRange)
     .then(response)
     .catch(next);
 }
