@@ -19,12 +19,13 @@ function getOverview(req, res, next) {
     .subtract(dateRange, 'day')
     .format('YYYY-MM-DD HH:mm:ss');
 
-  const processPayload = ([activeUsersCount, revisions, files, usersCount]) => {
+  const processPayload = ([activeUsersCount, revisions, files, usersCount, projectsCount]) => {
     const payload = {};
     payload.activeUsersCount = activeUsersCount;
     payload.revisions = revisions;
     payload.files = files;
     payload.usersCount = usersCount;
+    payload.projectsCount = projectsCount;
     return payload;
   };
 
@@ -37,7 +38,8 @@ function getOverview(req, res, next) {
     models.log.revision_log.getParticipationCount(convertedRange),
     models.log.revision_log.getRevisions(convertedRange),
     models.log.drive_log.getUniqueFiles(null, null, convertedRange),
-    models.app.user.getUsersCount(convertedRange)
+    models.app.user.getUsersCount(convertedRange),
+    models.app.project.getProjectsCount(convertedRange)
   ];
 
   return Promise.all(retrievalFunctions)
