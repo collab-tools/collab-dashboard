@@ -14,7 +14,7 @@
     const vm = this;
     const parent = $scope.$parent;
 
-    vm.subtitle = 'Here are some of the statistics when you are away...';
+    vm.subtitle = 'Collab In A Glance';
 
     // Retrieve number of milestones added
     Milestones

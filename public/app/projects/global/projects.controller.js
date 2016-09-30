@@ -15,7 +15,7 @@
   function projectsCtrl($scope, $log, _, Projects) {
     const vm = this;
     const parent = $scope.$parent;
-    vm.subtitle = 'Here you can browse and search for Projects';
+    vm.subtitle = 'Projects within Collab';
 
     const processProjects = (projects) => {
       vm.projects = projects;

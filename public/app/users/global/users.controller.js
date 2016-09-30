@@ -15,7 +15,7 @@
   function usersCtrl($scope, $log, _, Users) {
     const vm = this;
     const parent = $scope.$parent;
-    vm.subtitle = 'Here you can browse and search for users';
+    vm.subtitle = 'Users using Collab';
 
     const processUsers = (users) => {
       vm.users = users;
