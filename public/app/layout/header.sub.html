@@ -1,9 +1,9 @@
 <div class="p-a white lt box-shadow">
   <div class="row">
 		<div class="col-sm-6 col-md-6">
-			<div class="m-t-xs text-md _300">{{vm.subtitle}}</div>
+			<div class="m-t-sm text-md _300">{{vm.subtitle}}</div>
 		</div>
-		<div class="col-sm-3 col-sm-offset-3 col-xl-2 col-xl-offset-4">
+		<div class="col-sm-3 offset-sm-3 col-xl-2 offset-xl-4">
       <ui-select ng-model="dateRange.selected" theme="bootstrap" class="p-r pull-right">
         <ui-select-match class="ui-select-match" placeholder="Date Range">{{$select.selected.display}}</ui-select-match>
         <ui-select-choices class="ui-select-choices" repeat="range in dateRange">

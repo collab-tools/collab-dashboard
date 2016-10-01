@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import boom from 'boom';
 import config from 'config';
 import moment from 'moment';
 import octokat from 'octokat';
@@ -9,13 +10,13 @@ const models = new Storage();
 const ERROR_BAD_REQUEST = 'Unable to serve your content. Check your arguments.';
 const ERROR_MISSING_TEMPLATE = 'is a required parameter in GET request.';
 
-function getOverview(req, res) {
+function getOverview(req, res, next) {
   req.checkParams('userId', `userId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
   req.checkQuery('projectId', `projectId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
   req.query.range = req.query.range || 7;
   req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
   const errors = req.validationErrors();
-  if (errors) res.json(errors, 400);
+  if (errors) return next(boom.badRequest(errors));
 
   const userId = req.params.userId;
   const projectId = req.query.projectId;
@@ -43,9 +44,9 @@ function getOverview(req, res) {
 
     // Get all commits of the user and process
     return repo.commits.fetch({ since, author: githubName })
-        .then(commits => {
-          overviewPayload.commits = commits;
-        });
+      .then((commits) => {
+        overviewPayload.commits = commits;
+      });
   };
 
   const getRepoStats = (contributors) => {
@@ -53,10 +54,10 @@ function getOverview(req, res) {
     const defaultAcc = { a: 0, d: 0, c: 0 };
 
     contributors.forEach((contributor) => {
-      const rangeWeeks = since ? _.filter(contributor.weeks, (week) => week.w >= since) : contributor.weeks;
+      const rangeWeeks = since ? _.filter(contributor.weeks, (week) => { return week.w >= since; }) : contributor.weeks;
       contribStats[contributor.author.login] = rangeWeeks.reduce((previous, current) =>
-              ({ a: (previous.a + current.a), d: (previous.d + current.d), c: previous.c + current.c }),
-          defaultAcc);
+        ({ a: (previous.a + current.a), d: (previous.d + current.d), c: previous.c + current.c }),
+        defaultAcc);
     });
 
     const userStats = contribStats[githubName];
@@ -73,87 +74,76 @@ function getOverview(req, res) {
   };
 
   const response = () => {
-    if (overviewPayload.success) res.json(overviewPayload);
-    else res.boom.badRequest(ERROR_BAD_REQUEST);
-  };
-
-  const handleError = (error) => {
-    console.log(error);
-    res.boom.badRequest(ERROR_BAD_REQUEST);
+    if (!overviewPayload.success) return next(boom.badRequest(ERROR_BAD_REQUEST));
+    res.status(200).json(overviewPayload);
   };
 
   return octo.user.fetch()
-      .then(processUser)
-      .then(repo.stats.contributors.fetch)
-      .then(getRepoStats)
-      .then(response)
-      .catch(handleError);
+    .then(processUser)
+    .then(repo.stats.contributors.fetch)
+    .then(getRepoStats)
+    .then(response)
+    .catch(next);
 }
 
-function getCommits(req, res) {
+function getCommits(req, res, next) {
   req.checkParams('userId', `userId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
   req.checkQuery('projectId', `projectId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
   req.query.range = req.query.range || 7;
   req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
   const errors = req.validationErrors();
-  if (errors) res.boom.badRequest(errors);
+  if (errors) return next(boom.badRequest(errors));
 
   const userId = req.params.userId;
   const projectId = req.query.projectId;
   const dateRange = req.query.range;
-  const convertedRange = moment(new Date()).subtract(dateRange, 'day')
-      .format('YYYY-MM-DD HH:mm:ss');
+  const convertedRange = moment(new Date())
+    .subtract(dateRange, 'day')
+    .format('YYYY-MM-DD HH:mm:ss');
 
   const retrieveCommits = (user) => {
     const githubLogin = user.github_login;
-    return models.log['commit-log'].getUserCommits(githubLogin, projectId, convertedRange);
+    return models.log.commit_log.getUserCommits(githubLogin, projectId, convertedRange);
   };
 
   const response = (commits) => {
-    res.json(commits);
-  };
-
-  const errorHandler = () => {
-    res.boom.badRequest(ERROR_BAD_REQUEST);
+    res.status(200).json(commits);
   };
 
   return this.models.app.user.getUserById(userId)
-      .then(retrieveCommits)
-      .then(response)
-      .catch(errorHandler);
+    .then(retrieveCommits)
+    .then(response)
+    .catch(next);
 }
 
-function getCommitsCount(req, res) {
+function getCommitsCount(req, res, next) {
   req.checkParams('userId', `userId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
   req.checkQuery('projectId', `projectId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
   req.query.range = req.query.range || 7;
   req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
   const errors = req.validationErrors();
-  if (errors) res.boom.badRequest(errors);
+  if (errors) return next(boom.badRequest(errors));
 
   const userId = req.params.userId;
   const projectId = req.query.projectId;
   const dateRange = req.query.range;
-  const convertedRange = moment(new Date()).subtract(dateRange, 'day')
-      .format('YYYY-MM-DD HH:mm:ss');
+  const convertedRange = moment(new Date())
+    .subtract(dateRange, 'day')
+    .format('YYYY-MM-DD HH:mm:ss');
 
   const retrieveCommits = (user) => {
     const githubLogin = user.github_login;
-    return models.log['commit-log'].getUserCommitsCount(githubLogin, projectId, convertedRange);
+    return models.log.commit_log.getUserCommitsCount(githubLogin, projectId, convertedRange);
   };
 
   const response = (commits) => {
-    res.json(commits);
-  };
-
-  const errorHandler = () => {
-    res.boom.badRequest(ERROR_BAD_REQUEST);
+    res.status(200).json(commits);
   };
 
   return this.models.app.user.getUserById(userId)
-      .then(retrieveCommits)
-      .then(response)
-      .catch(errorHandler);
+    .then(retrieveCommits)
+    .then(response)
+    .catch(next);
 }
 
 const githubAPI = { getOverview, getCommits, getCommitsCount };

@@ -20,6 +20,7 @@ module.exports = function (express) {
   // =========================================================
   globalRouter.get('/github/overview', github.getOverview);
   globalRouter.get('/github/commits/:commitId', github.getCommit);
+  globalRouter.get('/github/commits', github.getCommits);
   globalRouter.get('/github/releases', github.getReleases);
   globalRouter.get('/github/releases/:releaseId', github.getRelease);
 
@@ -37,11 +38,13 @@ module.exports = function (express) {
   // Tasks Related
   // =========================================================
   globalRouter.get('/tasks/overview', tasks.getOverview);
+  globalRouter.get('/tasks', tasks.getTasks);
   globalRouter.get('/tasks/:taskId', tasks.getTask);
 
   // Milestones Related
   // =========================================================
   globalRouter.get('/milestones/overview', milestones.getOverview);
+  globalRouter.get('/milestones', milestones.getMilestones);
   globalRouter.get('/milestones/:milestoneId', milestones.getMilestone);
 
   return globalRouter;

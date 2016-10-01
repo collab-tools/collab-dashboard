@@ -1,4 +1,4 @@
-function getOverview(req, res) {
+function getOverview(req, res, next) {
 
 }
 
