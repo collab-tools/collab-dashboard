@@ -5,7 +5,7 @@
   "main": "server.compiled.js",
   "scripts": {
     "start": "cross-env NODE_ENV=production node server.compiled.js",
-    "compile": "babel -d lib/ src/ && babel server.js -o server.compiled.js",
+    "compile": "babel -d dist/ app/ && babel server.js -o server.compiled.js",
     "lint": "eslint server.js",
     "dev": "cross-env NODE_ENV=dev nodemon server.js -L --watch server.js --watch app --watch config --exec babel-node"
   },

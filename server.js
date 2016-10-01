@@ -11,12 +11,17 @@ import winston from 'winston';
 import winstonRotate from 'winston-daily-rotate-file';
 import fs from 'fs';
 
-require('./app/common/mixins')();
+const app = express();
+const isProduction = app.get('env') === 'production';
+const rootApp = isProduction ? `${__dirname}/dist` : `${__dirname}/app`;
+const rootPublic = isProduction ? `${__dirname}/public/dist` : `${__dirname}/public`;
+const rootLogging = `${__dirname}/logs`;
+
+require(`${rootApp}/common/mixins`)();
 
 // App & Middleware Configurations
 // ====================================================
 // body parser to grab information from HTTP POST requests
-const app = express();
 app.use(bodyParser.urlencoded({
   extended: true
 }));
@@ -40,25 +45,23 @@ app.use(compression());
 app.use(validator());
 
 // serve front-end static assets and angular application
-app.use(express.static(`${__dirname}/public/dist/app`));
-app.use('/assets', express.static(`${__dirname}/public/dist/assets`));
-app.use('/libs', express.static(`${__dirname}/public/libs`));
+app.use(express.static(`${rootPublic}/app`));
+app.use('/assets', express.static(`${rootPublic}/assets`));
+app.use('/libs', express.static(`${rootPublic}/libs`));
 
 // API Routes
 // =====================================================
-require('./app/routes')(app, express);
+require(`${rootApp}/routes`)(app, express);
 
 // Catch-All Routing - Sends user to front-end
 // =====================================================
 app.all('*', (req, res) => {
-  res.sendFile(`${__dirname}/public/dist/app/index.html`);
+  res.sendFile(`${rootPublic}/app/index.html`);
 });
-
 
 // configure logger to use as default error handler
 const tsFormat = () => (new Date()).toLocaleTimeString();
-const logDir = 'logs';
-if (!fs.existsSync(logDir)) { fs.mkdirSync(logDir); }
+if (!fs.existsSync(rootLogging)) { fs.mkdirSync(rootLogging); }
 winston.remove(winston.transports.Console);
 
 // default transport for console with timestamp and color coding
@@ -72,7 +75,7 @@ winston.add(winston.transports.Console, {
 // file transport for debug messages
 winston.add(winstonRotate, {
   name: 'debug-transport',
-  filename: `${logDir}/debug.log`,
+  filename: `${rootLogging}/debug.log`,
   timestamp: tsFormat,
   level: 'debug'
 });
@@ -80,7 +83,7 @@ winston.add(winstonRotate, {
 // file transport for system messages
 winston.add(winstonRotate, {
   name: 'system-transport',
-  filename: `${logDir}/system.log`,
+  filename: `${rootLogging}/system.log`,
   timestamp: tsFormat,
   level: 'info'
 });
