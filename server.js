@@ -3,7 +3,9 @@
 import express from 'express';
 import compression from 'compression';
 import bodyParser from 'body-parser';
+import helmet from 'helmet';
 import morgan from 'morgan';
+import hpp from 'hpp';
 import config from 'config';
 import boom from 'boom';
 import validator from 'express-validator';
@@ -17,6 +19,7 @@ const rootApp = isProduction ? `${__dirname}/dist` : `${__dirname}/app`;
 const rootPublic = isProduction ? `${__dirname}/public/dist` : `${__dirname}/public`;
 const rootLogging = `${__dirname}/logs`;
 
+// eslint-disable-next-line import/no-dynamic-require
 require(`${rootApp}/common/mixins`)();
 
 // App & Middleware Configurations
@@ -44,13 +47,20 @@ app.use(compression());
 // enable validator middle-ware for endpoints
 app.use(validator());
 
+// further secure by modifying various http headers
+app.use(helmet());
+
+// middleware to protect against HTTP parameter pollution attacks
+app.use(hpp());
+
 // serve front-end static assets and angular application
 app.use(express.static(`${rootPublic}/app`));
 app.use('/assets', express.static(`${rootPublic}/assets`));
 app.use('/libs', express.static(`${rootPublic}/libs`));
 
 // API Routes
-// =====================================================
+// =====================================================\
+// eslint-disable-next-line import/no-dynamic-require
 require(`${rootApp}/routes`)(app, express);
 
 // Catch-All Routing - Sends user to front-end
