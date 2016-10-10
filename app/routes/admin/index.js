@@ -12,7 +12,7 @@ const ERROR_ILLEGAL = 'Unauthorized access';
 const JWT_EXPIRY_DAYS = 7;
 
 function checkDevAccess(devKey) {
-  return devKey === config.developer_mode;
+  return devKey === config.developer_key;
 }
 
 /**
@@ -55,7 +55,7 @@ function createAdmin(req, res, next) {
   if (!checkDevAccess(devKey)) return next(boom.unauthorized(ERROR_ILLEGAL));
 
   // Validate that all mandatory fields are given
-  if (_.isNil(username) && _.isNil(password) && _.isNil(name) && _.isNil(role)) {
+  if (!_.isNil(username) && !_.isNil(password) && !_.isNil(name) && !_.isNil(role)) {
     const payload = { username, password, name, role };
     const response = (success) => {
       if (!success) return next(boom.badRequest(ERROR_BAD_REQUEST));

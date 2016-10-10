@@ -8,5 +8,5 @@
     "password": ""
   },
   "jwt_secret": "",
-  "developer_mode": false
+  "developer_key": ""
 }
