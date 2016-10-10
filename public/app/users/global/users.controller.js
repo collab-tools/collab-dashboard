@@ -19,6 +19,7 @@
 
     const processUsers = (users) => {
       vm.users = users;
+      vm.usersCount = users.length;
     };
 
     Users
