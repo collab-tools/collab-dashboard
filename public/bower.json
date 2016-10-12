@@ -13,7 +13,6 @@
       "src": [
         "angular/angular.js",
         "angular-animate/angular-animate.js",
-        "angular-resource/angular-resource.js",
         "angular-sanitize/angular-sanitize.js",
         "angular-touch/angular-touch.js",
         "angular-strap/dist/angular-strap.js",
@@ -116,7 +115,6 @@
     "angular-echarts": "~0.3.5",
     "angular-file-upload": "~1.1.1",
     "angular-motion": "~0.4.3",
-    "angular-resource": "1.5.3",
     "angular-sanitize": "1.5.3",
     "angular-smart-table": "~1.4.9",
     "angular-strap": "~2.3.2",
