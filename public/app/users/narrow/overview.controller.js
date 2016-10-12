@@ -36,9 +36,9 @@
 
     // Helper function to strip metadata from HTTP response
     const processResponse = (responses) => {
-      return processPayload(_.map(responses, (response) => {
+      return _.map(responses, (response) => {
         return response.data;
-      }));
+      });
     };
 
     const processPayload = (project, commits, files, revisions, tasks, milestones,
