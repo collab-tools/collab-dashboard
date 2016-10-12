@@ -19,6 +19,7 @@
 
     const processProjects = (projects) => {
       vm.projects = projects;
+      vm.projectCount = vm.projects.length;
     };
 
     Projects
