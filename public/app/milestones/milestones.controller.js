@@ -18,8 +18,8 @@
     vm.subtitle = 'Collab Statistics on Milestones Usage';
 
     const processActivities = (response) => {
-      vm.milestones = response.activities;
-      vm.milestoneCount = response.count;
+      vm.activities = response.data.activities;
+      vm.activitiesCount = response.data.count;
 
       // Count milestones created and completed
       vm.created = _.filter(vm.activities, { activity: 'C' });
@@ -37,7 +37,7 @@
       if (vm.doneCompleted.length !== vm.startCompleted.length) $log.error('Something went wrong.');
       else {
         // Compute time difference for each milestone
-        vm.completionTimes = _.map(_.zip(vm.startCompleted, vm.doneCompleted), activityPair => {
+        vm.completionTimes = _.map(_.zip(vm.startCompleted, vm.doneCompleted), (activityPair) => {
           const startDate = moment(activityPair[0], 'YYYY-MM-DD HH:mm:ss');
           const endDate = moment(activityPair[1], 'YYYY-MM-DD HH:mm:ss');
           return endDate.diff(startDate, 'minutes');
