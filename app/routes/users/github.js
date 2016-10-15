@@ -54,7 +54,9 @@ function getOverview(req, res, next) {
     const defaultAcc = { a: 0, d: 0, c: 0 };
 
     contributors.forEach((contributor) => {
-      const rangeWeeks = since ? _.filter(contributor.weeks, (week) => { return week.w >= since; }) : contributor.weeks;
+      const rangeWeeks = since ? _.filter(contributor.weeks, (week) => {
+        return week.w >= since;
+      }) : contributor.weeks;
       contribStats[contributor.author.login] = rangeWeeks.reduce((previous, current) =>
         ({ a: (previous.a + current.a), d: (previous.d + current.d), c: previous.c + current.c }),
         defaultAcc);
@@ -110,7 +112,7 @@ function getCommits(req, res, next) {
     res.status(200).json(commits);
   };
 
-  return this.models.app.user.getUserById(userId)
+  return models.app.user.getUserById(userId)
     .then(retrieveCommits)
     .then(response)
     .catch(next);
@@ -140,7 +142,7 @@ function getCommitsCount(req, res, next) {
     res.status(200).json(commits);
   };
 
-  return this.models.app.user.getUserById(userId)
+  return models.app.user.getUserById(userId)
     .then(retrieveCommits)
     .then(response)
     .catch(next);

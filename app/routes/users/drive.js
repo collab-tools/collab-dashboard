@@ -41,7 +41,7 @@ function getOverview(req, res, next) {
     res.status(200).json(payload);
   };
 
-  return this.models.app.user.getUserById(userId)
+  return Storage.app.user.getUserById(userId)
     .then(retrieveFilesAndRevisions)
     .then(response)
     .catch(next);
@@ -71,7 +71,7 @@ function getFiles(req, res, next) {
     res.status(200).json(files);
   };
 
-  return this.models.app.user.getUserById(userId)
+  return models.app.user.getUserById(userId)
     .then(retrieveFiles)
     .then(response)
     .catch(next);
@@ -101,7 +101,7 @@ function getFilesCount(req, res, next) {
     res.status(200).json({ count: files.length });
   };
 
-  return this.models.app.user.getUserById(userId)
+  return models.app.user.getUserById(userId)
     .then(retrieveFiles)
     .then(response)
     .catch(next);
@@ -132,7 +132,7 @@ function getRevisions(req, res, next) {
     res.status(200).json(revisions);
   };
 
-  return this.models.app.user.getUserById(userId)
+  return models.app.user.getUserById(userId)
     .then(retrieveRevisions)
     .then(response)
     .catch(next);
@@ -163,7 +163,7 @@ function getRevisionsCount(req, res, next) {
     res.status(200).json({ count: revisions.length });
   };
 
-  return this.models.app.user.getUserById(userId)
+  return models.app.user.getUserById(userId)
     .then(retrieveRevisions)
     .then(response)
     .catch(next);

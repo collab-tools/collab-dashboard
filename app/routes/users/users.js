@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import boom from 'boom';
+import moment from 'moment';
 import Storage from '../../common/storage-helper';
 
 const models = new Storage();
@@ -25,12 +26,16 @@ function getUser(req, res, next) {
 }
 
 function getUsers(req, res, next) {
+  const dateRange = req.query.range;
+  const convertedRange = moment(new Date())
+    .subtract(dateRange, 'day')
+    .format('YYYY-MM-DD HH:mm:ss');
   const response = (users) => {
     if (_.isNil(users)) return next(boom.badRequest(ERROR_BAD_REQUEST));
     res.status(200).json(users);
   };
 
-  return models.app.user.getUsers()
+  return models.app.user.getUsers(convertedRange)
     .then(response)
     .catch(next);
 }
