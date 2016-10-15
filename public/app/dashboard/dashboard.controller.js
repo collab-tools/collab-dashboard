@@ -3,6 +3,7 @@
  * Refer to documentation for specific requirements.
  * @namespace DashboardCtrl
  */
+
 (() => {
   angular
     .module('app')
