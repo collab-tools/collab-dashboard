@@ -1,0 +1,5 @@
+**/dist/**
+**/assets/**
+**/libs/**
+**/bower_components/**
+GruntFile.js
