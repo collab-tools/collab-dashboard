@@ -13,12 +13,12 @@
     $rootScope.$stateParams = $stateParams;
     /* eslint-disable */
     $rootScope.$on('$locationChangeStart', (event, next, current) => {
-      if (!auth.isLoggedIn() && $location.path() !== LOGIN_PATH ) {
-          event.preventDefault();
-          $location.path(LOGIN_PATH);
+      if (!auth.isLoggedIn() && $location.path() !== LOGIN_PATH) {
+        event.preventDefault();
+        $location.path(LOGIN_PATH);
       } else if (auth.isLoggedIn() && $location.path() === LOGIN_PATH) {
-          event.preventDefault();
-          $location.path(DEFAULT_PATH);
+        event.preventDefault();
+        $location.path(DEFAULT_PATH);
       }
     });
     /* eslint-enable */
@@ -80,7 +80,7 @@
         },
         controller: 'projectsCtrl',
         controllerAs: 'vm',
-        resolve: load(['projects/global/projects.controller.js'])
+        resolve: load(['moment', 'projects/global/projects.controller.js'])
       })
       .state('app.users', {
         url: '/users',
@@ -90,7 +90,7 @@
         },
         controller: 'usersCtrl',
         controllerAs: 'vm',
-        resolve: load(['users/global/users.controller.js'])
+        resolve: load(['moment', 'users/global/users.controller.js'])
       })
       .state('app.github', {
         url: '/github',
@@ -100,7 +100,7 @@
         },
         controller: 'githubCtrl',
         controllerAs: 'vm',
-        resolve: load(['github/github.controller.js'])
+        resolve: load(['moment', 'github/github.controller.js'])
       })
       .state('app.drive', {
         url: '/drive',
@@ -110,7 +110,7 @@
         },
         controller: 'driveCtrl',
         controllerAs: 'vm',
-        resolve: load(['drive/drive.controller.js'])
+        resolve: load(['moment', 'drive/drive.controller.js'])
       })
       .state('app.cloud', {
         url: '/cloud',
@@ -150,7 +150,7 @@
         },
         controller: 'userOverviewCtrl',
         controllerAs: 'vm',
-        resolve: load(['users/narrow/overview.controller.js'])
+        resolve: load(['moment', 'users/narrow/overview.controller.js'])
       })
       .state('app.project', {
         url: '/project',
@@ -160,7 +160,7 @@
         },
         controller: 'projectOverviewCtrl',
         controllerAs: 'vm',
-        resolve: load(['projects/narrow/overview.controller.js'])
+        resolve: load(['moment', 'projects/narrow/overview.controller.js'])
       })
       .state('app.profile', {
         url: '/profile',
