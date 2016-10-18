@@ -6,13 +6,51 @@ import Storage from '../../common/storage-helper';
 
 const models = new Storage();
 
-function getRepositories(req, res, next) {
+function getParticipatingUsers(req, res, next) {
+  req.query.range = req.query.range || constants.defaults.range;
+  req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
+  const errors = req.validationErrors();
+  if (errors) next(boom.badRequest(errors));
 
+  const dateRange = req.query.range;
+  const convertedRange = moment(new Date())
+    .subtract(dateRange, 'day')
+    .format('YYYY-MM-DD HH:mm:ss');
+
+  const response = (users) => {
+    if (_.isNil(users)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(users);
+  };
+
+  return models.log.commit_log.getParticipatingUsers(convertedRange)
+    .then(response)
+    .catch(next);
+}
+
+function getRepositories(req, res, next) {
+  req.query.range = req.query.range || constants.default.range;
+  req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
+  const errors = req.validationErrors();
+  if (errors) return next(boom.badRequest(errors));
+
+  const dateRange = req.query.range;
+  const convertedRange = moment(new Date())
+    .subtract(dateRange, 'day')
+    .format('YYYY-MM-DD HH:mm:ss');
+
+  const response = (repos) => {
+    if (_.isNil(repos)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(repos);
+  };
+
+  return models.app.projects.getRepositories(convertedRange)
+    .then(response)
+    .catch(next);
 }
 
 function getCommits(req, res, next) {
   req.query.range = req.query.range || constants.defaults.range;
-  req.checkQuery('range', `range ${constants.templates.error.missingParam}`).isInt();
+  req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
@@ -47,9 +85,9 @@ function getCommit(req, res, next) {
     .catch(next);
 }
 
-function getChanges(req, res, next) {
+function getReleases(req, res, next) {
   req.query.range = req.query.range || constants.defaults.range;
-  req.checkQuery('range', `range ${constants.templates.error.constants.templates.error.missingParam}`).isInt();
+  req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
@@ -68,7 +106,7 @@ function getChanges(req, res, next) {
     .catch(next);
 }
 
-function getChange(req, res, next) {
+function getRelease(req, res, next) {
   req.checkParams('releaseId', `releaseId ${constants.templates.error.missingParam}`).notEmpty();
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
@@ -84,6 +122,6 @@ function getChange(req, res, next) {
     .catch(next);
 }
 
-const githubAPI = { getRepositories, getCommits, getCommit, getChanges, getChange };
+const githubAPI = { getParticipatingUsers, getRepositories, getCommits, getCommit, getReleases, getRelease };
 
 export default githubAPI;

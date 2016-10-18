@@ -1,16 +1,14 @@
 import _ from 'lodash';
 import boom from 'boom';
 import moment from 'moment';
+import constants from '../../common/constants';
 import Storage from '../../common/storage-helper';
 
 const models = new Storage();
 
-const constants.templates.error.badRequest = 'Unable to serve your content. Check your arguments.';
-const constants.templates.error.missingParam = 'is a required parameter in GET request.';
-
 function getOverview(req, res, next) {
   req.query.range = req.query.range || constants.defaults.range;
-  req.checkQuery('range', `range ${constants.templates.error.missingParam}`).isInt();
+  req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
@@ -30,7 +28,7 @@ function getOverview(req, res, next) {
 
 function getMilestones(req, res, next) {
   req.query.range = req.query.range || constants.defaults.range;
-  req.checkQuery('range', `range ${constants.templates.error.missingParam}`).isInt();
+  req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
   if (_.isUndefined(req.query.count)) req.checkQuery('count', constants.templates.error.badRequest).isBoolean();
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));

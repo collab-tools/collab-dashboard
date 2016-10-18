@@ -6,15 +6,9 @@ import Storage from '../../common/storage-helper';
 
 const models = new Storage();
 
-const constants.templates.error.badRequest = 'Unable to serve your content. Check your arguments.';
-const ERROR_INVALID_DATA = 'contains a invalid data type.';
-const constants.templates.error.missingParam = 'is a required parameter in GET request.';
-
 function getParticipatingUsers(req, res, next) {
-  req.query.count = req.query.count || false;
   req.query.range = req.query.range || constants.defaults.range;
-  req.checkQuery('count', `count ${ERROR_INVALID_DATA}`).isBoolean();
-  req.checkQuery('range', `range ${constants.templates.error.missingParam}`).isInt();
+  req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
   const errors = req.validationErrors();
   if (errors) next(boom.badRequest(errors));
 
@@ -25,10 +19,7 @@ function getParticipatingUsers(req, res, next) {
 
   const response = (users) => {
     if (_.isNil(users)) return next(boom.badRequest(constants.templates.error.badRequest));
-    res.status(200).json({
-      count: users.length,
-      users
-    });
+    res.status(200).json(users);
   };
 
   return models.log.file_log.getParticipatingUsers(convertedRange)
@@ -39,7 +30,7 @@ function getParticipatingUsers(req, res, next) {
 
 function getChanges(req, res, next) {
   req.query.range = req.query.range || constants.defaults.range;
-  req.checkQuery('range', `range ${constants.templates.error.missingParam}`).isInt();
+  req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
@@ -61,7 +52,7 @@ function getChanges(req, res, next) {
 function getFileChanges(req, res, next) {
   req.checkParams('fileId', `fileId ${constants.templates.error.missingParam}`).notEmpty();
   req.query.range = req.query.range || constants.defaults.range;
-  req.checkQuery('range', `range ${constants.templates.error.missingParam}`).isInt();
+  req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
@@ -70,6 +61,7 @@ function getFileChanges(req, res, next) {
   const convertedRange = moment(new Date())
     .subtract(dateRange, 'day')
     .format('YYYY-MM-DD HH:mm:ss');
+
   const response = (revisions) => {
     if (_.isNil(revisions)) return next(boom.badRequest(constants.templates.error.badRequest));
     res.status(200).json(revisions);
@@ -96,6 +88,27 @@ function getFile(req, res, next) {
     .catch(next);
 }
 
-const driveAPI = { getParticipatingUsers, getChanges, getFileChanges, getFile };
+function getFiles(req, res, next) {
+  req.query.range = req.query.range || constants.defaults.range;
+  req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
+  const errors = req.validationErrors();
+  if (errors) return next(boom.badRequest(errors));
+
+  const dateRange = req.query.range;
+  const convertedRange = moment(new Date())
+    .subtract(dateRange, 'day')
+    .format('YYYY-MM-DD HH:mm:ss');
+
+  const response = (files) => {
+    if (_.isNil(files)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(files);
+  };
+
+  return models.log.drive_log.getUniqueFiles(convertedRange)
+    .then(response)
+    .catch(next);
+}
+
+const driveAPI = { getParticipatingUsers, getChanges, getFileChanges, getFile, getFiles };
 
 export default driveAPI;

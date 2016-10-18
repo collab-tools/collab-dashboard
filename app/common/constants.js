@@ -19,12 +19,15 @@ module.exports = {
     }
   },
   defaults: {
-    range: 7
+    range: 7,
+    jwtExpiry: 7
   },
   templates: {
     error: {
       badRequest: 'Unable to serve your content. Check your arguments.',
-      missingParam: 'is a required parameter in GET request.'
+      missingParam: 'is a required parameter in GET request.',
+      unauthorized: 'Unauthorized Access. Check your credentials',
+      invalidData: 'contains the wrong data type as expected.'
     }
   }
 };
