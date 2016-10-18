@@ -19,6 +19,7 @@ module.exports = function (express) {
   // GitHub Related
   // =========================================================
   globalRouter.get('/github/overview', github.getOverview);
+  globalRouter.get('/github/repos/', github.getRepos);
   globalRouter.get('/github/commits/:commitId', github.getCommit);
   globalRouter.get('/github/commits', github.getCommits);
   globalRouter.get('/github/releases', github.getReleases);
@@ -26,7 +27,7 @@ module.exports = function (express) {
 
   // Google Drive Related
   // =========================================================
-  globalRouter.get('/drive/overview', drive.getOverview);
+  globalRouter.get('/drive/users', drive.getParticipatingUsers);
   globalRouter.get('/drive/files/revisions', drive.getRevisions);
   globalRouter.get('/drive/files/:fileId', drive.getFile);
   globalRouter.get('/drive/files/:fileId/revisions', drive.getFileRevisions);

@@ -17,5 +17,14 @@ module.exports = {
       unknown: 'application/vnd.google-apps.unknown',
       video: 'application/vnd.google-apps.video'
     }
+  },
+  defaults: {
+    range: 7
+  },
+  templates: {
+    error: {
+      badRequest: 'Unable to serve your content. Check your arguments.',
+      missingParam: 'is a required parameter in GET request.'
+    }
   }
 };

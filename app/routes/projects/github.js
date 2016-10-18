@@ -5,13 +5,13 @@ import Storage from '../../common/storage-helper';
 
 const models = new Storage();
 
-const ERROR_BAD_REQUEST = 'Unable to serve your content. Check your arguments.';
-const ERROR_MISSING_TEMPLATE = 'is a required parameter in GET request.';
+const constants.templates.error.badRequest = 'Unable to serve your content. Check your arguments.';
+const constants.templates.error.missingParam = 'is a required parameter in GET request.';
 
 function getOverview(req, res, next) {
-  req.checkParams('projectId', `projectId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
-  req.query.range = req.query.range || 7;
-  req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
+  req.checkParams('projectId', `projectId ${constants.templates.error.missingParam}`).notEmpty();
+  req.query.range = req.query.range || constants.defaults.range;
+  req.checkQuery('range', `range ${constants.templates.error.missingParam}`).isInt();
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
@@ -22,7 +22,7 @@ function getOverview(req, res, next) {
     .format('YYYY-MM-DD HH:mm:ss');
 
   const response = (info) => {
-    if (_.isNil(info)) return next(boom.badRequest(ERROR_BAD_REQUEST));
+    if (_.isNil(info)) return next(boom.badRequest(constants.templates.error.badRequest));
     res.status(200).json({ info });
   };
 
@@ -33,9 +33,9 @@ function getOverview(req, res, next) {
 }
 
 function getCommits(req, res, next) {
-  req.checkParams('projectId', `projectId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
-  req.query.range = req.query.range || 7;
-  req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
+  req.checkParams('projectId', `projectId ${constants.templates.error.missingParam}`).notEmpty();
+  req.query.range = req.query.range || constants.defaults.range;
+  req.checkQuery('range', `range ${constants.templates.error.missingParam}`).isInt();
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
@@ -46,7 +46,7 @@ function getCommits(req, res, next) {
     .format('YYYY-MM-DD HH:mm:ss');
 
   const response = (commits) => {
-    if (_.isNil(commits)) return next(boom.badRequest(ERROR_BAD_REQUEST));
+    if (_.isNil(commits)) return next(boom.badRequest(constants.templates.error.badRequest));
     res.status(200).json({ commits });
   };
 

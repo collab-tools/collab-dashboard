@@ -5,14 +5,14 @@ import Storage from '../../common/storage-helper';
 
 const models = new Storage();
 
-const ERROR_BAD_REQUEST = 'Unable to serve your content. Check your arguments.';
-const ERROR_MISSING_TEMPLATE = 'is a required parameter in GET request.';
+const constants.templates.error.badRequest = 'Unable to serve your content. Check your arguments.';
+const constants.templates.error.missingParam = 'is a required parameter in GET request.';
 
 function getOverview(req, res, next) {
-  req.checkParams('userId', `userId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
-  req.checkQuery('projectId', `projectId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
-  req.query.range = req.query.range || 7;
-  req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
+  req.checkParams('userId', `userId ${constants.templates.error.missingParam}`).notEmpty();
+  req.checkQuery('projectId', `projectId ${constants.templates.error.missingParam}`).notEmpty();
+  req.query.range = req.query.range || constants.defaults.range;
+  req.checkQuery('range', `range ${constants.templates.error.missingParam}`).isInt();
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
@@ -48,10 +48,10 @@ function getOverview(req, res, next) {
 }
 
 function getFiles(req, res, next) {
-  req.checkParams('userId', `userId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
-  req.checkQuery('projectId', `projectId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
-  req.query.range = req.query.range || 7;
-  req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
+  req.checkParams('userId', `userId ${constants.templates.error.missingParam}`).notEmpty();
+  req.checkQuery('projectId', `projectId ${constants.templates.error.missingParam}`).notEmpty();
+  req.query.range = req.query.range || constants.defaults.range;
+  req.checkQuery('range', `range ${constants.templates.error.missingParam}`).isInt();
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
@@ -78,10 +78,10 @@ function getFiles(req, res, next) {
 }
 
 function getFilesCount(req, res, next) {
-  req.checkParams('userId', `userId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
-  req.checkQuery('projectId', `projectId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
-  req.query.range = req.query.range || 7;
-  req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
+  req.checkParams('userId', `userId ${constants.templates.error.missingParam}`).notEmpty();
+  req.checkQuery('projectId', `projectId ${constants.templates.error.missingParam}`).notEmpty();
+  req.query.range = req.query.range || constants.defaults.range;
+  req.checkQuery('range', `range ${constants.templates.error.missingParam}`).isInt();
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
@@ -108,10 +108,10 @@ function getFilesCount(req, res, next) {
 }
 
 function getRevisions(req, res, next) {
-  req.checkParams('userId', `userId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
-  req.checkQuery('projectId', `projectId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
-  req.query.range = req.query.range || 7;
-  req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
+  req.checkParams('userId', `userId ${constants.templates.error.missingParam}`).notEmpty();
+  req.checkQuery('projectId', `projectId ${constants.templates.error.missingParam}`).notEmpty();
+  req.query.range = req.query.range || constants.defaults.range;
+  req.checkQuery('range', `range ${constants.templates.error.missingParam}`).isInt();
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
@@ -139,10 +139,10 @@ function getRevisions(req, res, next) {
 }
 
 function getRevisionsCount(req, res, next) {
-  req.checkParams('userId', `userId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
-  req.checkQuery('projectId', `projectId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
-  req.query.range = req.query.range || 7;
-  req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
+  req.checkParams('userId', `userId ${constants.templates.error.missingParam}`).notEmpty();
+  req.checkQuery('projectId', `projectId ${constants.templates.error.missingParam}`).notEmpty();
+  req.query.range = req.query.range || constants.defaults.range;
+  req.checkQuery('range', `range ${constants.templates.error.missingParam}`).isInt();
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 

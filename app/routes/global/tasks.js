@@ -5,12 +5,12 @@ import Storage from '../../common/storage-helper';
 
 const models = new Storage();
 
-const ERROR_BAD_REQUEST = 'Unable to serve your content. Check your arguments.';
-const ERROR_MISSING_TEMPLATE = 'is a required parameter in GET request.';
+const constants.templates.error.badRequest = 'Unable to serve your content. Check your arguments.';
+const constants.templates.error.missingParam = 'is a required parameter in GET request.';
 
 function getOverview(req, res, next) {
-  req.query.range = req.query.range || 7;
-  req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
+  req.query.range = req.query.range || constants.defaults.range;
+  req.checkQuery('range', `range ${constants.templates.error.missingParam}`).isInt();
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest('test', errors));
 
@@ -19,7 +19,7 @@ function getOverview(req, res, next) {
     .subtract(dateRange, 'day')
     .format('YYYY-MM-DD HH:mm:ss');
   const response = (data) => {
-    if (_.isNil(data)) return next(boom.badRequest(ERROR_BAD_REQUEST));
+    if (_.isNil(data)) return next(boom.badRequest(constants.templates.error.badRequest));
     res.status(200).json({ count: data.count, activities: data.rows });
   };
 
@@ -29,9 +29,9 @@ function getOverview(req, res, next) {
 }
 
 function getTasks(req, res, next) {
-  req.query.range = req.query.range || 7;
-  req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
-  if (_.isUndefined(req.query.count)) req.checkQuery('count', ERROR_BAD_REQUEST).isBoolean();
+  req.query.range = req.query.range || constants.defaults.range;
+  req.checkQuery('range', `range ${constants.templates.error.missingParam}`).isInt();
+  if (_.isUndefined(req.query.count)) req.checkQuery('count', constants.templates.error.badRequest).isBoolean();
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
@@ -44,7 +44,7 @@ function getTasks(req, res, next) {
     return models.app.tasks.getTasks(convertedRange);
   };
   const response = (data) => {
-    if (_.isNil(data)) return next(boom.badRequest(ERROR_BAD_REQUEST));
+    if (_.isNil(data)) return next(boom.badRequest(constants.templates.error.badRequest));
     const payload = (req.query.count) ? { count: data } : { tasks: data };
     res.status(200).json(payload);
   };
@@ -55,13 +55,13 @@ function getTasks(req, res, next) {
 }
 
 function getTask(req, res, next) {
-  req.checkParams('taskId', `taskId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
+  req.checkParams('taskId', `taskId ${constants.templates.error.missingParam}`).notEmpty();
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
   const taskId = req.params.taskId;
   const response = (task) => {
-    if (_.isNil(task)) return next(boom.badRequest(ERROR_BAD_REQUEST));
+    if (_.isNil(task)) return next(boom.badRequest(constants.templates.error.badRequest));
     res.status(200).json(task);
   };
 

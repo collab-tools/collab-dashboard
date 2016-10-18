@@ -6,7 +6,7 @@ import Storage from '../../common/storage-helper';
 
 const models = new Storage();
 
-const ERROR_BAD_REQUEST = 'Unable to serve your content. Check your arguments.';
+const constants.templates.error.badRequest = 'Unable to serve your content. Check your arguments.';
 const ERROR_INVALID = 'Invalid username / password';
 const ERROR_ILLEGAL = 'Unauthorized access';
 const JWT_EXPIRY_DAYS = 7;
@@ -58,7 +58,7 @@ function createAdmin(req, res, next) {
   if (!_.isNil(username) && !_.isNil(password) && !_.isNil(name) && !_.isNil(role)) {
     const payload = { username, password, name, role };
     const response = (success) => {
-      if (!success) return next(boom.badRequest(ERROR_BAD_REQUEST));
+      if (!success) return next(boom.badRequest(constants.templates.error.badRequest));
       res.status(200).json({ success });
     };
     return models.log.admin.addUser(payload).then(response).catch(next);
