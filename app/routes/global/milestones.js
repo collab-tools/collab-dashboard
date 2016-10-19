@@ -6,30 +6,9 @@ import Storage from '../../common/storage-helper';
 
 const models = new Storage();
 
-function getOverview(req, res, next) {
-  req.query.range = req.query.range || constants.defaults.range;
-  req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
-  const errors = req.validationErrors();
-  if (errors) return next(boom.badRequest(errors));
-
-  const dateRange = req.query.range;
-  const convertedRange = moment(new Date())
-    .subtract(dateRange, 'day')
-    .format('YYYY-MM-DD HH:mm:ss');
-  const response = (data) => {
-    if (_.isNil(data)) return next(boom.badRequest(constants.templates.error.badRequest));
-    res.status(200).json({ count: data.count, activities: data.rows });
-  };
-
-  return models.log.milestone_log.getByRange(convertedRange)
-    .then(response)
-    .catch(next);
-}
-
 function getMilestones(req, res, next) {
   req.query.range = req.query.range || constants.defaults.range;
   req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
-  if (_.isUndefined(req.query.count)) req.checkQuery('count', constants.templates.error.badRequest).isBoolean();
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
@@ -38,13 +17,11 @@ function getMilestones(req, res, next) {
     .subtract(dateRange, 'day')
     .format('YYYY-MM-DD HH:mm:ss');
   const evalQuery = () => {
-    if (req.query.count) return models.app.milestone.getCount(convertedRange);
     return models.app.milestone.getMilestones(convertedRange);
   };
-  const response = (data) => {
-    if (_.isNil(data)) return next(boom.badRequest(constants.templates.error.badRequest));
-    const payload = (req.query.count) ? { count: data } : { milestones: data };
-    res.status(200).json(payload);
+  const response = (milestones) => {
+    if (_.isNil(milestones)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(milestones);
   };
 
   return evalQuery()
@@ -68,10 +45,55 @@ function getMilestone(req, res, next) {
     .catch(next);
 }
 
+function getActivities(req, res, next) {
+  req.query.range = req.query.range || constants.defaults.range;
+  req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
+  const errors = req.validationErrors();
+  if (errors) next(boom.badRequest(errors));
+
+  const dateRange = req.query.range;
+  const convertedRange = moment(new Date())
+    .subtract(dateRange, 'day')
+    .format('YYYY-MM-DD HH:mm:ss');
+
+  const response = (activities) => {
+    if (_.isNil(activities)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(activities);
+  };
+
+  return models.log.milestone_log.getActivities(convertedRange)
+    .then(response)
+    .catch(next);
+}
+
+function getMilestoneActivities(req, res, next) {
+  req.query.range = req.query.range || constants.defaults.range;
+  req.checkParams('milestoneId', `milestoneId ${constants.templates.error.missingParam}`).notEmpty();
+  req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
+  const errors = req.validationErrors();
+  if (errors) next(boom.badRequest(errors));
+
+  const milestoneId = req.params.milestoneId;
+  const dateRange = req.query.range;
+  const convertedRange = moment(new Date())
+    .subtract(dateRange, 'day')
+    .format('YYYY-MM-DD HH:mm:ss');
+
+  const response = (activities) => {
+    if (_.isNil(activities)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(activities);
+  };
+
+  return models.log.milestone_log.getMilestoneActivities(milestoneId, convertedRange)
+    .then(response)
+    .catch(next);
+}
+
 const milestonesAPI = {
-  getOverview,
   getMilestones,
-  getMilestone
+  getMilestone,
+  getActivities,
+  getMilestoneActivities
 };
 
 export default milestonesAPI;

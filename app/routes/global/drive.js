@@ -27,7 +27,6 @@ function getParticipatingUsers(req, res, next) {
     .catch(next);
 }
 
-
 function getChanges(req, res, next) {
   req.query.range = req.query.range || constants.defaults.range;
   req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
@@ -44,7 +43,7 @@ function getChanges(req, res, next) {
     res.status(200).json(commit);
   };
 
-  return models.log.revision_log.getRevisions(convertedRange)
+  return models.log.file_log.getChanges(convertedRange)
     .then(response)
     .catch(next);
 }
@@ -67,7 +66,7 @@ function getFileChanges(req, res, next) {
     res.status(200).json(revisions);
   };
 
-  return models.log.revision_log.getFileRevisions(fileId, convertedRange)
+  return models.log.file_log.getFileChanges(fileId, convertedRange)
     .then(response)
     .catch(next);
 }
@@ -83,7 +82,7 @@ function getFile(req, res, next) {
     res.status(200).json(file);
   };
 
-  return models.log.drive_log.getFile(fileId)
+  return models.log.file_log.getFile(fileId)
     .then(response)
     .catch(next);
 }
@@ -104,11 +103,17 @@ function getFiles(req, res, next) {
     res.status(200).json(files);
   };
 
-  return models.log.drive_log.getUniqueFiles(convertedRange)
+  return models.log.file_log.getFiles(null, null, convertedRange)
     .then(response)
     .catch(next);
 }
 
-const driveAPI = { getParticipatingUsers, getChanges, getFileChanges, getFile, getFiles };
+const driveAPI = {
+  getParticipatingUsers,
+  getChanges,
+  getFileChanges,
+  getFile,
+  getFiles
+};
 
 export default driveAPI;

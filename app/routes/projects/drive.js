@@ -1,12 +1,10 @@
 import _ from 'lodash';
 import boom from 'boom';
 import moment from 'moment';
+import constants from '../../common/constants';
 import Storage from '../../common/storage-helper';
 
 const models = new Storage();
-
-const constants.templates.error.badRequest = 'Unable to serve your content. Check your arguments.';
-const constants.templates.error.missingParam = 'is a required parameter in GET request.';
 
 function getOverview(req, res, next) {
   req.checkParams('projectId', `projectId ${constants.templates.error.missingParam}`).notEmpty();

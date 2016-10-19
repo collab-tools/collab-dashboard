@@ -17,7 +17,7 @@ module.exports = function (express) {
 
   // GitHub Related
   // =========================================================
-  globalRouter.get('/github/repos/', github.getRepos);
+  globalRouter.get('/github/repos/', github.getRepositories);
   globalRouter.get('/github/commits/:commitId', github.getCommit);
   globalRouter.get('/github/commits', github.getCommits);
   globalRouter.get('/github/releases', github.getReleases);
@@ -27,24 +27,25 @@ module.exports = function (express) {
   // Google Drive Related
   // =========================================================
   globalRouter.get('/drive/files', drive.getFiles);
-  globalRouter.get('/drive/files/revisions', drive.getRevisions);
   globalRouter.get('/drive/files/:fileId', drive.getFile);
-  globalRouter.get('/drive/files/:fileId/revisions', drive.getFileRevisions);
+  globalRouter.get('/drive/files/changes', drive.getChanges);
+  globalRouter.get('/drive/files/:fileId/changes', drive.getFileChanges);
   globalRouter.get('/drive/users', drive.getParticipatingUsers);
 
   // Tasks Related
   // =========================================================
-  globalRouter.get('/tasks/overview', tasks.getOverview);
   globalRouter.get('/tasks', tasks.getTasks);
   globalRouter.get('/tasks/:taskId', tasks.getTask);
+  globalRouter.get('/tasks/activities', tasks.getActivities);
+  globalRouter.get('/tasks/:taskId/activities', tasks.getTaskActivities);
   globalRouter.get('/tasks/users', tasks.getParticipatingUsers);
 
   // Milestones Related
   // =========================================================
-  globalRouter.get('/milestones/overview', milestones.getOverview);
   globalRouter.get('/milestones', milestones.getMilestones);
   globalRouter.get('/milestones/:milestoneId', milestones.getMilestone);
-  globalRouter.get('/milestones/users', milestones.getParticipatingUsers);
+  globalRouter.get('/milestones/activities', milestones.getActivities);
+  globalRouter.get('/milestones/:milestoneId/activities', milestones.getMilestoneActivities);
 
   // Cloud IDE Related
   // =========================================================

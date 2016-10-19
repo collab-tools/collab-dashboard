@@ -122,6 +122,13 @@ function getRelease(req, res, next) {
     .catch(next);
 }
 
-const githubAPI = { getParticipatingUsers, getRepositories, getCommits, getCommit, getReleases, getRelease };
+const githubAPI = {
+  getParticipatingUsers,
+  getRepositories,
+  getCommits,
+  getCommit,
+  getReleases,
+  getRelease
+};
 
 export default githubAPI;

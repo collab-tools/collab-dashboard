@@ -8,8 +8,7 @@ import milestones from './milestones';
 import users from './users';
 import projects from './projects';
 
-
-module.exports = function (express) {
+module.exports = (express) => {
   const usersRouter = express.Router();
   const auth = jwt({
     secret: config.jwt_secret,
@@ -18,33 +17,6 @@ module.exports = function (express) {
 
   usersRouter.use(auth);
 
-  // GitHub Related
-  // =========================================================
-  usersRouter.get('/:userId/github/overview', github.getOverview);
-  usersRouter.get('/:userId/github/commits', github.getCommits);
-  usersRouter.get('/:userId/github/commits/count', github.getCommitsCount);
-
-  // Google Drive Related
-  // =========================================================
-  usersRouter.get('/:userId/drive/overview', drive.getOverview);
-  usersRouter.get('/:userId/drive/revisions', drive.getRevisions);
-  usersRouter.get('/:userId/drive/revisions/count', drive.getRevisionsCount);
-  usersRouter.get('/:userId/drive/files', drive.getFiles);
-  usersRouter.get('/:userId/drive/files/count', drive.getFilesCount);
-
-  // Cloud IDE Related
-  // =========================================================
-  usersRouter.get('/:userId/cloud/overview', cloud.getOverview);
-
-  // Tasks Related
-  // =========================================================
-  usersRouter.get('/:userId/tasks/overview', tasks.getOverview);
-  usersRouter.get('/:userId/tasks/', tasks.getTasksAssigned);
-
-  // Milestones Related
-  // =========================================================
-  usersRouter.get('/:userId/milestones/overview', milestones.getOverview);
-
   // User Retrieval Related
   // =========================================================
   usersRouter.get('/:userId', users.getUser);
@@ -52,8 +24,32 @@ module.exports = function (express) {
 
   // Project Retrieval Related
   // ==========================================================
-  usersRouter.get('/:userId/projects/:projectId', projects.getUserProject);
   usersRouter.get('/:userId/projects/', projects.getUserProjects);
+
+  // GitHub Related
+  // =========================================================
+  usersRouter.get('/:userId/github/repos', github.getUserRepos);
+  usersRouter.get('/:userId/github/commits', github.getUserCommits);
+  usersRouter.get('/:userId/github/releases', github.getUserReleases);
+
+  // Google Drive Related
+  // =========================================================
+  usersRouter.get('/:userId/drive/files', drive.getUserFiles);
+  usersRouter.get('/:userId/drive/changes', drive.getUserChanges);
+
+  // Tasks Related
+  // =========================================================
+  usersRouter.get('/:userId/tasks', tasks.getTasksAssigned);
+  usersRouter.get('/:userId/tasks/activities', tasks.getTasksAssigned);
+
+  // Milestones Related
+  // =========================================================
+  usersRouter.get('/:userId/milestones', milestones.getInvolvedMilestones);
+  usersRouter.get('/:userId/milestones/activities', milestones.getActivities);
+
+  // Cloud IDE Related
+  // =========================================================
+  usersRouter.get('/:userId/cloud/overview', cloud.getOverview);
 
   return usersRouter;
 };

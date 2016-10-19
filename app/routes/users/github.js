@@ -3,12 +3,10 @@ import boom from 'boom';
 import config from 'config';
 import moment from 'moment';
 import octokat from 'octokat';
+import constants from '../../common/constants';
 import Storage from '../../common/storage-helper';
 
 const models = new Storage();
-
-const constants.templates.error.badRequest = 'Unable to serve your content. Check your arguments.';
-const constants.templates.error.missingParam = 'is a required parameter in GET request.';
 
 function getOverview(req, res, next) {
   req.checkParams('userId', `userId ${constants.templates.error.missingParam}`).notEmpty();
