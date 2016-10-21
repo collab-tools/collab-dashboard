@@ -36,6 +36,7 @@ module.exports = (express) => {
   // =========================================================
   usersRouter.get('/:userId/drive/files', drive.getUserFiles);
   usersRouter.get('/:userId/drive/changes', drive.getUserChanges);
+  usersRouter.get('/:userId/drive/activities', drive.getUserActivities);
 
   // Tasks Related
   // =========================================================
