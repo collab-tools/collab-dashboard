@@ -46,6 +46,7 @@ module.exports = function (express) {
   globalRouter.get('/milestones/:milestoneId', milestones.getMilestone);
   globalRouter.get('/milestones/activities', milestones.getActivities);
   globalRouter.get('/milestones/:milestoneId/activities', milestones.getMilestoneActivities);
+  globalRouter.get('/milestones/tasks', milestones.getTasksByMilestones);
 
   // Cloud IDE Related
   // =========================================================

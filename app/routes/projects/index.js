@@ -20,9 +20,6 @@ module.exports = function (express) {
   // =========================================================
   projectsRouter.get('/:projectId', projects.getProject);
   projectsRouter.get('/', projects.getProjects);
-
-  // User Retrieval Related
-  // =========================================================
   projectsRouter.get('/:projectId/users', projects.getUsers);
 
   // GitHub Related
@@ -31,12 +28,13 @@ module.exports = function (express) {
   projectsRouter.get('/:projectId/github/commits', github.getCommits);
   projectsRouter.get('/:projectId/github/releases', github.getReleases);
   projectsRouter.get('/:projectId/github/contributors', github.getContributors);
-  projectsRouter.get('/:projectId/github/activities', github.getActivities);
+  projectsRouter.get('/:projectId/github/stats', github.getStatistics);
 
   // Google Drive Related
   // =========================================================
   projectsRouter.get('/:projectId/drive/files', drive.getFiles);
   projectsRouter.get('/:projectId/drive/changes', drive.getChanges);
+  projectsRouter.get('/:projectId/drive/activities', drive.getActivities);
 
   // Tasks Related
   // =========================================================
@@ -47,6 +45,7 @@ module.exports = function (express) {
   // =========================================================
   projectsRouter.get('/:projectId/milestones', milestones.getMilestones);
   projectsRouter.get('/:projectId/milestones/activities', milestones.getActivities);
+  projectsRouter.get('/:projectId/milestones/tasks', milestones.getTasksByMilestones);
 
   // Cloud IDE Related
   // =========================================================
