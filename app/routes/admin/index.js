@@ -48,7 +48,9 @@ function createAdmin(req, res, next) {
   const name = req.body.name;
   const role = req.body.role;
 
-  if (!checkDevAccess(devKey)) return next(boom.unauthorized(constants.templates.error.unauthorized));
+  if (!checkDevAccess(devKey)) {
+    return next(boom.unauthorized(constants.templates.error.unauthorized));
+  }
 
   // Validate that all mandatory fields are given
   if (!_.isNil(username) && !_.isNil(password) && !_.isNil(name) && !_.isNil(role)) {
