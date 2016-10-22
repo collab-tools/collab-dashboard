@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import boom from 'boom';
+import moment from 'moment';
 import github from 'github';
-import moment from '../../common/moment';
 import constants from '../../common/constants';
 import Storage from '../../common/storage-helper';
 
