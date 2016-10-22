@@ -20,8 +20,7 @@ module.exports = (express) => {
   // =========================================================
   usersRouter.get('/:userId', users.getUser);
   usersRouter.get('/', users.getUsers);
-  usersRouter.get('/:userId/projects/', users.getUserProjects);
-  usersRouter.get('/:userId/project/', users.getUserProject);
+  usersRouter.get('/:userId/projects', users.getUserProjects);
 
   // GitHub Related
   // =========================================================
