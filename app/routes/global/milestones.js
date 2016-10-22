@@ -89,11 +89,39 @@ function getMilestoneActivities(req, res, next) {
     .catch(next);
 }
 
+function getTasksByMilestones(req, res, next) {
+  req.query.range = req.query.range || constants.defaults.range;
+  req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
+  const errors = req.validationErrors();
+  if (errors) next(boom.badRequest(errors));
+
+  const dateRange = req.query.range;
+  const convertedRange = moment(new Date())
+    .subtract(dateRange, 'day')
+    .format('YYYY-MM-DD HH:mm:ss');
+
+  const groupByMilestone = (tasks) => {
+    if (_.isNil(tasks)) return next(boom.badRequest(constants.templates.error.badRequest));
+    return _.groupBy(tasks, 'milestoneId');
+  };
+
+  const response = (groupedTasks) => {
+    if (_.isNil(groupedTasks)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(groupedTasks);
+  };
+
+  return models.app.task.getTasks(convertedRange)
+    .then(groupByMilestone)
+    .then(response)
+    .catch(next);
+}
+
 const milestonesAPI = {
   getMilestones,
   getMilestone,
   getActivities,
-  getMilestoneActivities
+  getMilestoneActivities,
+  getTasksByMilestones
 };
 
 export default milestonesAPI;
