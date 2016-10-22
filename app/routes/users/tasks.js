@@ -6,82 +6,107 @@ import Storage from '../../common/storage-helper';
 
 const models = new Storage();
 
-function getOverview(req, res, next) {
-  req.query.range = req.query.range || constants.defaults.range;
+function getUserTasks(req, res, next) {
   req.checkParams('userId', `userId ${constants.templates.error.missingParam}`).notEmpty();
-  req.checkQuery('projectId', `projectId ${constants.templates.error.missingParam}`).notEmpty();
-  req.checkQuery('range', `range ${constants.templates.error.missingParam}`).isInt();
+  req.query.range = req.query.range || constants.defaults.range;
+  req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
-  const projectId = req.query.projectId;
   const userId = req.params.userId;
   const dateRange = req.query.range;
   const convertedRange = moment(new Date())
     .subtract(dateRange, 'day')
     .format('YYYY-MM-DD HH:mm:ss');
 
-  const processLogs = (logs) => {
-    const payload = { tasks: {} };
-    if (_.isNil(logs)) return next(boom.badRequest(constants.templates.error.badRequest));
-    payload.logs = logs;
-
-    // Pseudo-map data structure to avoid duplicate pulls from database
-    logs.forEach((log) => {
-      log = log.toJSON();
-      payload.tasks[log.taskId] = true;
-    });
-
-    const relevantTasks = [];
-    _.forOwn(payload.tasks, (value, key) => {
-      relevantTasks.push(models.app.task.getTask(key));
-    });
-
-    // Retrieve all tasks referenced by log
-    return Promise.all(relevantTasks)
-      .then((tasks) => {
-        tasks.forEach((task) => {
-          task = task.toJSON();
-          payload.tasks[task.id] = task;
-        });
-        return payload;
-      });
+  const response = (tasks) => {
+    if (_.isNil(tasks)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(tasks);
   };
 
-  const response = (payload) => {
-    res.status(200).json(payload);
-  };
-
-  return models.log.task_log.getByProject(userId, projectId, convertedRange)
-    .then(processLogs)
+  return models.app.task.getTasksByAssignee(userId, null, convertedRange)
     .then(response)
     .catch(next);
 }
 
-
-function getTasksAssigned(req, res, next) {
-  req.checkParams('userId', constants.templates.error.badRequest).notEmpty();
+function getUserActivities(req, res, next) {
+  req.checkParams('userId', `userId ${constants.templates.error.missingParam}`).notEmpty();
   req.query.range = req.query.range || constants.defaults.range;
-  req.checkQuery('range', constants.templates.error.badRequest).isInt();
+  req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
   const userId = req.params.userId;
-  const projectId = req.query.projectId;
-  const dateRange = req.query.range || 7;
+  const dateRange = req.query.range;
+  const convertedRange = moment(new Date())
+    .subtract(dateRange, 'day')
+    .format('YYYY-MM-DD HH:mm:ss');
+
+  const response = (activities) => {
+    if (_.isNil(activities)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(activities);
+  };
+
+  return models.log.task_log.getUserActivities(userId, convertedRange)
+    .then(response)
+    .catch(next);
+}
+
+function getProjectTasks(req, res, next) {
+  req.checkParams('userId', `userId ${constants.templates.error.missingParam}`).notEmpty();
+  req.checkParams('projectId', `projectId ${constants.templates.error.missingParam}`).notEmpty();
+  req.query.range = req.query.range || constants.defaults.range;
+  req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
+  const errors = req.validationErrors();
+  if (errors) return next(boom.badRequest(errors));
+
+  const userId = req.params.userId;
+  const projectId = req.params.projectId;
+  const dateRange = req.query.range;
   const convertedRange = moment(new Date())
     .subtract(dateRange, 'day')
     .format('YYYY-MM-DD HH:mm:ss');
 
   const response = (tasks) => {
+    if (_.isNil(tasks)) return next(boom.badRequest(constants.templates.error.badRequest));
     res.status(200).json(tasks);
   };
 
-  return models.app.tasks.getTasksByAssignee(userId, projectId, convertedRange)
+  return models.app.task.getTasksByAssignee(userId, projectId, convertedRange)
     .then(response)
     .catch(next);
 }
 
-const tasksAPI = { getOverview, getTasksAssigned };
+function getProjectActivities(req, res, next) {
+  req.checkParams('userId', `userId ${constants.templates.error.missingParam}`).notEmpty();
+  req.checkParams('projectId', `projectId ${constants.templates.error.missingParam}`).notEmpty();
+  req.query.range = req.query.range || constants.defaults.range;
+  req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
+  const errors = req.validationErrors();
+  if (errors) return next(boom.badRequest(errors));
+
+  const userId = req.params.userId;
+  const projectId = req.params.projectId;
+  const dateRange = req.query.range;
+  const convertedRange = moment(new Date())
+    .subtract(dateRange, 'day')
+    .format('YYYY-MM-DD HH:mm:ss');
+
+  const response = (activities) => {
+    if (_.isNil(activities)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(activities);
+  };
+
+  return models.log.task_log.getUserActivitiesByProject(userId, projectId, convertedRange)
+    .then(response)
+    .catch(next);
+}
+
+const tasksAPI = {
+  getUserTasks,
+  getUserActivities,
+  getProjectTasks,
+  getProjectActivities
+};
 
 export default tasksAPI;
