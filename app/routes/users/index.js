@@ -51,6 +51,7 @@ module.exports = (express) => {
   // Milestones Related
   // =========================================================
   usersRouter.get('/:userId/milestones', milestones.getUserMilestones);
+  usersRouter.get('/:userId/milestones/assigned', milestones.getAssignedUserMilestones);
   usersRouter.get('/:userId/milestones/tasks', milestones.getTasksByMilestones);
   usersRouter.get('/:userId/project/:projectId/milestones/tasks', milestones.getTasksByProjectMilestones);
 
