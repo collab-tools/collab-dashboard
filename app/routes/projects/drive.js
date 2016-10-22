@@ -52,9 +52,34 @@ function getChanges(req, res, next) {
     .catch(next);
 }
 
+function getActivities(req, res, next) {
+  req.checkParams('projectId', `projectId ${constants.templates.error.missingParam}`).notEmpty();
+  req.query.range = req.query.range || constants.defaults.range;
+  req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
+  const errors = req.validationErrors();
+  if (errors) return next(boom.badRequest(errors));
+
+  const projectId = req.params.projectId;
+  const dateRange = req.query.range;
+  const convertedRange = moment(new Date())
+    .subtract(dateRange, 'day')
+    .format('YYYY-MM-DD HH:mm:ss');
+
+  const response = (revisions) => {
+    if (_.isNil(revisions)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(revisions);
+  };
+
+  return models.log.file_log.getProjectActivities(projectId, convertedRange)
+    .then(response)
+    .catch(next);
+}
+
 const driveAPI = {
   getFiles,
-  getChanges
+  getChanges,
+  getActivities
 };
+
 
 export default driveAPI;
