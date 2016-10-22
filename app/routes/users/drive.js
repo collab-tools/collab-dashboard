@@ -1,178 +1,234 @@
+import _ from 'lodash';
 import boom from 'boom';
-import Promise from 'bluebird';
 import moment from 'moment';
 import constants from '../../common/constants';
 import Storage from '../../common/storage-helper';
 
 const models = new Storage();
 
-function getOverview(req, res, next) {
+function getUserFiles(req, res, next) {
   req.checkParams('userId', `userId ${constants.templates.error.missingParam}`).notEmpty();
-  req.checkQuery('projectId', `projectId ${constants.templates.error.missingParam}`).notEmpty();
   req.query.range = req.query.range || constants.defaults.range;
-  req.checkQuery('range', `range ${constants.templates.error.missingParam}`).isInt();
+  req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
   const userId = req.params.userId;
-  const projectId = req.query.projectId;
   const dateRange = req.query.range;
   const convertedRange = moment(new Date())
     .subtract(dateRange, 'day')
     .format('YYYY-MM-DD HH:mm:ss');
 
-
-  const retrieveFilesAndRevisions = (user) => {
-    const googleId = user.google_id;
-    const promiseArray = [
-      models.log.drive_log.getUniqueFiles(projectId, googleId, convertedRange),
-      models.log.revision_log.getUserRevisions(googleId, null, convertedRange)
-    ];
-    return Promise.all(promiseArray);
+  const retrieveGoogleIdentity = (user) => {
+    if (_.isNil(user)) return next(boom.badRequest(constants.templates.error.badRequest));
+    return user.email;
   };
 
-  const response = (query) => {
-    const payload = {
-      files: query[0],
-      revisions: query[1]
-    };
-    res.status(200).json(payload);
+  const retrieveFiles = (email) => {
+    if (_.isNil(email)) return next(boom.badRequest(constants.templates.error.badRequest));
+    return models.log.file_log.getFiles(email, null, convertedRange);
   };
 
-  return Storage.app.user.getUserById(userId)
-    .then(retrieveFilesAndRevisions)
-    .then(response)
-    .catch(next);
-}
-
-function getFiles(req, res, next) {
-  req.checkParams('userId', `userId ${constants.templates.error.missingParam}`).notEmpty();
-  req.checkQuery('projectId', `projectId ${constants.templates.error.missingParam}`).notEmpty();
-  req.query.range = req.query.range || constants.defaults.range;
-  req.checkQuery('range', `range ${constants.templates.error.missingParam}`).isInt();
-  const errors = req.validationErrors();
-  if (errors) return next(boom.badRequest(errors));
-
-  const userId = req.params.userId;
-  const projectId = req.query.projectId;
-  const dateRange = req.query.range;
-  const convertedRange = moment(new Date())
-    .subtract(dateRange, 'day')
-    .format('YYYY-MM-DD HH:mm:ss');
-
-  const retrieveFiles = (user) => {
-    const googleId = user.google_id;
-    return models.log.drive_log.getUniqueFiles(projectId, googleId, convertedRange);
-  };
-
-  const response = (files) => {
-    res.status(200).json(files);
+  const response = (activities) => {
+    if (_.isNil(activities)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(activities);
   };
 
   return models.app.user.getUserById(userId)
+    .then(retrieveGoogleIdentity)
     .then(retrieveFiles)
     .then(response)
     .catch(next);
 }
 
-function getFilesCount(req, res, next) {
+function getUserChanges(req, res, next) {
   req.checkParams('userId', `userId ${constants.templates.error.missingParam}`).notEmpty();
-  req.checkQuery('projectId', `projectId ${constants.templates.error.missingParam}`).notEmpty();
   req.query.range = req.query.range || constants.defaults.range;
-  req.checkQuery('range', `range ${constants.templates.error.missingParam}`).isInt();
+  req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
   const userId = req.params.userId;
-  const projectId = req.query.projectId;
   const dateRange = req.query.range;
   const convertedRange = moment(new Date())
     .subtract(dateRange, 'day')
     .format('YYYY-MM-DD HH:mm:ss');
 
-  const retrieveFiles = (user) => {
-    const googleId = user.google_id;
-    return models.log.drive_log.getUniqueFiles(projectId, googleId, convertedRange);
+  const retrieveGoogleIdentity = (user) => {
+    if (_.isNil(user)) return next(boom.badRequest(constants.templates.error.badRequest));
+    return user.email;
   };
 
-  const response = (files) => {
-    res.status(200).json({ count: files.length });
+  const retrieveChanges = (email) => {
+    if (_.isNil(email)) return next(boom.badRequest(constants.templates.error.badRequest));
+    return models.log.file_log.getUserChanges(email, convertedRange);
+  };
+
+  const response = (activities) => {
+    if (_.isNil(activities)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(activities);
   };
 
   return models.app.user.getUserById(userId)
+    .then(retrieveGoogleIdentity)
+    .then(retrieveChanges)
+    .then(response)
+    .catch(next);
+}
+
+function getUserActivities(req, res, next) {
+  req.checkParams('userId', `userId ${constants.templates.error.missingParam}`).notEmpty();
+  req.query.range = req.query.range || constants.defaults.range;
+  req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
+  const errors = req.validationErrors();
+  if (errors) return next(boom.badRequest(errors));
+
+  const userId = req.params.userId;
+  const dateRange = req.query.range;
+  const convertedRange = moment(new Date())
+    .subtract(dateRange, 'day')
+    .format('YYYY-MM-DD HH:mm:ss');
+
+  const retrieveGoogleIdentity = (user) => {
+    if (_.isNil(user)) return next(boom.badRequest(constants.templates.error.badRequest));
+    return user.email;
+  };
+
+  const retrieveActivities = (email) => {
+    if (_.isNil(email)) return next(boom.badRequest(constants.templates.error.badRequest));
+    return models.log.file_log.getUserActivities(email, convertedRange);
+  };
+
+  const response = (activities) => {
+    if (_.isNil(activities)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(activities);
+  };
+
+  return models.app.user.getUserById(userId)
+    .then(retrieveGoogleIdentity)
+    .then(retrieveActivities)
+    .then(response)
+    .catch(next);
+}
+
+function getProjectFiles(req, res, next) {
+  req.checkParams('userId', `userId ${constants.templates.error.missingParam}`).notEmpty();
+  req.checkParams('projectId', `projectId ${constants.templates.error.missingParam}`).notEmpty();
+  req.query.range = req.query.range || constants.defaults.range;
+  req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
+  const errors = req.validationErrors();
+  if (errors) return next(boom.badRequest(errors));
+
+  const userId = req.params.userId;
+  const projectId = req.params.projectId;
+  const dateRange = req.query.range;
+  const convertedRange = moment(new Date())
+    .subtract(dateRange, 'day')
+    .format('YYYY-MM-DD HH:mm:ss');
+
+  const retrieveGoogleIdentity = (user) => {
+    if (_.isNil(user)) return next(boom.badRequest(constants.templates.error.badRequest));
+    return user.email;
+  };
+
+  const retrieveFiles = (email) => {
+    if (_.isNil(email)) return next(boom.badRequest(constants.templates.error.badRequest));
+    return models.log.file_log.getFiles(email, projectId, convertedRange);
+  };
+
+  const response = (activities) => {
+    if (_.isNil(activities)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(activities);
+  };
+
+  return models.app.user.getUserById(userId)
+    .then(retrieveGoogleIdentity)
     .then(retrieveFiles)
     .then(response)
     .catch(next);
 }
 
-function getRevisions(req, res, next) {
+function getProjectChanges(req, res, next) {
   req.checkParams('userId', `userId ${constants.templates.error.missingParam}`).notEmpty();
-  req.checkQuery('projectId', `projectId ${constants.templates.error.missingParam}`).notEmpty();
+  req.checkParams('projectId', `projectId ${constants.templates.error.missingParam}`).notEmpty();
   req.query.range = req.query.range || constants.defaults.range;
-  req.checkQuery('range', `range ${constants.templates.error.missingParam}`).isInt();
+  req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
   const userId = req.params.userId;
-  const projectId = req.query.projectId;
+  const projectId = req.params.projectId;
   const dateRange = req.query.range;
   const convertedRange = moment(new Date())
     .subtract(dateRange, 'day')
     .format('YYYY-MM-DD HH:mm:ss');
 
-  const retrieveRevisions = (user) => {
-    const googleId = user.google_id;
-    return models.log.revision_log.getUserRevisionsByProject(googleId,
-      projectId, null, convertedRange);
+  const retrieveGoogleIdentity = (user) => {
+    if (_.isNil(user)) return next(boom.badRequest(constants.templates.error.badRequest));
+    return user.email;
   };
 
-  const response = (revisions) => {
-    res.status(200).json(revisions);
+  const retrieveChanges = (email) => {
+    if (_.isNil(email)) return next(boom.badRequest(constants.templates.error.badRequest));
+    return models.log.file_log.getUserChangesByProject(email, projectId, convertedRange);
+  };
+
+  const response = (activities) => {
+    if (_.isNil(activities)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(activities);
   };
 
   return models.app.user.getUserById(userId)
-    .then(retrieveRevisions)
+    .then(retrieveGoogleIdentity)
+    .then(retrieveChanges)
     .then(response)
     .catch(next);
 }
 
-function getRevisionsCount(req, res, next) {
+function getProjectActivities(req, res, next) {
   req.checkParams('userId', `userId ${constants.templates.error.missingParam}`).notEmpty();
-  req.checkQuery('projectId', `projectId ${constants.templates.error.missingParam}`).notEmpty();
+  req.checkParams('projectId', `projectId ${constants.templates.error.missingParam}`).notEmpty();
   req.query.range = req.query.range || constants.defaults.range;
-  req.checkQuery('range', `range ${constants.templates.error.missingParam}`).isInt();
+  req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
   const userId = req.params.userId;
-  const projectId = req.query.projectId;
+  const projectId = req.params.projectId;
   const dateRange = req.query.range;
   const convertedRange = moment(new Date())
     .subtract(dateRange, 'day')
     .format('YYYY-MM-DD HH:mm:ss');
 
-  const retrieveRevisions = (user) => {
-    const googleId = user.google_id;
-    return models.log.revision_log.getUserRevisionsByProject(googleId,
-      projectId, null, convertedRange);
+  const retrieveGoogleIdentity = (user) => {
+    if (_.isNil(user)) return next(boom.badRequest(constants.templates.error.badRequest));
+    return user.email;
   };
 
-  const response = (revisions) => {
-    res.status(200).json({ count: revisions.length });
+  const retrieveActivities = (email) => {
+    if (_.isNil(email)) return next(boom.badRequest(constants.templates.error.badRequest));
+    return models.log.file_log.getUserActivitiesByProject(email, projectId, convertedRange);
+  };
+
+  const response = (activities) => {
+    if (_.isNil(activities)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(activities);
   };
 
   return models.app.user.getUserById(userId)
-    .then(retrieveRevisions)
+    .then(retrieveGoogleIdentity)
+    .then(retrieveActivities)
     .then(response)
     .catch(next);
 }
 
 const driveAPI = {
-  getOverview,
-  getRevisions,
-  getRevisionsCount,
-  getFiles,
-  getFilesCount
+  getUserFiles,
+  getUserChanges,
+  getUserActivities,
+  getProjectFiles,
+  getProjectChanges,
+  getProjectActivities
 };
 
 export default driveAPI;
