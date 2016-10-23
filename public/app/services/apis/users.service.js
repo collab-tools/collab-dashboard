@@ -1,3 +1,9 @@
+/**
+ * Service Factory that creates object that represent HTTP services
+ * for /api/users Resources.
+ * @namespace UsersFactory
+ */
+
 (() => {
   angular
     .module('app')
@@ -13,75 +19,102 @@
       cloud: {},
       milestones: {},
       tasks: {},
-      projects: {}
-    };
-
-    usersFactory.getUser = (userId) => {
-      return $http.get(`${urlBase}/${userId}`);
     };
 
     usersFactory.getUsers = (range) => {
       return $http.get(`${urlBase}?range=${range}`);
     };
 
-    usersFactory.projects.getProject = (userId, projectId) => {
-      return $http.get(`${urlBase}/${userId}/projects/${projectId}`);
+    usersFactory.getUser = (userId) => {
+      return $http.get(`${urlBase}/${userId}`);
     };
 
-    usersFactory.projects.getProjects = (userId, range) => {
-      return $http.get(`${urlBase}/${userId}/projects?range=${range}`);
+    usersFactory.getUserProjects = (userId) => {
+      return $http.get(`${urlBase}/${userId}/projects`);
     };
 
-    usersFactory.drive.getOverview = (userId, range) => {
-      return $http.get(`${urlBase}/${userId}/drive/overview?range=${range}`);
+    usersFactory.github.getUserRepos = (userId) => {
+      return $http.get(`${urlBase}/${userId}/github/repos`);
     };
 
-    usersFactory.drive.getFiles = (userId, range) => {
-      return $http.get(`${urlBase}/${userId}/drive/files?range=${range}`);
-    };
-
-    usersFactory.drive.getFilesCount = (userId, range) => {
-      return $http.get(`${urlBase}/${userId}/drive/files/count?range=${range}`);
-    };
-
-    usersFactory.drive.getRevisions = (userId, range) => {
-      return $http.get(`${urlBase}/${userId}/drive/revisions?range=${range}`);
-    };
-
-    usersFactory.drive.getRevisionsCount = (userId, range) => {
-      return $http.get(`${urlBase}/${userId}/drive/revisions/count?range=${range}`);
-    };
-
-    usersFactory.github.getOverview = (userId, range) => {
-      return $http.get(`${urlBase}/${userId}/github/overview?range=${range}`);
-    };
-
-    usersFactory.github.getCommits = (userId, range) => {
+    usersFactory.github.getUserCommits = (userId, range) => {
       return $http.get(`${urlBase}/${userId}/github/commits?range=${range}`);
     };
 
-    usersFactory.github.getCommitsCount = (userId, range) => {
-      return $http.get(`${urlBase}/${userId}/github/commits/count?range=${range}`);
+    usersFactory.github.getUserReleases = (userId, range) => {
+      return $http.get(`${urlBase}/${userId}/github/releases/count?range=${range}`);
+    };
+
+    usersFactory.github.getProjectRepo = (userId, projectId) => {
+      return $http.get(`${urlBase}/${userId}/project/${projectId}/github/repo`);
+    };
+
+    usersFactory.github.getProjectCommits = (userId, projectId, range) => {
+      return $http.get(`${urlBase}/${userId}/project/${projectId}/github/commits?range=${range}`);
+    };
+
+    usersFactory.github.getProjectReleases = (userId, projectId, range) => {
+      return $http.get(`${urlBase}/${userId}/project/${projectId}/github/releases?range=${range}`);
+    };
+
+    usersFactory.drive.getUserFiles = (userId, range) => {
+      return $http.get(`${urlBase}/${userId}/drive/files?range=${range}`);
+    };
+
+    usersFactory.drive.getUserChanges = (userId, range) => {
+      return $http.get(`${urlBase}/${userId}/drive/changes?range=${range}`);
+    };
+
+    usersFactory.drive.getUserActivities = (userId, range) => {
+      return $http.get(`${urlBase}/${userId}/drive/activities?range=${range}`);
+    };
+
+    usersFactory.drive.getProjectFiles = (userId, projectId, range) => {
+      return $http.get(`${urlBase}/${userId}/project/${projectId}/drive/files?range=${range}`);
+    };
+
+    usersFactory.drive.getProjectChanges = (userId, projectId, range) => {
+      return $http.get(`${urlBase}/${userId}/project/${projectId}/drive/changes?range=${range}`);
+    };
+
+    usersFactory.drive.getProjectActivities = (userId, projectId, range) => {
+      return $http.get(`${urlBase}/${userId}/project/${projectId}/drive/activities?range=${range}`);
+    };
+
+    usersFactory.tasks.getUserTasks = (userId, range) => {
+      return $http.get(`${urlBase}/${userId}/tasks?range=${range}`);
+    };
+
+    usersFactory.tasks.getUserActivities = (userId, range) => {
+      return $http.get(`${urlBase}/${userId}/tasks/activities?range=${range}`);
+    };
+
+    usersFactory.tasks.getProjectTasks = (userId, projectId, range) => {
+      return $http.get(`${urlBase}/${userId}/project/${projectId}/tasks?range=${range}`);
+    };
+
+    usersFactory.tasks.getProjectActivities = (userId, projectId, range) => {
+      return $http.get(`${urlBase}/${userId}/project/${projectId}/tasks/activities?range=${range}`);
+    };
+
+    usersFactory.milestones.getUserMilestones = (userId, range) => {
+      return $http.get(`${urlBase}/${userId}/milestones?range=${range}`);
+    };
+
+    usersFactory.milestones.getAssignedUserMilestones = (userId, range) => {
+      return $http.get(`${urlBase}/${userId}/milestones/assigned?range=${range}`);
+    };
+
+    usersFactory.milestones.getTasksByMilestones = (userId, range) => {
+      return $http.get(`${urlBase}/${userId}/milestones/tasks?range=${range}`);
+    };
+
+    usersFactory.milestones.getTasksByProjectMilestones = (userId, projectId, range) => {
+      return $http.get(`${urlBase}/${userId}/project/${projectId}/milestones/tasks?range=${range}`);
     };
 
     usersFactory.cloud.getOverview = (userId, range) => {
       return $http.get(`${urlBase}/${userId}/cloud/overview?range=${range}`);
-    };
-
-    usersFactory.tasks.getOverview = (userId, range) => {
-      return $http.get(`${urlBase}/${userId}/tasks/overview?range=${range}`);
-    };
-
-    usersFactory.tasks.getTasks = (userId, range) => {
-      return $http.get(`${urlBase}/${userId}/tasks?range=${range}`);
-    };
-
-    usersFactory.milestones.getOverview = (userId, range) => {
-      return $http.get(`${urlBase}/${userId}/milestones/overview?range=${range}`);
-    };
-
-    usersFactory.milestones.getMilestones = (userId, range) => {
-      return $http.get(`${urlBase}/${userId}/milestones?range=${range}`);
     };
 
     return usersFactory;

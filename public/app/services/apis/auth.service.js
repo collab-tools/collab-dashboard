@@ -1,3 +1,14 @@
+/**
+ * Service Factory that creates object that represent HTTP services
+ * for /api/admin Resources
+ * @namespace AuthTokenFactory
+ * @namespace AuthFactory
+ *
+ * Service Factory that creates object which intercepts HTTP methods
+ * and attach JWT token information for authenticating API calls.
+ * @namespace AuthInterceptorFactory
+ */
+
 (() => {
   angular
     .module('app')
