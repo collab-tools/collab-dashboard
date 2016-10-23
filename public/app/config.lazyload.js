@@ -145,12 +145,6 @@
         '../libs/jquery/bower-jvectormap/jquery-jvectormap-us-aea-en.js'
       ]
     }, {
-      name: 'moment',
-      module: false,
-      files: [
-        '../libs/js/moment/moment.js'
-      ]
-    }, {
       name: 'fullcalendar',
       module: false,
       files: [
