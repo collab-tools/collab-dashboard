@@ -39,7 +39,7 @@ function getProjects(req, res, next) {
     res.status(200).json(projects);
   };
 
-  return models.app.project.getProjects(startDate, endDate)
+  return models.app.project.getProjectsWithMembers(startDate, endDate)
     .then(response)
     .catch(next);
 }

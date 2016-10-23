@@ -4,26 +4,39 @@
  * @namespace ProjectsCtrl
  */
 
-/* global moment */
 (() => {
   angular
     .module('app')
     .controller('projectsCtrl', projectsCtrl);
 
-  projectsCtrl.$inject = ['$scope', '$log', '_', 'Projects'];
+  projectsCtrl.$inject = ['$scope', '$log', '$q', '_', 'moment', 'Projects'];
 
-  function projectsCtrl($scope, $log, _, Projects) {
+  function projectsCtrl($scope, $log, $q, _, moment, Projects) {
     const vm = this;
     const parent = $scope.$parent;
-    vm.subtitle = 'Projects within Collab';
 
-    const processProjects = (projects) => {
-      vm.projects = projects;
-      vm.projectCount = vm.projects.length;
+    vm.requestData = () => {
+      const start = parent.dateRange.selected.start;
+      const end = parent.dateRange.selected.end;
+
+      const processProjects = (projects) => {
+        vm.projects = _.map(projects.data, (project) => {
+          project.createdAt = moment(project.createdAt).format('Do MMM YY').toString();
+          return project;
+        });
+        vm.projectCount = vm.projects.length;
+        vm.projectUsersMean = _.sumBy(vm.projects, project => project.users.length) / vm.projectCount;
+      };
+
+      Projects
+        .getProjects(start, end)
+        .then(processProjects, $log.error);
     };
 
-    Projects
-      .getProjects(parent.dateRange.selected.days)
-      .then(processProjects, $log.error);
+    // Initialize controller by setting subtitle and data
+    (() => {
+      vm.subtitle = 'Projects within Collab';
+      vm.requestData();
+    })();
   }
 })();
