@@ -9,6 +9,7 @@
     'ui.load',
     'ui.jp',
     'oc.lazyLoad',
+    'angularMoment',
     'lodash'
   ]);
 })();

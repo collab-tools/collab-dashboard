@@ -1,3 +1,9 @@
+/**
+ * Main controller of the dashboard that makes global variables and methods
+ * available to other sub-controllers.
+ * @namespace AppCtrl
+ */
+
 (() => {
   angular
     .module('app')
@@ -5,21 +11,20 @@
 
   AppCtrl.$inject = [
     '$scope', '$localStorage', '$location', '$rootScope',
-    '$anchorScroll', '$timeout', '$window', 'Auth'
+    '$anchorScroll', '$timeout', '$window', 'moment', 'Auth'
   ];
 
-  function AppCtrl($scope, $localStorage, $location, $rootScope, $anchorScroll,
-    $timeout, $window, auth) {
+  function AppCtrl($scope, $localStorage, $location, $rootScope,
+    $anchorScroll, $timeout, $window, moment, Auth) {
     const vm = $scope;
 
-    vm.currentUser = auth.currentUser();
+    vm.currentUser = Auth.currentUser();
 
-    // TODO: Revamp to include dynamic ranges
     vm.dateRange = [
-      { display: 'Last 7 Days', days: 7 },
-      { display: 'Last 30 Days', days: 30 },
-      { display: 'Last 90 Days', days: 90 },
-      { display: 'All Time', days: 1000 }
+      { display: 'Last 7 Days', start: moment().startOf('day').subtract(7, 'days').valueOf(), end: moment().valueOf() },
+      { display: 'Last 30 Days', start: moment().startOf('day').subtract(30, 'days').valueOf(), end: moment().valueOf() },
+      { display: 'Last 90 Days', start: moment().startOf('day').subtract(90, 'days').valueOf(), end: moment().valueOf() },
+      { display: 'All Time', start: 0, end: moment().valueOf() }
     ];
     vm.dateRange.selected = vm.dateRange[0];
 
@@ -27,7 +32,7 @@
     vm.isMobile = isSmartDevice();
     vm.app = {
       name: 'Collab',
-      version: '0.0.1',
+      version: '1.0.0',
       color: {
         primary: '#0cc2aa',
         accent: '#a88add',
@@ -44,7 +49,7 @@
     };
 
     vm.logout = function () {
-      auth.logout();
+      Auth.logout();
       $location.path('/auth/login');
     };
 
