@@ -21,8 +21,8 @@
       cloud: {}
     };
 
-    projectsFactory.getProjects = (range) => {
-      return $http.get(`${urlBase}?range=${range}`);
+    projectsFactory.getProjects = (start, end) => {
+      return $http.get(`${urlBase}?start=${start}&end=${end}`);
     };
 
     projectsFactory.getProject = (projectId) => {
@@ -37,12 +37,12 @@
       return $http.get(`${urlBase}/${projectId}/github/repo`);
     };
 
-    projectsFactory.github.getCommits = (projectId, range) => {
-      return $http.get(`${urlBase}/${projectId}/github/commits?range=${range}`);
+    projectsFactory.github.getCommits = (projectId, start, end) => {
+      return $http.get(`${urlBase}/${projectId}/github/commits?start=${start}&end=${end}`);
     };
 
-    projectsFactory.github.getReleases = (projectId, range) => {
-      return $http.get(`${urlBase}/${projectId}/github/releases?range=${range}`);
+    projectsFactory.github.getReleases = (projectId, start, end) => {
+      return $http.get(`${urlBase}/${projectId}/github/releases?start=${start}&end=${end}`);
     };
 
     projectsFactory.github.getContributors = (projectId) => {
@@ -53,40 +53,40 @@
       return $http.get(`${urlBase}/${projectId}/github/stats`);
     };
 
-    projectsFactory.drive.getFiles = (projectId, range) => {
-      return $http.get(`${urlBase}/${projectId}/drive/files?range=${range}`);
+    projectsFactory.drive.getFiles = (projectId, start, end) => {
+      return $http.get(`${urlBase}/${projectId}/drive/files?start=${start}&end=${end}`);
     };
 
-    projectsFactory.drive.getChanges = (projectId, range) => {
-      return $http.get(`${urlBase}/${projectId}/drive/changes?range=${range}`);
+    projectsFactory.drive.getChanges = (projectId, start, end) => {
+      return $http.get(`${urlBase}/${projectId}/drive/changes?start=${start}&end=${end}`);
     };
 
-    projectsFactory.drive.getActivities = (projectId, range) => {
-      return $http.get(`${urlBase}/${projectId}/drive/activities?range=${range}`);
+    projectsFactory.drive.getActivities = (projectId, start, end) => {
+      return $http.get(`${urlBase}/${projectId}/drive/activities?start=${start}&end=${end}`);
     };
 
-    projectsFactory.tasks.getTasks = (projectId, range) => {
-      return $http.get(`${urlBase}/${projectId}/tasks?range=${range}`);
+    projectsFactory.tasks.getTasks = (projectId, start, end) => {
+      return $http.get(`${urlBase}/${projectId}/tasks?start=${start}&end=${end}`);
     };
 
-    projectsFactory.tasks.getActivities = (projectId, range) => {
-      return $http.get(`${urlBase}/${projectId}/tasks/activities?range=${range}`);
+    projectsFactory.tasks.getActivities = (projectId, start, end) => {
+      return $http.get(`${urlBase}/${projectId}/tasks/activities?start=${start}&end=${end}`);
     };
 
-    projectsFactory.milestones.getMilestones = (projectId, range) => {
-      return $http.get(`${urlBase}/${projectId}/milestones?range=${range}`);
+    projectsFactory.milestones.getMilestones = (projectId, start, end) => {
+      return $http.get(`${urlBase}/${projectId}/milestones?start=${start}&end=${end}`);
     };
 
-    projectsFactory.milestones.getActivities = (projectId, range) => {
-      return $http.get(`${urlBase}/${projectId}/milestones/activities?range=${range}`);
+    projectsFactory.milestones.getActivities = (projectId, start, end) => {
+      return $http.get(`${urlBase}/${projectId}/milestones/activities?start=${start}&end=${end}`);
     };
 
-    projectsFactory.milestones.getTasksByMilestones = (projectId, range) => {
-      return $http.get(`${urlBase}/${projectId}/milestones/tasks?range=${range}`);
+    projectsFactory.milestones.getTasksByMilestones = (projectId, start, end) => {
+      return $http.get(`${urlBase}/${projectId}/milestones/tasks?start=${start}&end=${end}`);
     };
 
-    projectsFactory.cloud.getOverview = (projectId, range) => {
-      return $http.get(`${urlBase}/${projectId}/cloud/overview?range=${range}`);
+    projectsFactory.cloud.getOverview = (projectId, start, end) => {
+      return $http.get(`${urlBase}/${projectId}/cloud/overview?start=${start}&end=${end}`);
     };
 
     return projectsFactory;

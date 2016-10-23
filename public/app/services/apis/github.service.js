@@ -15,28 +15,28 @@
     const urlBase = '/api/global/github';
     const githubFactory = {};
 
-    githubFactory.getRepositories = (range) => {
-      return $http.get(`${urlBase}/repos?range=${range}`);
+    githubFactory.getRepositories = (start, end) => {
+      return $http.get(`${urlBase}/repos?start=${start}&end=${end}`);
     };
 
-    githubFactory.getCommits = (range) => {
-      return $http.get(`${urlBase}/commits?range=${range}`);
+    githubFactory.getCommits = (start, end) => {
+      return $http.get(`${urlBase}/commits?start=${start}&end=${end}`);
     };
 
     githubFactory.getCommit = (commitId) => {
       return $http.get(`${urlBase}/commits/${commitId}`);
     };
 
-    githubFactory.getReleases = (range) => {
-      return $http.get(`${urlBase}/releases?range=${range}`);
+    githubFactory.getReleases = (start, end) => {
+      return $http.get(`${urlBase}/releases?start=${start}&end=${end}`);
     };
 
     githubFactory.getRelease = (releaseId) => {
       return $http.get(`${urlBase}/release/${releaseId}`);
     };
 
-    githubFactory.getParticipatingUsers = (range) => {
-      return $http.get(`${urlBase}/users?range=${range}`);
+    githubFactory.getParticipatingUsers = (start, end) => {
+      return $http.get(`${urlBase}/users?start=${start}&end=${end}`);
     };
 
     return githubFactory;

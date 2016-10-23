@@ -15,24 +15,24 @@
     const urlBase = '/api/global/tasks';
     const tasksFactory = {};
 
-    tasksFactory.getTasks = (range) => {
-      return $http.get(`${urlBase}?range=${range}`);
+    tasksFactory.getTasks = (start, end) => {
+      return $http.get(`${urlBase}?start=${start}&end=${end}`);
     };
 
     tasksFactory.getTask = (taskId) => {
       return $http.get(`${urlBase}/${taskId}`);
     };
 
-    tasksFactory.getActivities = (range) => {
-      return $http.get(`${urlBase}/activities?range=${range}`);
+    tasksFactory.getActivities = (start, end) => {
+      return $http.get(`${urlBase}/activities?start=${start}&end=${end}`);
     };
 
-    tasksFactory.getTaskActivities = (taskId, range) => {
-      return $http.get(`${urlBase}/${taskId}/activities?range=${range}`);
+    tasksFactory.getTaskActivities = (taskId, start, end) => {
+      return $http.get(`${urlBase}/${taskId}/activities?start=${start}&end=${end}`);
     };
 
-    tasksFactory.getParticipatingUsers = (range) => {
-      return $http.get(`${urlBase}/users?range=${range}`);
+    tasksFactory.getParticipatingUsers = (start, end) => {
+      return $http.get(`${urlBase}/users?start=${start}&end=${end}`);
     };
 
     return tasksFactory;

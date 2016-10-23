@@ -15,24 +15,32 @@
     const urlBase = '/api/global/drive';
     const driveFactory = {};
 
-    driveFactory.getFiles = (range) => {
-      return $http.get(`${urlBase}/files?range=${range}`);
+    driveFactory.getFiles = (start, end) => {
+      return $http.get(`${urlBase}/files?start=${start}&end=${end}`);
     };
 
     driveFactory.getFile = (fileId) => {
       return $http.get(`${urlBase}/files/${fileId}`);
     };
 
-    driveFactory.getChanges = (range) => {
-      return $http.get(`${urlBase}/changes?range=${range}`);
+    driveFactory.getChanges = (start, end) => {
+      return $http.get(`${urlBase}/changes?start=${start}&end=${end}`);
     };
 
-    driveFactory.getFileChanges = (fileId, range) => {
-      return $http.get(`${urlBase}/files/${fileId}/changes?range=${range}`);
+    driveFactory.getFileChanges = (fileId, start, end) => {
+      return $http.get(`${urlBase}/files/${fileId}/changes?start=${start}&end=${end}`);
     };
 
-    driveFactory.getParticipatingUsers = (range) => {
-      return $http.get(`${urlBase}/users?range=${range}`);
+    driveFactory.getActivities = (start, end) => {
+      return $http.get(`${urlBase}/files/activities?start=${start}&end=${end}`);
+    };
+
+    driveFactory.getFileActivities = (fileId, start, end) => {
+      return $http.get(`${urlBase}/files/${fileId}/activities?start=${start}&end=${end}`);
+    };
+
+    driveFactory.getParticipatingUsers = (start, end) => {
+      return $http.get(`${urlBase}/users?start=${start}&end=${end}`);
     };
 
     return driveFactory;

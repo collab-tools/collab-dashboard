@@ -15,24 +15,24 @@
     const urlBase = '/api/global/milestones';
     const milestonesFactory = {};
 
-    milestonesFactory.getMilestones = (range) => {
-      return $http.get(`${urlBase}?range=${range}`);
+    milestonesFactory.getMilestones = (start, end) => {
+      return $http.get(`${urlBase}?start=${start}&end=${end}`);
     };
 
     milestonesFactory.getMilestone = (milestoneId) => {
       return $http.get(`${urlBase}/${milestoneId}`);
     };
 
-    milestonesFactory.getActivities = (range) => {
-      return $http.get(`${urlBase}/activities?range=${range}`);
+    milestonesFactory.getActivities = (start, end) => {
+      return $http.get(`${urlBase}/activities?start=${start}&end=${end}`);
     };
 
-    milestonesFactory.getMilestoneActivities = (milestoneId, range) => {
-      return $http.get(`${urlBase}/${milestoneId}/activities?range=${range}`);
+    milestonesFactory.getMilestoneActivities = (milestoneId, start, end) => {
+      return $http.get(`${urlBase}/${milestoneId}/activities?start=${start}&end=${end}`);
     };
 
-    milestonesFactory.getTasksByMilestones = (range) => {
-      return $http.get(`${urlBase}/tasks?range=${range}`);
+    milestonesFactory.getTasksByMilestones = (start, end) => {
+      return $http.get(`${urlBase}/tasks?start=${start}&end=${end}`);
     };
 
     return milestonesFactory;
