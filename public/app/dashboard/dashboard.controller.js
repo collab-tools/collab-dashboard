@@ -9,34 +9,75 @@
     .module('app')
     .controller('dashboardCtrl', dashboardCtrl);
 
-  dashboardCtrl.$inject = ['$scope', 'Milestones', 'Tasks', 'Github', 'Users'];
+  dashboardCtrl.$inject = [
+    '$scope', 'moment', 'Milestones', 'Tasks', 'Drive', 'Github', 'Projects', 'Users',
+  ];
 
-  function dashboardCtrl($scope, Milestones, Tasks, Github, Users) {
+  function dashboardCtrl($scope, moment, Milestones, Tasks, Drive, Github, Projects, Users) {
     const vm = this;
     const parent = $scope.$parent;
+    vm.requestData = () => {
+      const start = parent.dateRange.selected.start;
+      const end = parent.dateRange.selected.end;
 
-    vm.subtitle = 'Collab In A Glance';
+      // Retrieve number of milestones added
+      Milestones
+        .getMilestones(start, end)
+        .then((response) => { vm.msCount = response.data.length; });
 
-    // Retrieve number of milestones added
-    Milestones
-      .getCount(parent.dateRange.selected.days)
-      .then((response) => { vm.msCount = response.data.count; });
+      // Retrieve number of tasks added
+      Tasks
+        .getTasks(start, end)
+        .then((response) => { vm.taskCount = response.data.length; });
 
-    // Retrieve number of tasks added
-    Tasks
-      .getCount(parent.dateRange.selected.days)
-      .then((response) => { vm.taskCount = response.data.count; });
+      // Retrieve number of github commits
+      Github
+        .getCommits(start, end)
+        .then((response) => { vm.commitCount = response.data.length; });
 
-    // Retrieve number of users and other statistics
-    Users
-      .getUsers(parent.dateRange.selected.days)
-      .then((response) => { vm.newUsers = response.data.count; });
+      // Retrieve number of github releases
+      Github
+        .getReleases(start, end)
+        .then((response) => { vm.releaseCount = response.data.length; });
 
-    // Retrieve feature popularity TODO: Google Analytics
+      // Retrieve number of new files created
+      Drive
+        .getFiles(start, end)
+        .then((response) => { vm.fileCount = response.data.length; });
 
-    // Retrieve number of commits TODO: Google Analytics
+      // Retrieve number of file changes
+      Drive
+        .getChanges(start, end)
+        .then((response) => { vm.changeCount = response.data.length; });
 
-    // TODO: To be replaced with dynamic data
+      // Retrieve number of new projects
+      Projects
+        .getProjects(start, end)
+        .then((response) => { vm.projectCount = response.data.length; });
+
+      // Retrieve number of users that signed up during date range
+      Users
+        .getUsers(start, end)
+        .then((response) => { vm.userCount = response.data.length; });
+
+      // Retrieve number of total registered accounts
+      Users
+        .getUsers(0, moment().valueOf())
+        .then((response) => { vm.totalCount = response.data.length; });
+
+      // Retrieve unique users and retention rate (Google Analaytics)
+      // Retrieve feature popularity (Google Analytics)
+      // Retrieve site uptime
+      // Retrieve average API load
+    };
+
+    // Initialize controller by setting subtitle and data
+    (() => {
+      vm.subtitle = 'Collab In A Glance';
+      vm.requestData();
+    })();
+
+
     vm.p_p_1 = [{ data: 70, label: 'Free' }, { data: 30, label: 'Busy' }];
     vm.p_b_1 = [
       [1, 0.7],
@@ -54,5 +95,6 @@
       [76, 3],
       [10, 4]
     ];
+
   }
 })();
