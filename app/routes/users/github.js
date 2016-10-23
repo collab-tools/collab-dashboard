@@ -30,21 +30,21 @@ function getUserRepos(req, res, next) {
 }
 
 function getUserCommits(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || constants.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || constants.defaults.endDate;
   req.checkParams('userId', `userId ${constants.templates.error.missingParam}`).notEmpty();
-  req.query.range = req.query.range || constants.defaults.range;
-  req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
+  req.checkQuery('start', `start ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  req.checkQuery('end', `end ${constants.templates.error.invalidData}`).isInt({ min: 0 });
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
   const userId = req.params.userId;
-  const dateRange = req.query.range;
-  const convertedRange = moment(new Date())
-    .subtract(dateRange, 'day')
-    .format('YYYY-MM-DD HH:mm:ss');
+  const startDate = moment(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  const endDate = moment(req.query.end).format('YYYY-MM-DD HH:mm:ss');
 
   const retrieveCommits = (user) => {
     if (_.isNil(user)) return next(boom.badRequest(constants.templates.error.badRequest));
-    return models.log.commit_log.getUserCommits(user.githubLogin, null, convertedRange);
+    return models.log.commit_log.getUserCommits(user.githubLogin, null, startDate, endDate);
   };
 
   const response = (commmits) => {
@@ -59,23 +59,23 @@ function getUserCommits(req, res, next) {
 }
 
 function getUserReleases(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || constants.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || constants.defaults.endDate;
   req.checkParams('userId', `userId ${constants.templates.error.missingParam}`).notEmpty();
-  req.query.range = req.query.range || constants.defaults.range;
-  req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
+  req.checkQuery('start', `start ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  req.checkQuery('end', `end ${constants.templates.error.invalidData}`).isInt({ min: 0 });
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
   const userId = req.params.userId;
-  const dateRange = req.query.range;
-  const convertedRange = moment(new Date())
-    .subtract(dateRange, 'day')
-    .format('YYYY-MM-DD HH:mm:ss');
+  const startDate = moment(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  const endDate = moment(req.query.end).format('YYYY-MM-DD HH:mm:ss');
 
   const retrieveReleases = (projects) => {
     if (_.isNil(projects)) return next(boom.badRequest(constants.templates.error.badRequest));
     const retrieval = [];
     _.forEach(projects, (project) => {
-      retrieval.push(models.log.release_log.getProjectReleases(project.id, convertedRange));
+      retrieval.push(models.log.release_log.getProjectReleases(project.id, startDate, endDate));
     });
     return Promise.all(retrieval);
   };
@@ -116,23 +116,23 @@ function getProjectRepo(req, res, next) {
 }
 
 function getProjectCommits(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || constants.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || constants.defaults.endDate;
   req.checkParams('userId', `userId ${constants.templates.error.missingParam}`).notEmpty();
   req.checkParams('projectId', `projectId ${constants.templates.error.missingParam}`).notEmpty();
-  req.query.range = req.query.range || constants.defaults.range;
-  req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
+  req.checkQuery('start', `start ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  req.checkQuery('end', `end ${constants.templates.error.invalidData}`).isInt({ min: 0 });
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
   const userId = req.params.userId;
   const projectId = req.params.projectId;
-  const dateRange = req.query.range;
-  const convertedRange = moment(new Date())
-    .subtract(dateRange, 'day')
-    .format('YYYY-MM-DD HH:mm:ss');
+  const startDate = moment(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  const endDate = moment(req.query.end).format('YYYY-MM-DD HH:mm:ss');
 
   const retrieveCommits = (user) => {
     if (_.isNil(user)) return next(boom.badRequest(constants.templates.error.badRequest));
-    return models.log.commit_log.getUserCommits(user.githubLogin, projectId, convertedRange);
+    return models.log.commit_log.getUserCommits(user.githubLogin, projectId, startDate, endDate);
   };
 
   const response = (commits) => {
@@ -147,25 +147,25 @@ function getProjectCommits(req, res, next) {
 }
 
 function getProjectReleases(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || constants.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || constants.defaults.endDate;
   req.checkParams('userId', `userId ${constants.templates.error.missingParam}`).notEmpty();
   req.checkParams('projectId', `projectId ${constants.templates.error.missingParam}`).notEmpty();
-  req.query.range = req.query.range || constants.defaults.range;
-  req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
+  req.checkQuery('start', `start ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  req.checkQuery('end', `end ${constants.templates.error.invalidData}`).isInt({ min: 0 });
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
   const projectId = req.params.projectId;
-  const dateRange = req.query.range;
-  const convertedRange = moment(new Date())
-    .subtract(dateRange, 'day')
-    .format('YYYY-MM-DD HH:mm:ss');
+  const startDate = moment(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  const endDate = moment(req.query.end).format('YYYY-MM-DD HH:mm:ss');
 
   const response = (releases) => {
     if (_.isNil(releases)) return next(boom.badRequest(constants.templates.error.badRequest));
     res.status(200).json(releases);
   };
 
-  return models.log.release_log.getProjectReleases(projectId, convertedRange)
+  return models.log.release_log.getProjectReleases(projectId, startDate, endDate)
     .then(response)
     .catch(next);
 }

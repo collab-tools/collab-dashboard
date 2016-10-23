@@ -7,17 +7,17 @@ import Storage from '../../common/storage-helper';
 const models = new Storage();
 
 function getUserFiles(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || constants.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || constants.defaults.endDate;
   req.checkParams('userId', `userId ${constants.templates.error.missingParam}`).notEmpty();
-  req.query.range = req.query.range || constants.defaults.range;
-  req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
+  req.checkQuery('start', `start ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  req.checkQuery('end', `end ${constants.templates.error.invalidData}`).isInt({ min: 0 });
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
   const userId = req.params.userId;
-  const dateRange = req.query.range;
-  const convertedRange = moment(new Date())
-    .subtract(dateRange, 'day')
-    .format('YYYY-MM-DD HH:mm:ss');
+  const startDate = moment(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  const endDate = moment(req.query.end).format('YYYY-MM-DD HH:mm:ss');
 
   const retrieveGoogleIdentity = (user) => {
     if (_.isNil(user)) return next(boom.badRequest(constants.templates.error.badRequest));
@@ -26,7 +26,7 @@ function getUserFiles(req, res, next) {
 
   const retrieveFiles = (email) => {
     if (_.isNil(email)) return next(boom.badRequest(constants.templates.error.badRequest));
-    return models.log.file_log.getFiles(email, null, convertedRange);
+    return models.log.file_log.getFiles(email, null, startDate, endDate);
   };
 
   const response = (files) => {
@@ -42,17 +42,17 @@ function getUserFiles(req, res, next) {
 }
 
 function getUserChanges(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || constants.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || constants.defaults.endDate;
   req.checkParams('userId', `userId ${constants.templates.error.missingParam}`).notEmpty();
-  req.query.range = req.query.range || constants.defaults.range;
-  req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
+  req.checkQuery('start', `start ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  req.checkQuery('end', `end ${constants.templates.error.invalidData}`).isInt({ min: 0 });
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
   const userId = req.params.userId;
-  const dateRange = req.query.range;
-  const convertedRange = moment(new Date())
-    .subtract(dateRange, 'day')
-    .format('YYYY-MM-DD HH:mm:ss');
+  const startDate = moment(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  const endDate = moment(req.query.end).format('YYYY-MM-DD HH:mm:ss');
 
   const retrieveGoogleIdentity = (user) => {
     if (_.isNil(user)) return next(boom.badRequest(constants.templates.error.badRequest));
@@ -61,7 +61,7 @@ function getUserChanges(req, res, next) {
 
   const retrieveChanges = (email) => {
     if (_.isNil(email)) return next(boom.badRequest(constants.templates.error.badRequest));
-    return models.log.file_log.getUserChanges(email, convertedRange);
+    return models.log.file_log.getUserChanges(email, startDate, endDate);
   };
 
   const response = (changes) => {
@@ -77,17 +77,17 @@ function getUserChanges(req, res, next) {
 }
 
 function getUserActivities(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || constants.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || constants.defaults.endDate;
   req.checkParams('userId', `userId ${constants.templates.error.missingParam}`).notEmpty();
-  req.query.range = req.query.range || constants.defaults.range;
-  req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
+  req.checkQuery('start', `start ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  req.checkQuery('end', `end ${constants.templates.error.invalidData}`).isInt({ min: 0 });
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
   const userId = req.params.userId;
-  const dateRange = req.query.range;
-  const convertedRange = moment(new Date())
-    .subtract(dateRange, 'day')
-    .format('YYYY-MM-DD HH:mm:ss');
+  const startDate = moment(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  const endDate = moment(req.query.end).format('YYYY-MM-DD HH:mm:ss');
 
   const retrieveGoogleIdentity = (user) => {
     if (_.isNil(user)) return next(boom.badRequest(constants.templates.error.badRequest));
@@ -96,7 +96,7 @@ function getUserActivities(req, res, next) {
 
   const retrieveActivities = (email) => {
     if (_.isNil(email)) return next(boom.badRequest(constants.templates.error.badRequest));
-    return models.log.file_log.getUserActivities(email, convertedRange);
+    return models.log.file_log.getUserActivities(email, startDate, endDate);
   };
 
   const response = (activities) => {
@@ -112,19 +112,19 @@ function getUserActivities(req, res, next) {
 }
 
 function getProjectFiles(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || constants.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || constants.defaults.endDate;
   req.checkParams('userId', `userId ${constants.templates.error.missingParam}`).notEmpty();
   req.checkParams('projectId', `projectId ${constants.templates.error.missingParam}`).notEmpty();
-  req.query.range = req.query.range || constants.defaults.range;
-  req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
+  req.checkQuery('start', `start ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  req.checkQuery('end', `end ${constants.templates.error.invalidData}`).isInt({ min: 0 });
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
   const userId = req.params.userId;
   const projectId = req.params.projectId;
-  const dateRange = req.query.range;
-  const convertedRange = moment(new Date())
-    .subtract(dateRange, 'day')
-    .format('YYYY-MM-DD HH:mm:ss');
+  const startDate = moment(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  const endDate = moment(req.query.end).format('YYYY-MM-DD HH:mm:ss');
 
   const retrieveGoogleIdentity = (user) => {
     if (_.isNil(user)) return next(boom.badRequest(constants.templates.error.badRequest));
@@ -133,7 +133,7 @@ function getProjectFiles(req, res, next) {
 
   const retrieveFiles = (email) => {
     if (_.isNil(email)) return next(boom.badRequest(constants.templates.error.badRequest));
-    return models.log.file_log.getFiles(email, projectId, convertedRange);
+    return models.log.file_log.getFiles(email, projectId, startDate, endDate);
   };
 
   const response = (files) => {
@@ -149,19 +149,19 @@ function getProjectFiles(req, res, next) {
 }
 
 function getProjectChanges(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || constants.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || constants.defaults.endDate;
   req.checkParams('userId', `userId ${constants.templates.error.missingParam}`).notEmpty();
   req.checkParams('projectId', `projectId ${constants.templates.error.missingParam}`).notEmpty();
-  req.query.range = req.query.range || constants.defaults.range;
-  req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
+  req.checkQuery('start', `start ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  req.checkQuery('end', `end ${constants.templates.error.invalidData}`).isInt({ min: 0 });
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
   const userId = req.params.userId;
   const projectId = req.params.projectId;
-  const dateRange = req.query.range;
-  const convertedRange = moment(new Date())
-    .subtract(dateRange, 'day')
-    .format('YYYY-MM-DD HH:mm:ss');
+  const startDate = moment(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  const endDate = moment(req.query.end).format('YYYY-MM-DD HH:mm:ss');
 
   const retrieveGoogleIdentity = (user) => {
     if (_.isNil(user)) return next(boom.badRequest(constants.templates.error.badRequest));
@@ -170,7 +170,7 @@ function getProjectChanges(req, res, next) {
 
   const retrieveChanges = (email) => {
     if (_.isNil(email)) return next(boom.badRequest(constants.templates.error.badRequest));
-    return models.log.file_log.getUserChangesByProject(email, projectId, convertedRange);
+    return models.log.file_log.getUserChangesByProject(email, projectId, startDate, endDate);
   };
 
   const response = (changes) => {
@@ -186,19 +186,19 @@ function getProjectChanges(req, res, next) {
 }
 
 function getProjectActivities(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || constants.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || constants.defaults.endDate;
   req.checkParams('userId', `userId ${constants.templates.error.missingParam}`).notEmpty();
   req.checkParams('projectId', `projectId ${constants.templates.error.missingParam}`).notEmpty();
-  req.query.range = req.query.range || constants.defaults.range;
-  req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
+  req.checkQuery('start', `start ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  req.checkQuery('end', `end ${constants.templates.error.invalidData}`).isInt({ min: 0 });
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
   const userId = req.params.userId;
   const projectId = req.params.projectId;
-  const dateRange = req.query.range;
-  const convertedRange = moment(new Date())
-    .subtract(dateRange, 'day')
-    .format('YYYY-MM-DD HH:mm:ss');
+  const startDate = moment(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  const endDate = moment(req.query.end).format('YYYY-MM-DD HH:mm:ss');
 
   const retrieveGoogleIdentity = (user) => {
     if (_.isNil(user)) return next(boom.badRequest(constants.templates.error.badRequest));
@@ -207,7 +207,7 @@ function getProjectActivities(req, res, next) {
 
   const retrieveActivities = (email) => {
     if (_.isNil(email)) return next(boom.badRequest(constants.templates.error.badRequest));
-    return models.log.file_log.getUserActivitiesByProject(email, projectId, convertedRange);
+    return models.log.file_log.getUserActivitiesByProject(email, projectId, startDate, endDate);
   };
 
   const response = (activities) => {
