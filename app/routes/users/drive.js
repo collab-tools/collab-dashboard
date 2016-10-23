@@ -29,9 +29,9 @@ function getUserFiles(req, res, next) {
     return models.log.file_log.getFiles(email, null, convertedRange);
   };
 
-  const response = (activities) => {
-    if (_.isNil(activities)) return next(boom.badRequest(constants.templates.error.badRequest));
-    res.status(200).json(activities);
+  const response = (files) => {
+    if (_.isNil(files)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(files);
   };
 
   return models.app.user.getUserById(userId)
@@ -64,9 +64,9 @@ function getUserChanges(req, res, next) {
     return models.log.file_log.getUserChanges(email, convertedRange);
   };
 
-  const response = (activities) => {
-    if (_.isNil(activities)) return next(boom.badRequest(constants.templates.error.badRequest));
-    res.status(200).json(activities);
+  const response = (changes) => {
+    if (_.isNil(changes)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(changes);
   };
 
   return models.app.user.getUserById(userId)
@@ -136,9 +136,9 @@ function getProjectFiles(req, res, next) {
     return models.log.file_log.getFiles(email, projectId, convertedRange);
   };
 
-  const response = (activities) => {
-    if (_.isNil(activities)) return next(boom.badRequest(constants.templates.error.badRequest));
-    res.status(200).json(activities);
+  const response = (files) => {
+    if (_.isNil(files)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(files);
   };
 
   return models.app.user.getUserById(userId)
@@ -173,9 +173,9 @@ function getProjectChanges(req, res, next) {
     return models.log.file_log.getUserChangesByProject(email, projectId, convertedRange);
   };
 
-  const response = (activities) => {
-    if (_.isNil(activities)) return next(boom.badRequest(constants.templates.error.badRequest));
-    res.status(200).json(activities);
+  const response = (changes) => {
+    if (_.isNil(changes)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(changes);
   };
 
   return models.app.user.getUserById(userId)

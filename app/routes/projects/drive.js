@@ -42,9 +42,9 @@ function getChanges(req, res, next) {
     .subtract(dateRange, 'day')
     .format('YYYY-MM-DD HH:mm:ss');
 
-  const response = (revisions) => {
-    if (_.isNil(revisions)) return next(boom.badRequest(constants.templates.error.badRequest));
-    res.status(200).json(revisions);
+  const response = (changes) => {
+    if (_.isNil(changes)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(changes);
   };
 
   return models.log.file_log.getProjectChanges(projectId, convertedRange)
@@ -65,9 +65,9 @@ function getActivities(req, res, next) {
     .subtract(dateRange, 'day')
     .format('YYYY-MM-DD HH:mm:ss');
 
-  const response = (revisions) => {
-    if (_.isNil(revisions)) return next(boom.badRequest(constants.templates.error.badRequest));
-    res.status(200).json(revisions);
+  const response = (activities) => {
+    if (_.isNil(activities)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(activities);
   };
 
   return models.log.file_log.getProjectActivities(projectId, convertedRange)

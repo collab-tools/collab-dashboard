@@ -6,27 +6,6 @@ import Storage from '../../common/storage-helper';
 
 const models = new Storage();
 
-function getParticipatingUsers(req, res, next) {
-  req.query.range = req.query.range || constants.defaults.range;
-  req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
-  const errors = req.validationErrors();
-  if (errors) next(boom.badRequest(errors));
-
-  const dateRange = req.query.range;
-  const convertedRange = moment(new Date())
-    .subtract(dateRange, 'day')
-    .format('YYYY-MM-DD HH:mm:ss');
-
-  const response = (users) => {
-    if (_.isNil(users)) return next(boom.badRequest(constants.templates.error.badRequest));
-    res.status(200).json(users);
-  };
-
-  return models.log.commit_log.getParticipatingUsers(convertedRange)
-    .then(response)
-    .catch(next);
-}
-
 function getRepositories(req, res, next) {
   req.query.range = req.query.range || constants.default.range;
   req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
@@ -122,13 +101,34 @@ function getRelease(req, res, next) {
     .catch(next);
 }
 
+function getParticipatingUsers(req, res, next) {
+  req.query.range = req.query.range || constants.defaults.range;
+  req.checkQuery('range', `range ${constants.templates.error.invalidData}`).isInt();
+  const errors = req.validationErrors();
+  if (errors) next(boom.badRequest(errors));
+
+  const dateRange = req.query.range;
+  const convertedRange = moment(new Date())
+    .subtract(dateRange, 'day')
+    .format('YYYY-MM-DD HH:mm:ss');
+
+  const response = (users) => {
+    if (_.isNil(users)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(users);
+  };
+
+  return models.log.commit_log.getParticipatingUsers(convertedRange)
+    .then(response)
+    .catch(next);
+}
+
 const githubAPI = {
-  getParticipatingUsers,
   getRepositories,
   getCommits,
   getCommit,
   getReleases,
-  getRelease
+  getRelease,
+  getParticipatingUsers
 };
 
 export default githubAPI;

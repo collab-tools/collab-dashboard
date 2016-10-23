@@ -17,9 +17,9 @@ module.exports = function (express) {
 
   // GitHub Related
   // =========================================================
-  globalRouter.get('/github/repos/', github.getRepositories);
-  globalRouter.get('/github/commits/:commitId', github.getCommit);
+  globalRouter.get('/github/repos', github.getRepositories);
   globalRouter.get('/github/commits', github.getCommits);
+  globalRouter.get('/github/commits/:commitId', github.getCommit);
   globalRouter.get('/github/releases', github.getReleases);
   globalRouter.get('/github/releases/:releaseId', github.getRelease);
   globalRouter.get('/github/users', github.getParticipatingUsers);
@@ -30,6 +30,8 @@ module.exports = function (express) {
   globalRouter.get('/drive/files/:fileId', drive.getFile);
   globalRouter.get('/drive/files/changes', drive.getChanges);
   globalRouter.get('/drive/files/:fileId/changes', drive.getFileChanges);
+  globalRouter.get('/drive/files/activities', drive.getActivities);
+  globalRouter.get('/drive/files/:fileId/activities', drive.getFileActivities);
   globalRouter.get('/drive/users', drive.getParticipatingUsers);
 
   // Tasks Related

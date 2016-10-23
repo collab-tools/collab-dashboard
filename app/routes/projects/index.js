@@ -18,8 +18,8 @@ module.exports = function (express) {
 
   // Projects Retrieval Related
   // =========================================================
-  projectsRouter.get('/:projectId', projects.getProject);
   projectsRouter.get('/', projects.getProjects);
+  projectsRouter.get('/:projectId', projects.getProject);
   projectsRouter.get('/:projectId/users', projects.getUsers);
 
   // GitHub Related

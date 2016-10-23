@@ -18,8 +18,8 @@ module.exports = (express) => {
 
   // User Retrieval Related
   // =========================================================
-  usersRouter.get('/:userId', users.getUser);
   usersRouter.get('/', users.getUsers);
+  usersRouter.get('/:userId', users.getUser);
   usersRouter.get('/:userId/projects', users.getUserProjects);
 
   // GitHub Related

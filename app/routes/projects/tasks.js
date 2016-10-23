@@ -42,7 +42,9 @@ function getActivities(req, res, next) {
     .format('YYYY-MM-DD HH:mm:ss');
 
   const response = (tasksActivities) => {
-    if (_.isNil(tasksActivities)) return next(boom.badRequest(constants.templates.error.badRequest));
+    if (_.isNil(tasksActivities)) {
+      return next(boom.badRequest(constants.templates.error.badRequest));
+    }
     res.status(200).json(tasksActivities);
   };
 
