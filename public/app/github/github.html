@@ -12,7 +12,7 @@
         </div>
         <div class="clear">
           <h4 class="m-a-0 text-md">
-            <a href>{{vm.reposCount}} <span class="text-sm">New Repositories</span></a>
+            <a href>{{vm.repos.count}} <span class="text-sm">New Repositories</span></a>
           </h4>
         </div>
       </div>
@@ -26,7 +26,7 @@
         </div>
         <div class="clear">
           <h4 class="m-a-0 text-md">
-            <a href>{{vm.commitsCount}} <span class="text-sm">Commits Pushed</span></a>
+            <a href>{{vm.commits.count}} <span class="text-sm">Commits Pushed</span></a>
           </h4>
         </div>
       </div>
@@ -40,7 +40,7 @@
         </div>
         <div class="clear">
           <h4 class="m-a-0 text-md">
-            <a href>{{vm.releasesCount}} <span class="text-sm">Releases Pushed</span></a>
+            <a href>{{vm.releases.count}} <span class="text-sm">Releases Pushed</span></a>
           </h4>
         </div>
       </div>
@@ -54,18 +54,18 @@
           <small>Contributions to master logged over time</small>
         </div>
         <div class="box-body">
-          <div ui-jp="plot" ui-refresh="app.color" ui-options="
-            [{ data: {{vm.commitsByDate}},
+          <div ui-jp="plot" ui-refresh="vm.range" ui-options="
+            [{ data: {{vm.commits.grouped}},
               points: { show: true, radius: 3},
               splines: { show: true, tension: 0.45, lineWidth: 0, fill: 0.4}
             }],
             { colors: ['{{app.color.primary}}'],
               series: { shadowSize: 3 },
-              xaxis: { show: true, mode: 'time', timezone: 'browser', minTickSize: [1, 'day'], min: {{vm.start}}, max: {{vm.end}}},
+              xaxis: { show: true, mode: 'time', timezone: 'browser', minTickSize: [1, 'day'], min: {{vm.range.start}}, max: {{vm.range.end}}},
               yaxis:{ show: true, font: { color: '#ccc' }, min:1, minTickSize: 1, tickDecimals: 0},
               grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(120,120,120,0.5)' },
               tooltip: true,
-              tooltipOpts: { content: function(label, x, y) { console.log(x); return moment(parseInt(x)).format('DD/MM') + ': ' + y + ' Commit(s)' }, defaultTheme: false, shifts: { x: 0, y: -40 } }
+              tooltipOpts: { content: function(label, x, y) { return moment(parseInt(x)).format('DD/MM') + ': ' + y + ' Commit(s)' }, defaultTheme: false, shifts: { x: 0, y: -40 } }
             }" style="height:162px">
           </div>
         </div>
@@ -76,8 +76,8 @@
         <div class="col-xs-12">
           <div class="box p-a">
             <div class="pull-left m-r">
-              <span class="sparkline inline" ui-jp="sparkline" ui-refresh="app.color" ui-options="
-              [{{vm.usersCount - vm.participatingCount}}, {{vm.participatingCount}}],
+              <span class="sparkline inline" ui-jp="sparkline" ui-refresh="vm.participation.count" ui-options="
+              [{{vm.users.count - vm.participation.count}}, {{vm.participation.count}}],
               { type:'pie',
                 height:36,
                 sliceColors:['{{app.color.light}}','{{app.color.primary}}'],
@@ -85,9 +85,9 @@
             </div>
             <div class="clear">
               <h4 class="m-a-0 text-md">
-                <a href>{{vm.utilizationRate * 100}}% <span class="text-sm">Feature Utilization Rate</span></a>
+                <a href>{{vm.participation.utilization * 100}}% <span class="text-sm">Feature Utilization Rate</span></a>
               </h4>
-              <small class="text-muted">{{vm.participatingCount}} Github User(s)</small>
+              <small class="text-muted">{{vm.participation.count}} Github User(s)</small>
             </div>
           </div>
         </div>
@@ -98,9 +98,9 @@
             </div>
             <div class="clear">
               <h4 class="m-a-0 text-md">
-                <a href><span class="text-sm">Standard Deviation (Commits):</span> {{vm.deviationCommits.toFixed(2)}}</a>
+                <a href><span class="text-sm">Standard Deviation (Commits):</span> {{vm.commits.deviation.toFixed(2)}}</a>
               </h4>
-              <small class="text-muted">Max: 1255 (16/2/16) Min: 53 (22/2/16)</small>
+              <small class="text-muted">Max: {{vm.commits.max[1]}} ({{moment(parseInt(vm.commits.max[0]))}}) Min: {{vm.commits.min[1]}} {{vm.commits.min[0]}}</small>
             </div>
           </div>
         </div>
@@ -113,9 +113,9 @@
             </div>
             <div class="clear">
               <h4 class="m-a-0 text-md">
-                <a href>{{vm.trackedReleasesCount}} <span class="text-sm">Tracked Releases</span></a>
+                <a href>{{vm.releases.trackedCount}} <span class="text-sm">Tracked Releases</span></a>
               </h4>
-              <small class="text-muted">{{vm.releasesCount - vm.trackedReleasesCount}} Releases Untracked</small>
+              <small class="text-muted">{{vm.releases.count - vm.releases.trackedCount}} Releases Untracked</small>
             </div>
           </div>
         </div>
@@ -127,17 +127,17 @@
       <h2>Releases</h2>
     </div>
     <div class="table-responsive">
-      <table ng-if="vm.releases" ui-jp="dataTable" ui-options="{
-        data: {{vm.releases}},
+      <table ng-if="vm.releases.data" ui-jp="dataTable" ui-options="{
+        data: {{vm.releases.data}},
         aoColumns: [
           { mData: 'projectId',
             mRender: function(data, type, full) {
-              return {{vm.projectsMap}}[data].content;
+              return {{vm.projects.map}}[data].content;
             }
           },
           { mData: 'projectId',
             mRender: function(data, type, full) {
-              return {{vm.projectsMap}}[data].githubRepoOwner + '/' + {{vm.projectsMap}}[data].githubRepoName;
+              return {{vm.projects.map}}[data].githubRepoOwner + '/' + {{vm.projects.map}}[data].githubRepoName;
             }
           },
           { mData: 'tagName' },
