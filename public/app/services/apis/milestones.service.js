@@ -15,8 +15,8 @@
     const urlBase = '/api/global/milestones';
     const milestonesFactory = {};
 
-    milestonesFactory.getMilestones = (start, end) => {
-      return $http.get(`${urlBase}?start=${start}&end=${end}`);
+    milestonesFactory.getMilestones = (elapsed, start, end) => {
+      return $http.get(`${urlBase}?elapsed=${elapsed}&start=${start}&end=${end}`);
     };
 
     milestonesFactory.getMilestone = (milestoneId) => {
