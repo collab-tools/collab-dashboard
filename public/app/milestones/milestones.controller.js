@@ -4,81 +4,123 @@
  * @namespace MilestonesCtrl
  */
 
-/* global moment */
 (() => {
   angular
     .module('app')
     .controller('milestonesCtrl', milestonesCtrl);
 
-  milestonesCtrl.$inject = ['$scope', '$log', '_', 'Milestones'];
+  milestonesCtrl.$inject = ['$scope', '$log', '$q', '_', 'moment', 'Milestones'];
 
-  function milestonesCtrl($scope, $log, _, Milestones) {
+  function milestonesCtrl($scope, $log, $q, _, moment, Milestones) {
     const vm = this;
     const parent = $scope.$parent;
-    vm.subtitle = 'Collab Statistics on Milestones Usage';
 
-    const processActivities = (response) => {
-      vm.activities = response.data.activities;
-      vm.activitiesCount = response.data.count;
+    vm.requestData = () => {
+      vm.range = {
+        start: parent.dateRange.selected.start,
+        end: parent.dateRange.selected.end,
+        days: moment(parent.dateRange.selected.end).diff(moment(parent.dateRange.selected.start), 'days')
+      };
 
-      // Count milestones created and completed
-      vm.created = _.filter(vm.activities, { activity: 'C' });
-      vm.createdCount = vm.created.length;
-      vm.done = _.filter(vm.activities, { activity: 'D' });
-      vm.doneCount = vm.done.length;
-      vm.startCompleted = _.sortBy(_.intersectionBy(vm.created, vm.done, 'milestoneId'), 'milestoneId');
-      vm.doneCompleted = _.intersectionBy(vm.done, vm.created, 'milestoneId');
-      vm.completedCount = vm.startCompleted.length;
+      const processResponse = (response) => {
+        const milestones = response[0].data;
+        const elapsedMilestones = response[1].data;
+        const activities = response[2].data;
+        const milestoneTasks = response[3].data;
 
-      // Calculate percentages of the milestones statuses
-      vm.createdPercentile = (vm.createdCount - vm.startCompleted.length) / vm.created;
-      vm.donePercentile = vm.doneCompleted / vm.created;
-
-      if (vm.doneCompleted.length !== vm.startCompleted.length) $log.error('Something went wrong.');
-      else {
-        // Compute time difference for each milestone
-        vm.completionTimes = _.map(_.zip(vm.startCompleted, vm.doneCompleted), (activityPair) => {
-          const startDate = moment(activityPair[0], 'YYYY-MM-DD HH:mm:ss');
-          const endDate = moment(activityPair[1], 'YYYY-MM-DD HH:mm:ss');
-          return endDate.diff(startDate, 'minutes');
+        // calculate the number of milestones completed and time taken to complete
+        const milestonesCount = milestones.length;
+        const elapsedMilestonesCount = elapsedMilestones.length;
+        const completedMilestones = _.filter(elapsedMilestones, (milestone) => {
+          return _.every(milestone.tasks, task => task.completedOn);
         });
+        const completedMilestonesCount = completedMilestones.length;
+        const completedMilestonesTimes = _.map(completedMilestones, (milestone) => {
+          return moment(milestone.deadline).diff(moment(milestone.createdAt), 'hours', true);
+        });
+        const completedMilestonesMax = _.max(completedMilestonesTimes);
+        const completedMilestonesMin = _.min(completedMilestonesTimes);
+        const completedMilestonesMean = _.sum(completedMilestonesTimes) / completedMilestonesCount;
+        const completedMilestonesDeviation = _.reduce(completedMilestonesTimes, (sum, time) => {
+          return sum + Math.pow(time - completedMilestonesMean, 2);
+        }, 0) / completedMilestonesCount;
 
-        // Calculate completion mean time as well as standard deviation
-        // Naive implementation: Double Reduce following formula for mean and SD
-        vm.meanCompletion = (_.reduce(vm.completionTimes, (sum, minutes) => {
-          return sum + minutes;
-        })) / vm.completionTimes.length;
+        // calculate the number of missed milestones
+        const milestonesMissed = _.filter(elapsedMilestones, (milestone) => {
+          return _.some(milestone.tasks, task => !task.completedOn);
+        });
+        const milestonesMissedCount = milestonesMissed.length;
+        const completionRate = completedMilestonesCount / elapsedMilestonesCount;
 
-        vm.deviationCompletion = (_.reduce(vm.completionTimes, (vsum, minutes) => {
-          return vsum + Math.pow(minutes - vm.meanCompletion, 2);
-        })) / vm.completionTimes.length;
-      }
+        // compute tracked milestones and comparisons
+
+
+        // build milestones modal for view usages
+        vm.milestones = {
+          data: milestones,
+          count: milestonesCount,
+          elapsed: elapsedMilestones,
+          elapsedCount: elapsedMilestonesCount,
+          completed: completedMilestones,
+          completedMax: completedMilestonesMax,
+          completedMin: completedMilestonesMin,
+          completedCount: completedMilestonesCount,
+          completedMean: completedMilestonesMean,
+          completedDeviation: completedMilestonesDeviation,
+          missed: milestonesMissed,
+          missedCount: milestonesMissedCount,
+          rate: completionRate
+        };
+
+        // compute number of milestones created
+        const activitiesCount = activities.length;
+        const activitesCreated = _.filter(activities, { activity: 'C' });
+        const activitesCreatedCount = activitesCreated.length;
+
+        // build activites modal for view usages
+        vm.activities = {
+          data: activities,
+          count: activitiesCount,
+          created: activitesCreated,
+          createdCount: activitesCreatedCount
+        };
+
+        // compute distribution of tasks per milestone and
+        const milestoneTasksCount = milestoneTasks.length;
+        const nullRemoved = _.omit(milestoneTasks, 'null');
+        const tasksDistribution = _
+          .chain(nullRemoved)
+          .mapValues(tasks => tasks.length)
+          .toPairs()
+          .groupBy(pair => pair[1])
+          .mapValues(milestones => milestones.length)
+          .toPairs()
+          .map((pair) => {
+            return { label: pair[0], data: pair[1] };
+          })
+          .value();
+        console.log(tasksDistribution);
+        // build milestoneTasks modal for view usages
+        vm.milestoneTasks = {
+          data: milestoneTasks,
+          count: milestoneTasksCount,
+          distribution: tasksDistribution
+        };
+      };
+
+      $q
+        .all([
+          Milestones.getMilestones(false, vm.range.start, vm.range.end),
+          Milestones.getMilestones(true, vm.range.start, vm.range.end),
+          Milestones.getActivities(vm.range.start, vm.range.end),
+          Milestones.getTasksByMilestones(vm.range.start, vm.range.end)
+        ])
+        .then(processResponse, $log.error);
     };
 
-    Milestones
-      .getOverview(parent.dateRange.selected.days)
-      .then(processActivities);
-
-    // TODO: To be replaced with dynamic data
-    vm.p_p_2 = [{ data: 75, label: 'Closed' }, { data: 25, label: 'Open' }];
-    vm.p_b_1 = [
-      [1, 0.7],
-      [2, 1],
-      [3, 1],
-      [4, 0.9],
-      [5, 1],
-      [6, 1],
-      [7, 0.5]
-    ];
-    vm.p_b_3 = [
-      [1, 3],
-      [2, 4],
-      [3, 3],
-      [4, 6],
-      [5, 5],
-      [6, 4],
-      [7, 5],
-      [8, 3]
-    ];
+    (() => {
+      vm.subtitle = 'Collab Statistics on Milestones Usage';
+      vm.requestData();
+    })();
   }
 })();
