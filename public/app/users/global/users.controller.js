@@ -26,19 +26,17 @@
         });
         vm.usersCount = vm.users.length;
         // Active Users to be retrieved from Google Analytics
-        vm.requestCompleted = true;
       };
 
-      return Users
+      Users
         .getUsers(start, end)
         .then(processUsers, $log.error);
     };
 
     // Initialize controller by setting subtitle and requesting data
     (() => {
-      vm.users = [];
       vm.subtitle = 'Users of Collab';
-      return vm.requestData();
+      vm.requestData();
     })();
   }
 })();

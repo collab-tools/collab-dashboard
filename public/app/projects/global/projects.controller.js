@@ -26,10 +26,9 @@
         });
         vm.projectCount = vm.projects.length;
         vm.usersMean = _.sumBy(vm.projects, project => project.users.length) / vm.projectCount;
-        vm.requestCompleted = true;
       };
 
-      return Projects
+      Projects
         .getProjects(start, end)
         .then(processProjects, $log.error);
     };
@@ -37,7 +36,7 @@
     // Initialize controller by setting subtitle and data
     (() => {
       vm.subtitle = 'Projects within Collab';
-      return vm.requestData();
+      vm.requestData();
     })();
   }
 })();
