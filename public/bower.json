@@ -70,6 +70,8 @@
       "flot/jquery.flot.js",
       "flot/jquery.flot.resize.js",
       "flot/jquery.flot.pie.js",
+      "flot/jquery.flot.categories.js",
+      "flot/jquery.flot.time.js",
       "flot.tooltip/js/jquery.flot.tooltip.min.js",
       "flot-spline/js/jquery.flot.spline.min.js",
       "flot.orderbars/js/jquery.flot.orderBars.js",
