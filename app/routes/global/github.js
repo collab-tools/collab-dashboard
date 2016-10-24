@@ -22,7 +22,7 @@ function getRepositories(req, res, next) {
     res.status(200).json(repos);
   };
 
-  return models.app.projects.getRepositories(startDate, endDate)
+  return models.app.project.getRepositories(startDate, endDate)
     .then(response)
     .catch(next);
 }
