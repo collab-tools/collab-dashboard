@@ -31,7 +31,7 @@
     const authLayout = 'layout/layout.auth.html';
     const login = 'authentication/login.html';
 
-    // App Templates
+    // App Templates Relative Paths
     const appLayout = 'layout/layout.html';
     const dashboard = 'dashboard/dashboard.html';
     const projects = 'projects/global/projects.html';
@@ -45,7 +45,7 @@
     const projectOverview = 'projects/narrow/overview.html';
     const profile = 'profile/profile.html';
 
-    // Misc Templates
+    // Misc Templates Relative Paths
     const error404 = 'misc/404.html';
 
     const defaultRoute = '/app/dashboard';
@@ -70,7 +70,9 @@
         },
         controller: 'dashboardCtrl',
         controllerAs: 'vm',
-        resolve: load(['ui.select', 'dashboard/dashboard.controller.js'])
+        resolve: load([
+          'ui.select', 'dashboard/dashboard.controller.js'
+        ])
       })
       .state('app.projects', {
         url: '/projects',
@@ -80,7 +82,18 @@
         },
         controller: 'projectsCtrl',
         controllerAs: 'vm',
-        resolve: load(['ui.select', 'projects/global/projects.controller.js'])
+        resolve: load([
+          'ui.select', 'projects/global/projects.controller.js'
+        ])
+      })
+      .state('app.project', {
+        url: '/project/:projectId',
+        templateUrl: projectOverview,
+        controller: 'projectOverviewCtrl',
+        controllerAs: 'vm',
+        resolve: load([
+          'ui.select', 'projects/narrow/overview.controller.js'
+        ])
       })
       .state('app.users', {
         url: '/users',
@@ -90,7 +103,18 @@
         },
         controller: 'usersCtrl',
         controllerAs: 'vm',
-        resolve: load(['ui.select', 'users/global/users.controller.js'])
+        resolve: load([
+          'ui.select', 'users/global/users.controller.js'
+        ])
+      })
+      .state('app.user', {
+        url: '/user/:userId',
+        templateUrl: userOverview,
+        controller: 'userOverviewCtrl',
+        controllerAs: 'vm',
+        resolve: load([
+          'ui.select', 'users/narrow/overview.controller.js'
+        ])
       })
       .state('app.github', {
         url: '/github',
@@ -100,7 +124,9 @@
         },
         controller: 'githubCtrl',
         controllerAs: 'vm',
-        resolve: load(['ui.select', 'github/github.controller.js'])
+        resolve: load([
+          'ui.select', 'github/github.controller.js'
+        ])
       })
       .state('app.drive', {
         url: '/drive',
@@ -110,7 +136,9 @@
         },
         controller: 'driveCtrl',
         controllerAs: 'vm',
-        resolve: load(['ui.select', 'drive/drive.controller.js'])
+        resolve: load([
+          'ui.select', 'drive/drive.controller.js'
+        ])
       })
       .state('app.cloud', {
         url: '/cloud',
@@ -120,7 +148,9 @@
         },
         controller: 'cloudCtrl',
         controllerAs: 'vm',
-        resolve: load(['ui.select', 'cloud/cloud.controller.js'])
+        resolve: load([
+          'ui.select', 'cloud/cloud.controller.js'
+        ])
       })
       .state('app.tasks', {
         url: '/tasks',
@@ -130,7 +160,9 @@
         },
         controller: 'tasksCtrl',
         controllerAs: 'vm',
-        resolve: load(['ui.select', 'tasks/tasks.controller.js'])
+        resolve: load([
+          'ui.select', 'tasks/tasks.controller.js'
+        ])
       })
       .state('app.milestones', {
         url: '/milestones',
@@ -140,27 +172,9 @@
         },
         controller: 'milestonesCtrl',
         controllerAs: 'vm',
-        resolve: load(['ui.select', 'milestones/milestones.controller.js'])
-      })
-      .state('app.user', {
-        url: '/user',
-        templateUrl: userOverview,
-        data: {
-          title: 'User Overview: Hooi Tong'
-        },
-        controller: 'userOverviewCtrl',
-        controllerAs: 'vm',
-        resolve: load(['ui.select', 'users/narrow/overview.controller.js'])
-      })
-      .state('app.project', {
-        url: '/project',
-        templateUrl: projectOverview,
-        data: {
-          title: 'Project Overview: Project Gene'
-        },
-        controller: 'projectOverviewCtrl',
-        controllerAs: 'vm',
-        resolve: load(['ui.select', 'projects/narrow/overview.controller.js'])
+        resolve: load([
+          'ui.select', 'milestones/milestones.controller.js'
+        ])
       })
       .state('app.profile', {
         url: '/profile',
@@ -170,7 +184,9 @@
         },
         controller: 'profileCtrl',
         controllerAs: 'vm',
-        resolve: load(['ui.select', 'profile/profile.controller.js'])
+        resolve: load([
+          'ui.select', 'profile/profile.controller.js'
+        ])
       })
       .state('auth', {
         abstract: true,
@@ -186,7 +202,9 @@
         templateUrl: login,
         controller: 'loginCtrl',
         controllerAs: 'vm',
-        resolve: load(['ui.bootstrap', 'authentication/login.controller.js'])
+        resolve: load([
+          'ui.bootstrap', 'authentication/login.controller.js'
+        ])
       })
       .state('404', {
         url: '/404',
