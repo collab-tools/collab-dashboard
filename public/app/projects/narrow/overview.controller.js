@@ -4,19 +4,16 @@
  * @namespace ProjectOverviewCtrl
  */
 
-/* global moment */
 (() => {
   angular
     .module('app')
     .controller('projectOverviewCtrl', projectOverviewCtrl);
 
-  projectOverviewCtrl.$inject = ['$scope', '$stateParams', '$log', '$q', '_', 'Projects'];
+  projectOverviewCtrl.$inject = ['$scope', '$stateParams', '$log', '$q', '_', 'moment', 'Projects'];
 
-  function projectOverviewCtrl($scope, $stateParams, $log, $q, _, Projects) {
+  function projectOverviewCtrl($scope, $stateParams, $log, $q, _, moment, Projects) {
     const vm = this;
     const parent = $scope.$parent;
-    vm.subtitle = 'Statistics on Team Gene\'s Usage';
-
     const projectId = $stateParams.projectId;
 
     const retrievalFunctions = [
@@ -37,6 +34,9 @@
 
     const processPayload = (project, files, revisions, commits, tasks, milestones) => {
       vm.project = project;
+      vm.title = `Project Overview: ${project.content}`;
+      vm.subtitle = `Statistics on ${project.content} Activities`;
+
       vm.files = files;
       vm.revisions = revisions;
       vm.commits = commits;
