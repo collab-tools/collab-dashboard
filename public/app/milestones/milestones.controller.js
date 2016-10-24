@@ -99,7 +99,7 @@
             return { label: pair[0], data: pair[1] };
           })
           .value();
-        console.log(tasksDistribution);
+
         // build milestoneTasks modal for view usages
         vm.milestoneTasks = {
           data: milestoneTasks,
