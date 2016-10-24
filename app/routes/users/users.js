@@ -18,7 +18,7 @@ function getUser(req, res, next) {
     res.status(200).json(user);
   };
 
-  return models.app.user.getUserById(userId)
+  return models.app.user.getUserWithProjects(userId)
     .then(response)
     .catch(next);
 }
@@ -39,7 +39,7 @@ function getUsers(req, res, next) {
     res.status(200).json(users);
   };
 
-  return models.app.user.getUsers(startDate, endDate)
+  return models.app.user.getUsersWithProjects(startDate, endDate)
     .then(response)
     .catch(next);
 }
