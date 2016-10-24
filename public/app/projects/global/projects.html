@@ -24,7 +24,7 @@
         </div>
         <div class="clear">
           <h4 class="m-a-0 text-md">
-            <a href>{{vm.projectUsersMean}} <span class="text-sm">Mean Members</span></a>
+            <a href>{{vm.usersMean}} <span class="text-sm">Mean Members</span></a>
           </h4>
         </div>
       </div>
@@ -49,7 +49,7 @@
       <h2>Projects</h2>
     </div>
     <div class="table-responsive">
-      <table ui-jp="dataTable" ui-options="{
+      <table ng-if="vm.requestCompleted" ui-jp="dataTable" ui-options="{
         data: {{vm.projects}},
         aoColumns: [
           { mData: 'content',
@@ -62,10 +62,16 @@
               return full.githubRepoOwner + '/' + full.githubRepoName;
             }
           },
-          { mData: 'users[, ].displayName'
-          },
-          {
+          { mData: 'users',
             mRender: function(data, type, full) {
+              var userString = '';
+              data.forEach(function(user) {
+                userString += '<a href=&quot;/app/user/' + user.id + '&quot;>' + user.displayName + '\n';
+              });
+              return userString;
+            }
+          },
+          { mRender: function(data, type, full) {
               return full.users.length;
             }
           },

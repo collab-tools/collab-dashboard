@@ -9,9 +9,9 @@
     .module('app')
     .controller('projectsCtrl', projectsCtrl);
 
-  projectsCtrl.$inject = ['$scope', '$log', '$q', '_', 'moment', 'Projects'];
+  projectsCtrl.$inject = ['$scope', '$log', '_', 'moment', 'Projects'];
 
-  function projectsCtrl($scope, $log, $q, _, moment, Projects) {
+  function projectsCtrl($scope, $log, _, moment, Projects) {
     const vm = this;
     const parent = $scope.$parent;
 
@@ -25,10 +25,11 @@
           return project;
         });
         vm.projectCount = vm.projects.length;
-        vm.projectUsersMean = _.sumBy(vm.projects, project => project.users.length) / vm.projectCount;
+        vm.usersMean = _.sumBy(vm.projects, project => project.users.length) / vm.projectCount;
+        vm.requestCompleted = true;
       };
 
-      Projects
+      return Projects
         .getProjects(start, end)
         .then(processProjects, $log.error);
     };
@@ -36,7 +37,7 @@
     // Initialize controller by setting subtitle and data
     (() => {
       vm.subtitle = 'Projects within Collab';
-      vm.requestData();
+      return vm.requestData();
     })();
   }
 })();
