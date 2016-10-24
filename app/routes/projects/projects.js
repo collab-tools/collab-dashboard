@@ -18,7 +18,7 @@ function getProject(req, res, next) {
     res.status(200).json(project);
   };
 
-  return models.app.project.findProjectById(projectId)
+  return models.app.project.getProjectWithMembers(projectId)
     .then(response)
     .catch(next);
 }
