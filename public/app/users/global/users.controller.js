@@ -57,7 +57,7 @@
 
       $q
         .all([
-          Users.getUsers(vm.range.start, vm.rangeend),
+          Users.getUsers(vm.range.start, vm.range.end),
           Users.getUsers(0, vm.range.end),
           Milestones.getParticipatingUsers(vm.range.start, vm.range.end),
           Tasks.getParticipatingUsers(vm.range.start, vm.range.end),
