@@ -47,6 +47,7 @@ module.exports = function (express) {
   globalRouter.get('/milestones', milestones.getMilestones);
   globalRouter.get('/milestones/activities', milestones.getActivities);
   globalRouter.get('/milestones/tasks', milestones.getTasksByMilestones);
+  globalRouter.get('/milestones/users', milestones.getParticipatingUsers);
   globalRouter.get('/milestones/:milestoneId', milestones.getMilestone);
   globalRouter.get('/milestones/:milestoneId/activities', milestones.getMilestoneActivities);
 

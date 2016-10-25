@@ -35,6 +35,10 @@
       return $http.get(`${urlBase}/tasks?start=${start}&end=${end}`);
     };
 
+    milestonesFactory.getParticipatingUsers = (start, end) => {
+      return $http.get(`${urlBase}/users?start=${start}&end=${end}`);
+    };
+
     return milestonesFactory;
   }
 })();
