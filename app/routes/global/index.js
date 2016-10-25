@@ -23,6 +23,7 @@ module.exports = function (express) {
   globalRouter.get('/github/releases', github.getReleases);
   globalRouter.get('/github/releases/:releaseId', github.getRelease);
   globalRouter.get('/github/users', github.getParticipatingUsers);
+  globalRouter.get('/github/projects', github.getParticipatingProjects);
 
   // Google Drive Related
   // =========================================================
@@ -33,12 +34,14 @@ module.exports = function (express) {
   globalRouter.get('/drive/files/:fileId/changes', drive.getFileChanges);
   globalRouter.get('/drive/files/:fileId/activities', drive.getFileActivities);
   globalRouter.get('/drive/users', drive.getParticipatingUsers);
+  globalRouter.get('/drive/projects', drive.getParticipatingProjects);
 
   // Tasks Related
   // =========================================================
   globalRouter.get('/tasks', tasks.getTasks);
   globalRouter.get('/tasks/activities', tasks.getActivities);
   globalRouter.get('/tasks/users', tasks.getParticipatingUsers);
+  globalRouter.get('/tasks/projects', tasks.getParticipatingProjects);
   globalRouter.get('/tasks/:taskId', tasks.getTask);
   globalRouter.get('/tasks/:taskId/activities', tasks.getTaskActivities);
 
@@ -48,6 +51,7 @@ module.exports = function (express) {
   globalRouter.get('/milestones/activities', milestones.getActivities);
   globalRouter.get('/milestones/tasks', milestones.getTasksByMilestones);
   globalRouter.get('/milestones/users', milestones.getParticipatingUsers);
+  globalRouter.get('/milestones/projects', milestones.getParticipatingProjects);
   globalRouter.get('/milestones/:milestoneId', milestones.getMilestone);
   globalRouter.get('/milestones/:milestoneId/activities', milestones.getMilestoneActivities);
 

@@ -35,6 +35,10 @@
       return $http.get(`${urlBase}/users?start=${start}&end=${end}`);
     };
 
+    tasksFactory.getParticipatingProjects = (start, end) => {
+      return $http.get(`${urlBase}/projects?start=${start}&end=${end}`);
+    };
+
     return tasksFactory;
   }
 })();

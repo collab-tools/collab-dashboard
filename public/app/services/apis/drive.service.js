@@ -43,6 +43,10 @@
       return $http.get(`${urlBase}/users?start=${start}&end=${end}`);
     };
 
+    driveFactory.getParticipatingProjects = (start, end) => {
+      return $http.get(`${urlBase}/projects?start=${start}&end=${end}`);
+    };
+
     return driveFactory;
   }
 })();

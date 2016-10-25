@@ -39,6 +39,10 @@
       return $http.get(`${urlBase}/users?start=${start}&end=${end}`);
     };
 
+    githubFactory.getParticipatingProjects = (start, end) => {
+      return $http.get(`${urlBase}/projects?start=${start}&end=${end}`);
+    };
+
     return githubFactory;
   }
 })();
