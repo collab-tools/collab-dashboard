@@ -12,8 +12,8 @@
         </div>
         <div class="clear">
           <h4 class="m-a-0 text-md">
-            <a href>1562
-              <span class="text-sm">Tasks Created</span>
+            <a href>
+              {{vm.tasks.createdCount}} <span class="text-sm">Tasks Created</span>
             </a>
           </h4>
         </div>
@@ -28,8 +28,8 @@
         </div>
         <div class="clear">
           <h4 class="m-a-0 text-md">
-            <a href>2052
-              <span class="text-sm">Tasks Pending</span>
+            <a href>
+              {{vm.tasks.pendingCount}} <span class="text-sm">Tasks Pending</span>
             </a>
           </h4>
         </div>
@@ -44,8 +44,8 @@
         </div>
         <div class="clear">
           <h4 class="m-a-0 text-md">
-            <a href>205
-              <span class="text-sm">Tasks Completed</span>
+            <a href>
+              {{vm.tasks.doneCount}} <span class="text-sm">Tasks Completed</span>
             </a>
           </h4>
         </div>
@@ -56,22 +56,20 @@
     <div class="col-lg-12 col-xl-4">
       <div class="box">
         <div class="box-header">
-          <h3>Task Acitvities Composition</h3>
-          <small>Recorded over the past 7 days</small>
+          <h3>Task Activities Distribution</h3>
+          <small>From {{vm.activities.count}} Activities</small>
         </div>
         <div class="box-body">
-          <div class="p-y-md">
-            <div ui-jp="plot" ui-refresh="app.color" ui-options="
-							{{vm.p_p_6}},
-							{
-							series: { pie: { show: true, innerRadius: 0, stroke: { width: 2, color: '#fff' }, label: { show: true, threshold: 0.05 }, tilt: 0.5, startAngle: 30 } },
-							legend: {backgroundColor: 'transparent'},
-							colors: ['{{app.color.warn}}','{{app.color.info}}', '{{app.color.success}}'],
-							grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(120,120,120,0.5)' },
-							tooltip: true,
-							tooltipOpts: { content: '%s: %p.0%' }
-							}
-						" style="height:152px"></div>
+          <div ng-if="vm.activities.count" ui-jp="plot" ui-refresh="vm.activities" ui-options="
+              {{vm.activities.distribution}},
+              {
+                series: { pie: { show: true, innerRadius: 0, stroke: { width: 2, color: '#fff' }, label: { show: true, threshold: 0.05 }, tilt: 0.6, startAngle: 30 } },
+                legend: { show: false },
+                colors: ['{{app.color.warn}}','{{app.color.info}}', '{{app.color.success}}'],
+                grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(120,120,120,0.5)' },
+                tooltip: true,
+                tooltipOpts: { content: '%s: %p.0%' }
+              }" style="height:222px">
           </div>
         </div>
       </div>
@@ -79,31 +77,24 @@
     <div class="col-lg-12 col-xl-8">
       <div class="box dark">
         <div class="box-header">
-          <h3>Tasks Tracked</h3>
-          <small>Mean time to complete</small>
+          <h3>Completed Tasks Duration</h3>
+          <small># of Completed Tasks / Time to Complete (Hours)</small>
         </div>
         <div class="box-body">
-          <div ui-jp="plot" ui-refresh="app.color" ui-options="
-						[
-						{
-						data: {{vm.p_b_6}},
-						bars: { show: true, barWidth: 0.35, lineWidth: 1, fillColor: { colors: [{ opacity: 0.8 }, { opacity: 1}] }, order:1 }
-						},
-						{
-						data: {{vm.p_b_7}},
-						bars: { show: true, barWidth: 0.35, lineWidth: 1, fillColor: { colors: [{ opacity: 0.8 }, { opacity: 1}] }, order:2 }
-						}
-						],
-						{
-						colors: ['{{app.color.primary}}','{{app.color.warn}}'],
-						series: { shadowSize: 3 },
-						xaxis: { show: true, font: { color: '#ccc' }, position: 'bottom', ticks:[[1, 'TA1'],[2, 'TA2'],[3, 'TA3'],[4, 'TA4'],[5, 'TA5'],[6, 'TA6'],[7, 'TA7']] },
-						yaxis:{ show: true, font: { color: '#ccc' }},
-						grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(120,120,120,0.5)' },
-						tooltip: true,
-						tooltipOpts: { content: '%x.0 is %y.4',  defaultTheme: false, shifts: { x: 0, y: -40 } }
-						}
-						" style="height:200px"></div>
+          <div ng-if="vm.tasks.doneCount" ui-jp="plot" ui-refresh="vm.tasks.doneDistribution" ui-options="
+            [{ data: {{vm.tasks.doneDistribution}},
+              points: { show: true, radius: 3},
+              splines: { show: true, tension: 0.45, lineWidth: 0, fill: 0.4}
+            }],
+            { colors: ['{{app.color.primary}}'],
+              series: { shadowSize: 3 },
+              xaxis: { show: true,  minTickSize: '1', min: {{vm.tasks.doneMin}}, max: {{vm.tasks.doneMax}}},
+              yaxis:{ show: true, font: { color: '#ccc' }, min: 0, minTickSize: 1, tickDecimals: 0},
+              grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(120,120,120,0.5)' },
+              tooltip: true,
+              tooltipOpts: { content: '%x', defaultTheme: false, shifts: { x: 0, y: -40 } }
+            }" style="height:222px">
+          </div>
         </div>
       </div>
     </div>
@@ -112,15 +103,16 @@
     <div class="col-lg-6 col-xl-4">
       <div class="box p-a dark">
         <div class="pull-left m-r">
-          <span ui-jp="sparkline" ui-refresh="app.color" ui-options="[44,56], {type:'pie', height:36, sliceColors:['{{app.color.light}}','{{app.color.dark}}']}" class="sparkline inline"></span>
+          <span ui-jp="sparkline" ui-refresh="app.color" ui-options="[{{vm.users.count - vm.participation.count}}, {{vm.participation.count}}], {type:'pie', height:36, sliceColors:['{{app.color.dark}}', '{{app.color.light}}']}"
+            class="sparkline inline"></span>
         </div>
         <div class="clear">
           <h4 class="m-a-0 text-md">
-            <a href>56%
-              <span class="text-sm">Feature Utilization Rate</span>
+            <a href>
+              {{vm.participation.utilization * 100}}% <span class="text-sm">Feature Utilization Rate</span>
             </a>
           </h4>
-          <small class="text-muted">5243 Unique Tasks Activities</small>
+          <small class="text-muted">for {{vm.users.count}} Users</small>
         </div>
       </div>
     </div>
@@ -132,11 +124,12 @@
         <div class="clear">
           <h4 class="m-a-0 text-md">
             <a href>
-              <span class="text-sm">Standard Deviation (Mean Time):</span>
-              3.43</a>
+              <span class="text-sm">Standard Deviation (Duration):</span> {{vm.tasks.doneDeviation.toFixed(3)}}
+            </a>
           </h4>
-          <small class="text-muted">Max: 42 Hours Min: 11 Hours</small>
-        </div></div>
+          <small class="text-muted">Max: {{vm.tasks.doneMax.toFixed(3)}} Hours Min: {{vm.tasks.doneMin.toFixed(3)}} Hours</small>
+        </div>
+      </div>
     </div>
     <div class="col-lg-12 col-xl-4">
       <div class="box p-a dark">
@@ -147,11 +140,11 @@
         </div>
         <div class="clear">
           <h4 class="m-a-0 text-md">
-            <a href>182 Hours
-              <span class="text-sm">Completion Mean</span>
+            <a href>
+              {{vm.tasks.doneMean.toFixed(3)}} <span class="text-sm">Mean Completion Time (Hours)</span>
             </a>
           </h4>
-          <small class="text-muted">Based on 205 Completed Tasks</small>
+          <small class="text-muted">From {{vm.tasks.doneCount}} Completed Tasks</small>
         </div>
       </div>
     </div>

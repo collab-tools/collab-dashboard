@@ -4,83 +4,119 @@
  * @namespace TasksCtrl
  */
 
-/* global moment */
 (() => {
   angular
     .module('app')
     .controller('tasksCtrl', tasksCtrl);
 
-  tasksCtrl.$inject = ['$scope', '$log', '_', 'Tasks'];
+  tasksCtrl.$inject = ['$scope', '$log', '$q', '_', 'moment', 'Tasks', 'Users'];
 
-  function tasksCtrl($scope, $log, _, Tasks) {
+  function tasksCtrl($scope, $log, $q, _, moment, Tasks, Users) {
     const vm = this;
     const parent = $scope.$parent;
-    vm.subtitle = 'Collab Statistics on Tasks Usage';
 
-    const processActivities = (response) => {
-      vm.activities = response.data.activities;
-      vm.activityCount = response.data.count;
+    vm.requestData = () => {
+      vm.range = {
+        start: parent.dateRange.selected.start,
+        end: parent.dateRange.selected.end,
+        days: moment(parent.dateRange.selected.end).diff(moment(parent.dateRange.selected.start), 'days')
+      };
 
-      // Count tasks created, pending, completed
-      vm.created = _.filter(vm.activities, { activity: 'C' });
-      vm.createdCount = vm.created.length;
-      vm.done = _.filter(vm.activities, { activity: 'D' });
-      vm.doneCount = vm.done.length;
-      vm.startCompleted = _.sortBy(_.intersectionBy(vm.created, vm.done, 'taskId'), 'taskId');
-      vm.doneCompleted = _.intersectionBy(vm.done, vm.created, 'taskId');
-      vm.completedCount = vm.startCompleted.length;
+      const processResponse = (response) => {
+        const tasks = response[0].data;
+        const activities = response[1].data;
+        const participating = response[2].data;
+        const users = response[3].data;
 
-      // Calculate percentages of the tasks statuses
-      vm.createdPercentile = (vm.createdCount - vm.startCompleted.length) / vm.created;
-      vm.donePercentile = vm.doneCompleted / vm.created;
+        // convert array of tasks into map
+        const tasksMap = _.keyBy(tasks, 'id');
 
-      if (vm.doneCompleted.length !== vm.startCompleted.length) $log.error('Something went wrong.');
-      else {
-        // Compute time difference for each task
-        vm.completionTimes = _.map(_.zip(vm.startCompleted, vm.doneCompleted), (activityPair) => {
-          const startDate = moment(activityPair[0], 'YYYY-MM-DD HH:mm:ss');
-          const endDate = moment(activityPair[1], 'YYYY-MM-DD HH:mm:ss');
-          return endDate.diff(startDate, 'minutes');
+        // calculate task activities breakdown
+        const createdTasks = _.filter(activities, { activity: 'C' });
+        const createdTasksCount = createdTasks.length;
+        const doneTasks = _.filter(activities, { activity: 'D' });
+        const doneTasksCount = doneTasks.length;
+
+        // calculate time to complete each tasks, mean time and deviation
+        const doneTasksDuration = _.map(doneTasks, (activity) => {
+          const completedOn = tasksMap[activity.taskId].completedOn;
+          const createdAt = tasksMap[activity.taskId].createdAt;
+          return moment(completedOn).diff(createdAt, 'hours', true);
         });
+        const doneTasksDistribution = _
+          .chain(doneTasksDuration)
+          .groupBy(duration => duration.toFixed(3))
+          .toPairs()
+          .value();
+        const doneTasksMax = _.max(doneTasksDuration);
+        const doneTasksMin = _.min(doneTasksDuration);
+        const doneTasksMean = _.sum(doneTasksDuration) / doneTasksCount;
+        const doneTasksDeviation = _.reduce(doneTasksDuration, (sum, duration) => {
+          return sum + Math.pow(duration - doneTasksDuration, 2);
+        }, 0) / doneTasksCount;
 
-        // Calculate completion mean time as well as standard deviation
-        // Naive implementation: Double Reduce following formula for mean and SD
-        vm.meanCompletion = (_.reduce(vm.completionTimes, (sum, minutes) => {
-          return sum + minutes;
-        })) / vm.completionTimes.length;
+        // calculate number of tasks that are still pending
+        const pendingTasks = _.filter(tasks, { completedOn: null });
+        const pendingTasksCount = pendingTasks.length;
 
-        vm.deviationCompletion = (_.reduce(vm.completionTimes, (vsum, minutes) => {
-          return vsum + Math.pow(minutes - vm.meanCompletion, 2);
-        })) / vm.completionTimes.length;
-      }
+        // build tasks modal for view usages
+        vm.tasks = {
+          created: createdTasks,
+          createdCount: createdTasksCount,
+          done: doneTasks,
+          doneCount: doneTasksCount,
+          doneDistribution: doneTasksDistribution,
+          doneMax: doneTasksMax,
+          doneMin: doneTasksMin,
+          doneMean: doneTasksMean,
+          doneDeviation: doneTasksDeviation,
+          pending: pendingTasks,
+          pendingCount: pendingTasksCount
+        };
+
+        // build activities modal for view usages
+        const activitiesCount = activities.length;
+        const activitiesDistribution = [
+          { label: 'Created', data: createdTasksCount },
+          { label: 'Done', data: doneTasksCount }
+        ];
+        vm.activities = {
+          data: activities,
+          count: activitiesCount,
+          distribution: activitiesDistribution
+        };
+
+        // calculate utilization rate
+        const participatingCount = participating.length;
+        const usersCount = users.length;
+        const utilizationRate = _.round(participatingCount / usersCount, 1);
+
+        // build participation and users modal for view usages
+        vm.participation = {
+          data: participating,
+          count: participatingCount,
+          utilization: utilizationRate
+        };
+
+        vm.users = {
+          data: users,
+          count: usersCount
+        };
+      };
+
+      $q
+        .all([
+          Tasks.getTasks(0, vm.range.end),
+          Tasks.getActivities(vm.range.start, vm.range.end),
+          Tasks.getParticipatingUsers(vm.range.start, vm.range.end),
+          Users.getUsers(0, vm.range.end)
+        ])
+        .then(processResponse, $log.error);
     };
 
-    Tasks
-      .getOverview(parent.dateRange.selected.days)
-      .then(processActivities, $log.error);
-
-    // TODO: To be replaced with dynamic data
-    vm.p_b_6 = [
-      [1, 20],
-      [2, 40],
-      [3, 15],
-      [4, 53],
-      [5, 63],
-      [6, 12],
-      [7, 42]
-    ];
-    vm.p_b_7 = [
-      [1, 24],
-      [2, 44],
-      [3, 17],
-      [4, 51],
-      [5, 62],
-      [6, 15],
-      [7, 51]
-    ];
-    vm.p_p_6 = [{ data: 35, label: 'Opened' }, { data: 15, label: 'Pending' }, {
-      data: 50,
-      label: 'Completed'
-    }];
+    (() => {
+      vm.subtitle = 'Collab Statistics on Tasks Usage';
+      vm.requestData();
+    })();
   }
 })();
