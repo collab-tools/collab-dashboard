@@ -61,7 +61,7 @@
           return sum + Math.pow(pair[1] - meanCommits, 2);
         }, 0) / vm.range.days;
 
-      // build commits modal for view usages
+        // build commits modal for view usages
         vm.commits = {
           data: commits,
           count: commitsCount,
