@@ -12,8 +12,8 @@
         </div>
         <div class="clear">
           <h4 class="m-a-0 text-md">
-            <a href>1052
-              <span class="text-sm">New Files Shared</span>
+            <a href>
+              {{vm.files.count}} <span class="text-sm">New Files Shared</span>
             </a>
           </h4>
         </div>
@@ -28,8 +28,8 @@
         </div>
         <div class="clear">
           <h4 class="m-a-0 text-md">
-            <a href>8502
-              <span class="text-sm">Revisions Made</span>
+            <a href>
+              {{vm.changes.count}} <span class="text-sm">Revisions Made</span>
             </a>
           </h4>
         </div>
@@ -41,19 +41,20 @@
       <div class="box">
         <div class="box-header">
           <h3>File Types Shared</h3>
+          <small>Distribution of File Types</small>
         </div>
         <div class="box-body">
-          <div ui-jp="plot" ui-refresh="app.color" ui-options="
-						{{vm.p_p_5}},
-						{
-						series: { pie: { show: true, innerRadius: 0, stroke: { width: 0 }, label: { show: true, threshold: 0.05 } } },
-						legend: {backgroundColor: 'transparent'},
-						colors: ['{{app.color.info}}','{{app.color.success}}', '{{app.color.warn}}'],
-						grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(120,120,120,0.5)' },
-						tooltip: true,
-						tooltipOpts: { content: '%s: %p.0%' }
-						}
-					" style="height:218px"></div>
+          <div ng-if="vm.files.count" ui-jp="plot" ui-refresh="vm.files" ui-options="
+              {{vm.files.distribution}},
+              {
+                series: { pie: { show: true, innerRadius: 0, stroke: { width: 2, color: '#fff' }, label: { show: true, threshold: 0.05 }, tilt: 0.6, startAngle: 30 } },
+                legend: { show: false },
+                colors: ['{{app.color.warn}}','{{app.color.info}}', '{{app.color.success}}'],
+                grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(120,120,120,0.5)' },
+                tooltip: true,
+                tooltipOpts: { content: '%s: %p.0%' }
+              }" style="height:218px">
+          </div>
         </div>
       </div>
     </div>
@@ -61,27 +62,24 @@
       <div class="box">
         <div class="box-header">
           <h3>Revisions</h3>
-          <small>Recorded file revisions over time</small>
+          <small>Recorded File Revisions Over Time</small>
         </div>
         <div class="box-body">
-          <div ui-jp="plot" ui-refresh="app.color" ui-options="
-						[
-						{
-						data: {{vm.p_l_3}},
-						points: { show: true, radius: 3},
-						splines: { show: true, tension: 0.45, lineWidth: 0, fill: 0.4}
-						}
-						],
-						{
-						colors: ['green'],
-						series: { shadowSize: 3 },
-						xaxis: { show: true, font: { color: '#ccc' }, position: 'bottom' },
-						yaxis:{ show: true, font: { color: '#ccc' }, min:1},
-						grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(120,120,120,0.5)' },
-						tooltip: true,
-						tooltipOpts: { content: '%x.0 is %y.4',  defaultTheme: false, shifts: { x: 0, y: -40 } }
-						}
-						" style="height:200px"></div>
+          <div ng-if="vm.changes.grouped && vm.changes.grouped.length !== 0" ui-jp="plot" ui-refresh="vm.changes.grouped"
+            ui-options="
+            [{ data: {{vm.changes.grouped}},
+              points: { show: true, radius: 3},
+              splines: { show: true, tension: 0.45, lineWidth: 0, fill: 0.4}
+            }],
+            { colors: ['{{app.color.primary}}'],
+              series: { shadowSize: 3 },
+              xaxis: { show: true, mode: 'time', timezone: 'browser', minTickSize: [1, 'day'], min: {{vm.range.start}}, max: {{vm.range.end}}},
+              yaxis:{ show: true, font: { color: '#ccc' }, min: 1, minTickSize: 1, tickDecimals: 0},
+              grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(120,120,120,0.5)' },
+              tooltip: true,
+              tooltipOpts: { content: function(label, x, y) { return moment(parseInt(x)).format('DD/MM') + ': ' + y + ' Commit(s)' }, defaultTheme: false, shifts: { x: 0, y: -40 } }
+            }" style="height:218px">
+          </div>
         </div>
       </div>
     </div>
@@ -90,15 +88,16 @@
     <div class="col-lg-6 col-xl-4">
       <div class="box p-a">
         <div class="pull-left m-r">
-          <span ui-jp="sparkline" ui-refresh="app.color" ui-options="[44,56], {type:'pie', height:36, sliceColors:['{{app.color.light}}','{{app.color.warn}}']}" class="sparkline inline"></span>
+          <span class="sparkline inline" ui-jp="sparkline" ui-refresh="app.color" ui-options="
+          [{{vm.users.count- vm.participation.count}}, {{vm.participation.count}}], {type:'pie', height:36, sliceColors:['{{app.color.light}}','{{app.color.warn}}']}"></span>
         </div>
         <div class="clear">
           <h4 class="m-a-0 text-md">
-            <a href>56%
-              <span class="text-sm">Feature Utilization Rate</span>
+            <a href>
+              {{vm.participation.utilization * 100}}% <span class="text-sm">Feature Utilization Rate</span>
             </a>
           </h4>
-          <small class="text-muted">5243 Unique Drive Activities</small>
+          <small class="text-muted">from {{vm.users.count}} Users</small>
         </div>
       </div>
     </div>
@@ -110,10 +109,10 @@
         <div class="clear">
           <h4 class="m-a-0 text-md">
             <a href>
-              <span class="text-sm">Standard Deviation:</span>
-              51.93</a>
+              <span class="text-sm">Standard Deviation:</span> {{vm.changes.deviation.toFixed(2)}}
+             </a>
           </h4>
-          <small class="text-muted">Max: 1222 (16/2/16) Min: 533 (22/2/16)</small>
+          <small class="text-muted">Max: {{vm.changes.max}} ({{vm.changes.maxDate}}) Min: {{vm.changes.min}} ({{vm.changes.minDate}})</small>
         </div>
       </div>
     </div>
@@ -126,11 +125,11 @@
         </div>
         <div class="clear">
           <h4 class="m-a-0 text-md">
-            <a href>56212
-              <span class="text-sm">Active Teams</span>
+            <a href>
+              {{vm.projects.activeCount}}<span class="text-sm"> Active Teams</span>
             </a>
           </h4>
-          <small class="text-muted">425 Inactive Teams</small>
+          <small class="text-muted">{{vm.projects.inactiveCount}} Inactive Teams</small>
         </div>
       </div>
     </div>
