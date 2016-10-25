@@ -1,6 +1,6 @@
 {
   "name": "collab-dashboard",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Comprises of REST API and AngularJS Front-End for Collab Dashboard",
   "main": "server.compiled.js",
   "scripts": {
