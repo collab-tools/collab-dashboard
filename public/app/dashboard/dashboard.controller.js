@@ -17,6 +17,7 @@
     Milestones, Tasks, Drive, Github, Projects, Users) {
     const vm = this;
     const parent = $scope.$parent;
+
     vm.requestData = () => {
       vm.range = {
         start: parent.dateRange.selected.start,
@@ -24,21 +25,10 @@
         days: moment(parent.dateRange.selected.end).diff(moment(parent.dateRange.selected.start), 'days')
       };
 
-      const processResponse = (response) => {
-        const milestones = response[0].data;
-        const tasks = response[1].data;
-        const commits = response[2].data;
-        const releases = response[3].data;
-        const files = response[4].data;
-        const changes = response[5].data;
-        const projects = response[6].data;
-        const newUsers = response[7].data;
-        const users = response[8].data;
-        const milestonesUsersPartial = response[9].data;
-        const tasksUsersPartial = response[10].data;
-        const githubUsersPartial = response[11].data;
-        const driveUsersPartial = response[12].data;
-
+      const stripHeaders = response => _.map(response, 'data');
+      const processResponse = (milestones, tasks, commits, releases, files, changes,
+        projects, newUsers, users, milestonesUsersPartial, tasksUsersPartial,
+        githubUsersPartial, driveUsersPartial) => {
         // build individual modals for view usages
         vm.milestones = {
           data: milestones,
@@ -136,7 +126,9 @@
           Tasks.getParticipatingUsers(vm.range.start, vm.range.end),
           Github.getParticipatingUsers(vm.range.start, vm.range.end),
           Drive.getParticipatingUsers(vm.range.start, vm.range.end)
-        ]).then(processResponse, $log.error);
+        ])
+        .then(stripHeaders, $log.error)
+        .then(_.spread(processResponse), $log.error);
     };
 
     // Initialize controller by setting subtitle and data
@@ -145,7 +137,7 @@
       vm.requestData();
     })();
 
-    // Sample Data to be Removed
+    // Sample Data to be Removed (Performance Analytics)
     vm.p_p_1 = [{ data: 70, label: 'Free' }, { data: 30, label: 'Busy' }];
     vm.p_b_1 = [
       [1, 0.7],
