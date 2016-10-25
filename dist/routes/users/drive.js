@@ -4,17 +4,21 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
 var _boom = require('boom');
 
 var _boom2 = _interopRequireDefault(_boom);
 
-var _bluebird = require('bluebird');
-
-var _bluebird2 = _interopRequireDefault(_bluebird);
-
 var _moment = require('moment');
 
 var _moment2 = _interopRequireDefault(_moment);
+
+var _constants = require('../../common/constants');
+
+var _constants2 = _interopRequireDefault(_constants);
 
 var _storageHelper = require('../../common/storage-helper');
 
@@ -24,145 +28,205 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var models = new _storageHelper2.default();
 
-var ERROR_BAD_REQUEST = 'Unable to serve your content. Check your arguments.';
-var ERROR_MISSING_TEMPLATE = 'is a required parameter in GET request.';
-
-function getOverview(req, res, next) {
-  req.checkParams('userId', 'userId ' + ERROR_MISSING_TEMPLATE).notEmpty();
-  req.checkQuery('projectId', 'projectId ' + ERROR_MISSING_TEMPLATE).notEmpty();
-  req.query.range = req.query.range || 7;
-  req.checkQuery('range', 'range ' + ERROR_MISSING_TEMPLATE).isInt();
+function getUserFiles(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || _constants2.default.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || _constants2.default.defaults.endDate;
+  req.checkParams('userId', 'userId ' + _constants2.default.templates.error.missingParam).notEmpty();
+  req.checkQuery('start', 'start ' + _constants2.default.templates.error.invalidData).isInt({ min: 0 });
+  req.checkQuery('end', 'end ' + _constants2.default.templates.error.invalidData).isInt({ min: 0 });
   var errors = req.validationErrors();
   if (errors) return next(_boom2.default.badRequest(errors));
 
   var userId = req.params.userId;
-  var projectId = req.query.projectId;
-  var dateRange = req.query.range;
-  var convertedRange = (0, _moment2.default)(new Date()).subtract(dateRange, 'day').format('YYYY-MM-DD HH:mm:ss');
+  var startDate = (0, _moment2.default)(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  var endDate = (0, _moment2.default)(req.query.end).format('YYYY-MM-DD HH:mm:ss');
 
-  var retrieveFilesAndRevisions = function retrieveFilesAndRevisions(user) {
-    var googleId = user.google_id;
-    var promiseArray = [models.log.drive_log.getUniqueFiles(projectId, googleId, convertedRange), models.log.revision_log.getUserRevisions(googleId, null, convertedRange)];
-    return _bluebird2.default.all(promiseArray);
+  var retrieveGoogleIdentity = function retrieveGoogleIdentity(user) {
+    if (_lodash2.default.isNil(user)) return next(_boom2.default.badRequest(_constants2.default.templates.error.badRequest));
+    return user.email;
   };
 
-  var response = function response(query) {
-    var payload = {
-      files: query[0],
-      revisions: query[1]
-    };
-    res.status(200).json(payload);
-  };
-
-  return this.models.app.user.getUserById(userId).then(retrieveFilesAndRevisions).then(response).catch(next);
-}
-
-function getFiles(req, res, next) {
-  req.checkParams('userId', 'userId ' + ERROR_MISSING_TEMPLATE).notEmpty();
-  req.checkQuery('projectId', 'projectId ' + ERROR_MISSING_TEMPLATE).notEmpty();
-  req.query.range = req.query.range || 7;
-  req.checkQuery('range', 'range ' + ERROR_MISSING_TEMPLATE).isInt();
-  var errors = req.validationErrors();
-  if (errors) return next(_boom2.default.badRequest(errors));
-
-  var userId = req.params.userId;
-  var projectId = req.query.projectId;
-  var dateRange = req.query.range;
-  var convertedRange = (0, _moment2.default)(new Date()).subtract(dateRange, 'day').format('YYYY-MM-DD HH:mm:ss');
-
-  var retrieveFiles = function retrieveFiles(user) {
-    var googleId = user.google_id;
-    return models.log.drive_log.getUniqueFiles(projectId, googleId, convertedRange);
+  var retrieveFiles = function retrieveFiles(email) {
+    if (_lodash2.default.isNil(email)) return next(_boom2.default.badRequest(_constants2.default.templates.error.badRequest));
+    return models.log.file_log.getFiles(email, null, startDate, endDate);
   };
 
   var response = function response(files) {
+    if (_lodash2.default.isNil(files)) return next(_boom2.default.badRequest(_constants2.default.templates.error.badRequest));
     res.status(200).json(files);
   };
 
-  return this.models.app.user.getUserById(userId).then(retrieveFiles).then(response).catch(next);
+  return models.app.user.getUserById(userId).then(retrieveGoogleIdentity).then(retrieveFiles).then(response).catch(next);
 }
 
-function getFilesCount(req, res, next) {
-  req.checkParams('userId', 'userId ' + ERROR_MISSING_TEMPLATE).notEmpty();
-  req.checkQuery('projectId', 'projectId ' + ERROR_MISSING_TEMPLATE).notEmpty();
-  req.query.range = req.query.range || 7;
-  req.checkQuery('range', 'range ' + ERROR_MISSING_TEMPLATE).isInt();
+function getUserChanges(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || _constants2.default.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || _constants2.default.defaults.endDate;
+  req.checkParams('userId', 'userId ' + _constants2.default.templates.error.missingParam).notEmpty();
+  req.checkQuery('start', 'start ' + _constants2.default.templates.error.invalidData).isInt({ min: 0 });
+  req.checkQuery('end', 'end ' + _constants2.default.templates.error.invalidData).isInt({ min: 0 });
   var errors = req.validationErrors();
   if (errors) return next(_boom2.default.badRequest(errors));
 
   var userId = req.params.userId;
-  var projectId = req.query.projectId;
-  var dateRange = req.query.range;
-  var convertedRange = (0, _moment2.default)(new Date()).subtract(dateRange, 'day').format('YYYY-MM-DD HH:mm:ss');
+  var startDate = (0, _moment2.default)(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  var endDate = (0, _moment2.default)(req.query.end).format('YYYY-MM-DD HH:mm:ss');
 
-  var retrieveFiles = function retrieveFiles(user) {
-    var googleId = user.google_id;
-    return models.log.drive_log.getUniqueFiles(projectId, googleId, convertedRange);
+  var retrieveGoogleIdentity = function retrieveGoogleIdentity(user) {
+    if (_lodash2.default.isNil(user)) return next(_boom2.default.badRequest(_constants2.default.templates.error.badRequest));
+    return user.email;
+  };
+
+  var retrieveChanges = function retrieveChanges(email) {
+    if (_lodash2.default.isNil(email)) return next(_boom2.default.badRequest(_constants2.default.templates.error.badRequest));
+    return models.log.file_log.getUserChanges(email, startDate, endDate);
+  };
+
+  var response = function response(changes) {
+    if (_lodash2.default.isNil(changes)) return next(_boom2.default.badRequest(_constants2.default.templates.error.badRequest));
+    res.status(200).json(changes);
+  };
+
+  return models.app.user.getUserById(userId).then(retrieveGoogleIdentity).then(retrieveChanges).then(response).catch(next);
+}
+
+function getUserActivities(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || _constants2.default.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || _constants2.default.defaults.endDate;
+  req.checkParams('userId', 'userId ' + _constants2.default.templates.error.missingParam).notEmpty();
+  req.checkQuery('start', 'start ' + _constants2.default.templates.error.invalidData).isInt({ min: 0 });
+  req.checkQuery('end', 'end ' + _constants2.default.templates.error.invalidData).isInt({ min: 0 });
+  var errors = req.validationErrors();
+  if (errors) return next(_boom2.default.badRequest(errors));
+
+  var userId = req.params.userId;
+  var startDate = (0, _moment2.default)(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  var endDate = (0, _moment2.default)(req.query.end).format('YYYY-MM-DD HH:mm:ss');
+
+  var retrieveGoogleIdentity = function retrieveGoogleIdentity(user) {
+    if (_lodash2.default.isNil(user)) return next(_boom2.default.badRequest(_constants2.default.templates.error.badRequest));
+    return user.email;
+  };
+
+  var retrieveActivities = function retrieveActivities(email) {
+    if (_lodash2.default.isNil(email)) return next(_boom2.default.badRequest(_constants2.default.templates.error.badRequest));
+    return models.log.file_log.getUserActivities(email, startDate, endDate);
+  };
+
+  var response = function response(activities) {
+    if (_lodash2.default.isNil(activities)) return next(_boom2.default.badRequest(_constants2.default.templates.error.badRequest));
+    res.status(200).json(activities);
+  };
+
+  return models.app.user.getUserById(userId).then(retrieveGoogleIdentity).then(retrieveActivities).then(response).catch(next);
+}
+
+function getProjectFiles(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || _constants2.default.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || _constants2.default.defaults.endDate;
+  req.checkParams('userId', 'userId ' + _constants2.default.templates.error.missingParam).notEmpty();
+  req.checkParams('projectId', 'projectId ' + _constants2.default.templates.error.missingParam).notEmpty();
+  req.checkQuery('start', 'start ' + _constants2.default.templates.error.invalidData).isInt({ min: 0 });
+  req.checkQuery('end', 'end ' + _constants2.default.templates.error.invalidData).isInt({ min: 0 });
+  var errors = req.validationErrors();
+  if (errors) return next(_boom2.default.badRequest(errors));
+
+  var userId = req.params.userId;
+  var projectId = req.params.projectId;
+  var startDate = (0, _moment2.default)(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  var endDate = (0, _moment2.default)(req.query.end).format('YYYY-MM-DD HH:mm:ss');
+
+  var retrieveGoogleIdentity = function retrieveGoogleIdentity(user) {
+    if (_lodash2.default.isNil(user)) return next(_boom2.default.badRequest(_constants2.default.templates.error.badRequest));
+    return user.email;
+  };
+
+  var retrieveFiles = function retrieveFiles(email) {
+    if (_lodash2.default.isNil(email)) return next(_boom2.default.badRequest(_constants2.default.templates.error.badRequest));
+    return models.log.file_log.getFiles(email, projectId, startDate, endDate);
   };
 
   var response = function response(files) {
-    res.status(200).json({ count: files.length });
+    if (_lodash2.default.isNil(files)) return next(_boom2.default.badRequest(_constants2.default.templates.error.badRequest));
+    res.status(200).json(files);
   };
 
-  return this.models.app.user.getUserById(userId).then(retrieveFiles).then(response).catch(next);
+  return models.app.user.getUserById(userId).then(retrieveGoogleIdentity).then(retrieveFiles).then(response).catch(next);
 }
 
-function getRevisions(req, res, next) {
-  req.checkParams('userId', 'userId ' + ERROR_MISSING_TEMPLATE).notEmpty();
-  req.checkQuery('projectId', 'projectId ' + ERROR_MISSING_TEMPLATE).notEmpty();
-  req.query.range = req.query.range || 7;
-  req.checkQuery('range', 'range ' + ERROR_MISSING_TEMPLATE).isInt();
+function getProjectChanges(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || _constants2.default.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || _constants2.default.defaults.endDate;
+  req.checkParams('userId', 'userId ' + _constants2.default.templates.error.missingParam).notEmpty();
+  req.checkParams('projectId', 'projectId ' + _constants2.default.templates.error.missingParam).notEmpty();
+  req.checkQuery('start', 'start ' + _constants2.default.templates.error.invalidData).isInt({ min: 0 });
+  req.checkQuery('end', 'end ' + _constants2.default.templates.error.invalidData).isInt({ min: 0 });
   var errors = req.validationErrors();
   if (errors) return next(_boom2.default.badRequest(errors));
 
   var userId = req.params.userId;
-  var projectId = req.query.projectId;
-  var dateRange = req.query.range;
-  var convertedRange = (0, _moment2.default)(new Date()).subtract(dateRange, 'day').format('YYYY-MM-DD HH:mm:ss');
+  var projectId = req.params.projectId;
+  var startDate = (0, _moment2.default)(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  var endDate = (0, _moment2.default)(req.query.end).format('YYYY-MM-DD HH:mm:ss');
 
-  var retrieveRevisions = function retrieveRevisions(user) {
-    var googleId = user.google_id;
-    return models.log.revision_log.getUserRevisionsByProject(googleId, projectId, null, convertedRange);
+  var retrieveGoogleIdentity = function retrieveGoogleIdentity(user) {
+    if (_lodash2.default.isNil(user)) return next(_boom2.default.badRequest(_constants2.default.templates.error.badRequest));
+    return user.email;
   };
 
-  var response = function response(revisions) {
-    res.status(200).json(revisions);
+  var retrieveChanges = function retrieveChanges(email) {
+    if (_lodash2.default.isNil(email)) return next(_boom2.default.badRequest(_constants2.default.templates.error.badRequest));
+    return models.log.file_log.getUserChangesByProject(email, projectId, startDate, endDate);
   };
 
-  return this.models.app.user.getUserById(userId).then(retrieveRevisions).then(response).catch(next);
+  var response = function response(changes) {
+    if (_lodash2.default.isNil(changes)) return next(_boom2.default.badRequest(_constants2.default.templates.error.badRequest));
+    res.status(200).json(changes);
+  };
+
+  return models.app.user.getUserById(userId).then(retrieveGoogleIdentity).then(retrieveChanges).then(response).catch(next);
 }
 
-function getRevisionsCount(req, res, next) {
-  req.checkParams('userId', 'userId ' + ERROR_MISSING_TEMPLATE).notEmpty();
-  req.checkQuery('projectId', 'projectId ' + ERROR_MISSING_TEMPLATE).notEmpty();
-  req.query.range = req.query.range || 7;
-  req.checkQuery('range', 'range ' + ERROR_MISSING_TEMPLATE).isInt();
+function getProjectActivities(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || _constants2.default.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || _constants2.default.defaults.endDate;
+  req.checkParams('userId', 'userId ' + _constants2.default.templates.error.missingParam).notEmpty();
+  req.checkParams('projectId', 'projectId ' + _constants2.default.templates.error.missingParam).notEmpty();
+  req.checkQuery('start', 'start ' + _constants2.default.templates.error.invalidData).isInt({ min: 0 });
+  req.checkQuery('end', 'end ' + _constants2.default.templates.error.invalidData).isInt({ min: 0 });
   var errors = req.validationErrors();
   if (errors) return next(_boom2.default.badRequest(errors));
 
   var userId = req.params.userId;
-  var projectId = req.query.projectId;
-  var dateRange = req.query.range;
-  var convertedRange = (0, _moment2.default)(new Date()).subtract(dateRange, 'day').format('YYYY-MM-DD HH:mm:ss');
+  var projectId = req.params.projectId;
+  var startDate = (0, _moment2.default)(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  var endDate = (0, _moment2.default)(req.query.end).format('YYYY-MM-DD HH:mm:ss');
 
-  var retrieveRevisions = function retrieveRevisions(user) {
-    var googleId = user.google_id;
-    return models.log.revision_log.getUserRevisionsByProject(googleId, projectId, null, convertedRange);
+  var retrieveGoogleIdentity = function retrieveGoogleIdentity(user) {
+    if (_lodash2.default.isNil(user)) return next(_boom2.default.badRequest(_constants2.default.templates.error.badRequest));
+    return user.email;
   };
 
-  var response = function response(revisions) {
-    res.status(200).json({ count: revisions.length });
+  var retrieveActivities = function retrieveActivities(email) {
+    if (_lodash2.default.isNil(email)) return next(_boom2.default.badRequest(_constants2.default.templates.error.badRequest));
+    return models.log.file_log.getUserActivitiesByProject(email, projectId, startDate, endDate);
   };
 
-  return this.models.app.user.getUserById(userId).then(retrieveRevisions).then(response).catch(next);
+  var response = function response(activities) {
+    if (_lodash2.default.isNil(activities)) return next(_boom2.default.badRequest(_constants2.default.templates.error.badRequest));
+    res.status(200).json(activities);
+  };
+
+  return models.app.user.getUserById(userId).then(retrieveGoogleIdentity).then(retrieveActivities).then(response).catch(next);
 }
 
 var driveAPI = {
-  getOverview: getOverview,
-  getRevisions: getRevisions,
-  getRevisionsCount: getRevisionsCount,
-  getFiles: getFiles,
-  getFilesCount: getFilesCount
+  getUserFiles: getUserFiles,
+  getUserChanges: getUserChanges,
+  getUserActivities: getUserActivities,
+  getProjectFiles: getProjectFiles,
+  getProjectChanges: getProjectChanges,
+  getProjectActivities: getProjectActivities
 };
 
 exports.default = driveAPI;

@@ -16,6 +16,10 @@ var _moment = require('moment');
 
 var _moment2 = _interopRequireDefault(_moment);
 
+var _constants = require('../../common/constants');
+
+var _constants2 = _interopRequireDefault(_constants);
+
 var _storageHelper = require('../../common/storage-helper');
 
 var _storageHelper2 = _interopRequireDefault(_storageHelper);
@@ -24,61 +28,105 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var models = new _storageHelper2.default();
 
-var ERROR_BAD_REQUEST = 'Unable to serve your content. Check your arguments.';
-var ERROR_MISSING_TEMPLATE = 'is a required parameter in GET request.';
-
-function getOverview(req, res, next) {
-  req.query.range = req.query.range || 7;
-  req.checkQuery('range', 'range ' + ERROR_MISSING_TEMPLATE).isInt();
-  var errors = req.validationErrors();
-  if (errors) return next(_boom2.default.badRequest('test', errors));
-
-  var dateRange = req.query.range;
-  var convertedRange = (0, _moment2.default)(new Date()).subtract(dateRange, 'day').format('YYYY-MM-DD HH:mm:ss');
-  var response = function response(data) {
-    if (_lodash2.default.isNil(data)) return next(_boom2.default.badRequest(ERROR_BAD_REQUEST));
-    res.status(200).json({ count: data.count, activities: data.rows });
-  };
-
-  return models.log.task_log.getByRange(convertedRange).then(response).catch(next);
-}
-
 function getTasks(req, res, next) {
-  req.query.range = req.query.range || 7;
-  req.checkQuery('range', 'range ' + ERROR_MISSING_TEMPLATE).isInt();
-  if (_lodash2.default.isUndefined(req.query.count)) req.checkQuery('count', ERROR_BAD_REQUEST).isBoolean();
+  req.query.start = parseInt(req.query.start, 10) || _constants2.default.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || _constants2.default.defaults.endDate;
+  req.checkQuery('start', 'start ' + _constants2.default.templates.error.invalidData).isInt({ min: 0 });
+  req.checkQuery('end', 'end ' + _constants2.default.templates.error.invalidData).isInt({ min: 0 });
   var errors = req.validationErrors();
   if (errors) return next(_boom2.default.badRequest(errors));
 
-  var dateRange = req.query.range;
-  var convertedRange = (0, _moment2.default)(new Date()).subtract(dateRange, 'day').format('YYYY-MM-DD HH:mm:ss');
-  var evalQuery = function evalQuery() {
-    if (req.query.count) return models.app.task.getCount(convertedRange);
-    return models.app.tasks.getTasks(convertedRange);
-  };
-  var response = function response(data) {
-    if (_lodash2.default.isNil(data)) return next(_boom2.default.badRequest(ERROR_BAD_REQUEST));
-    var payload = req.query.count ? { count: data } : { tasks: data };
-    res.status(200).json(payload);
+  var startDate = (0, _moment2.default)(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  var endDate = (0, _moment2.default)(req.query.end).format('YYYY-MM-DD HH:mm:ss');
+
+  var response = function response(tasks) {
+    if (_lodash2.default.isNil(tasks)) return next(_boom2.default.badRequest(_constants2.default.templates.error.badRequest));
+    res.status(200).json(tasks);
   };
 
-  return evalQuery().then(response).catch(next);
+  return models.app.task.getTasks(startDate, endDate).then(response).catch(next);
 }
 
 function getTask(req, res, next) {
-  req.checkParams('taskId', 'taskId ' + ERROR_MISSING_TEMPLATE).notEmpty();
+  req.checkParams('taskId', 'taskId ' + _constants2.default.templates.error.missingParam).notEmpty();
   var errors = req.validationErrors();
   if (errors) return next(_boom2.default.badRequest(errors));
 
   var taskId = req.params.taskId;
+
   var response = function response(task) {
-    if (_lodash2.default.isNil(task)) return next(_boom2.default.badRequest(ERROR_BAD_REQUEST));
+    if (_lodash2.default.isNil(task)) return next(_boom2.default.badRequest(_constants2.default.templates.error.badRequest));
     res.status(200).json(task);
   };
 
   return models.app.task.getTask(taskId).then(response).catch(next);
 }
 
-var tasksAPI = { getOverview: getOverview, getTasks: getTasks, getTask: getTask };
+function getActivities(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || _constants2.default.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || _constants2.default.defaults.endDate;
+  req.checkQuery('start', 'start ' + _constants2.default.templates.error.invalidData).isInt({ min: 0 });
+  req.checkQuery('end', 'end ' + _constants2.default.templates.error.invalidData).isInt({ min: 0 });
+  var errors = req.validationErrors();
+  if (errors) next(_boom2.default.badRequest(errors));
+
+  var startDate = (0, _moment2.default)(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  var endDate = (0, _moment2.default)(req.query.end).format('YYYY-MM-DD HH:mm:ss');
+
+  var response = function response(activities) {
+    if (_lodash2.default.isNil(activities)) return next(_boom2.default.badRequest(_constants2.default.templates.error.badRequest));
+    res.status(200).json(activities);
+  };
+
+  return models.log.task_log.getActivities(startDate, endDate).then(response).catch(next);
+}
+
+function getTaskActivities(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || _constants2.default.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || _constants2.default.defaults.endDate;
+  req.checkParams('taskId', 'taskId ' + _constants2.default.templates.error.missingParam).notEmpty();
+  req.checkQuery('start', 'start ' + _constants2.default.templates.error.invalidData).isInt({ min: 0 });
+  req.checkQuery('end', 'end ' + _constants2.default.templates.error.invalidData).isInt({ min: 0 });
+  var errors = req.validationErrors();
+  if (errors) next(_boom2.default.badRequest(errors));
+
+  var taskId = req.params.taskId;
+  var startDate = (0, _moment2.default)(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  var endDate = (0, _moment2.default)(req.query.end).format('YYYY-MM-DD HH:mm:ss');
+
+  var response = function response(activities) {
+    if (_lodash2.default.isNil(activities)) return next(_boom2.default.badRequest(_constants2.default.templates.error.badRequest));
+    res.status(200).json(activities);
+  };
+
+  return models.log.task_log.getTaskActivities(null, taskId, startDate, endDate).then(response).catch(next);
+}
+
+function getParticipatingUsers(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || _constants2.default.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || _constants2.default.defaults.endDate;
+  req.checkQuery('start', 'start ' + _constants2.default.templates.error.invalidData).isInt({ min: 0 });
+  req.checkQuery('end', 'end ' + _constants2.default.templates.error.invalidData).isInt({ min: 0 });
+  var errors = req.validationErrors();
+  if (errors) next(_boom2.default.badRequest(errors));
+
+  var startDate = (0, _moment2.default)(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  var endDate = (0, _moment2.default)(req.query.end).format('YYYY-MM-DD HH:mm:ss');
+
+  var response = function response(users) {
+    if (_lodash2.default.isNil(users)) return next(_boom2.default.badRequest(_constants2.default.templates.error.badRequest));
+    res.status(200).json(users);
+  };
+
+  return models.log.task_log.getParticipatingUsers(startDate, endDate).then(response).catch(next);
+}
+
+var tasksAPI = {
+  getTasks: getTasks,
+  getTask: getTask,
+  getActivities: getActivities,
+  getTaskActivities: getTaskActivities,
+  getParticipatingUsers: getParticipatingUsers
+};
 
 exports.default = tasksAPI;

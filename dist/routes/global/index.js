@@ -41,34 +41,43 @@ module.exports = function (express) {
 
   // GitHub Related
   // =========================================================
-  globalRouter.get('/github/overview', _github2.default.getOverview);
-  globalRouter.get('/github/commits/:commitId', _github2.default.getCommit);
+  globalRouter.get('/github/repos', _github2.default.getRepositories);
   globalRouter.get('/github/commits', _github2.default.getCommits);
+  globalRouter.get('/github/commits/:commitId', _github2.default.getCommit);
   globalRouter.get('/github/releases', _github2.default.getReleases);
   globalRouter.get('/github/releases/:releaseId', _github2.default.getRelease);
+  globalRouter.get('/github/users', _github2.default.getParticipatingUsers);
 
   // Google Drive Related
   // =========================================================
-  globalRouter.get('/drive/overview', _drive2.default.getOverview);
-  globalRouter.get('/drive/files/revisions', _drive2.default.getRevisions);
+  globalRouter.get('/drive/files', _drive2.default.getFiles);
+  globalRouter.get('/drive/files/changes', _drive2.default.getChanges);
+  globalRouter.get('/drive/files/activities', _drive2.default.getActivities);
   globalRouter.get('/drive/files/:fileId', _drive2.default.getFile);
-  globalRouter.get('/drive/files/:fileId/revisions', _drive2.default.getFileRevisions);
+  globalRouter.get('/drive/files/:fileId/changes', _drive2.default.getFileChanges);
+  globalRouter.get('/drive/files/:fileId/activities', _drive2.default.getFileActivities);
+  globalRouter.get('/drive/users', _drive2.default.getParticipatingUsers);
+
+  // Tasks Related
+  // =========================================================
+  globalRouter.get('/tasks', _tasks2.default.getTasks);
+  globalRouter.get('/tasks/activities', _tasks2.default.getActivities);
+  globalRouter.get('/tasks/users', _tasks2.default.getParticipatingUsers);
+  globalRouter.get('/tasks/:taskId', _tasks2.default.getTask);
+  globalRouter.get('/tasks/:taskId/activities', _tasks2.default.getTaskActivities);
+
+  // Milestones Related
+  // =========================================================
+  globalRouter.get('/milestones', _milestones2.default.getMilestones);
+  globalRouter.get('/milestones/activities', _milestones2.default.getActivities);
+  globalRouter.get('/milestones/tasks', _milestones2.default.getTasksByMilestones);
+  globalRouter.get('/milestones/users', _milestones2.default.getParticipatingUsers);
+  globalRouter.get('/milestones/:milestoneId', _milestones2.default.getMilestone);
+  globalRouter.get('/milestones/:milestoneId/activities', _milestones2.default.getMilestoneActivities);
 
   // Cloud IDE Related
   // =========================================================
   globalRouter.get('/cloud/overview', _cloud2.default.getOverview);
-
-  // Tasks Related
-  // =========================================================
-  globalRouter.get('/tasks/overview', _tasks2.default.getOverview);
-  globalRouter.get('/tasks', _tasks2.default.getTasks);
-  globalRouter.get('/tasks/:taskId', _tasks2.default.getTask);
-
-  // Milestones Related
-  // =========================================================
-  globalRouter.get('/milestones/overview', _milestones2.default.getOverview);
-  globalRouter.get('/milestones', _milestones2.default.getMilestones);
-  globalRouter.get('/milestones/:milestoneId', _milestones2.default.getMilestone);
 
   return globalRouter;
 };

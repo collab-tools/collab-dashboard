@@ -1,5 +1,11 @@
 'use strict';
 
+var _moment = require('moment');
+
+var _moment2 = _interopRequireDefault(_moment);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 module.exports = {
   google: {
     mime: {
@@ -18,6 +24,20 @@ module.exports = {
       spreadsheet: 'application/vnd.google-apps.spreadsheet',
       unknown: 'application/vnd.google-apps.unknown',
       video: 'application/vnd.google-apps.video'
+    }
+  },
+  defaults: {
+    startDate: 0,
+    endDate: (0, _moment2.default)().valueOf(),
+    jwtExpiry: 7
+  },
+  templates: {
+    error: {
+      badRequest: 'Unable to serve your content. Check your arguments.',
+      missingParam: 'is a required parameter in GET request.',
+      unauthorized: 'Unauthorized Access. Check your credentials',
+      invalidData: 'contains the wrong data type as expected.',
+      invalidRange: 'Invalid date range has been provided.'
     }
   }
 };

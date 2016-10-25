@@ -16,6 +16,10 @@ var _config = require('config');
 
 var _config2 = _interopRequireDefault(_config);
 
+var _constants = require('../../common/constants');
+
+var _constants2 = _interopRequireDefault(_constants);
+
 var _storageHelper = require('../../common/storage-helper');
 
 var _storageHelper2 = _interopRequireDefault(_storageHelper);
@@ -24,13 +28,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var models = new _storageHelper2.default();
 
-var ERROR_BAD_REQUEST = 'Unable to serve your content. Check your arguments.';
-var ERROR_INVALID = 'Invalid username / password';
-var ERROR_ILLEGAL = 'Unauthorized access';
-var JWT_EXPIRY_DAYS = 7;
-
 function checkDevAccess(devKey) {
-  return devKey === _config2.default.developer_mode;
+  return devKey === _config2.default.developer_key;
 }
 
 /**
@@ -42,12 +41,12 @@ function authenticate(req, res, next) {
   var searchParameter = { username: givenUser };
 
   var authenticateUser = function authenticateUser(user) {
-    if (_lodash2.default.isNil(user)) return next(_boom2.default.unauthorized(ERROR_INVALID));
+    if (_lodash2.default.isNil(user)) return next(_boom2.default.unauthorized(_constants2.default.templates.error.unauthorized));
     var isValidated = user.comparePassword(givenPass);
-    if (!isValidated) return next(_boom2.default.unauthorized(ERROR_INVALID));
+    if (!isValidated) return next(_boom2.default.unauthorized(_constants2.default.templates.error.unauthorized));
 
     var expiry = new Date();
-    expiry.setDate(expiry.getDate() + JWT_EXPIRY_DAYS);
+    expiry.setDate(expiry.getDate() + _constants2.default.defaults.jwtExpiry);
     var payload = {
       name: user.name,
       username: user.username,
@@ -68,19 +67,21 @@ function createAdmin(req, res, next) {
   var name = req.body.name;
   var role = req.body.role;
 
-  if (!checkDevAccess(devKey)) return next(_boom2.default.unauthorized(ERROR_ILLEGAL));
+  if (!checkDevAccess(devKey)) {
+    return next(_boom2.default.unauthorized(_constants2.default.templates.error.unauthorized));
+  }
 
   // Validate that all mandatory fields are given
-  if (_lodash2.default.isNil(username) && _lodash2.default.isNil(password) && _lodash2.default.isNil(name) && _lodash2.default.isNil(role)) {
+  if (!_lodash2.default.isNil(username) && !_lodash2.default.isNil(password) && !_lodash2.default.isNil(name) && !_lodash2.default.isNil(role)) {
     var payload = { username: username, password: password, name: name, role: role };
     var response = function response(success) {
-      if (!success) return next(_boom2.default.badRequest(ERROR_BAD_REQUEST));
+      if (!success) return next(_boom2.default.badRequest(_constants2.default.templates.error.badRequest));
       res.status(200).json({ success: success });
     };
     return models.log.admin.addUser(payload).then(response).catch(next);
   }
 
-  return next(_boom2.default.unauthorized(ERROR_ILLEGAL));
+  return next(_boom2.default.unauthorized(_constants2.default.templates.error.unauthorized));
 }
 
 module.exports = function (express) {

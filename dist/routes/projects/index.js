@@ -43,35 +43,40 @@ module.exports = function (express) {
 
   projectsRouter.use(auth);
 
+  // Projects Retrieval Related
+  // =========================================================
+  projectsRouter.get('/', _projects2.default.getProjects);
+  projectsRouter.get('/:projectId', _projects2.default.getProject);
+  projectsRouter.get('/:projectId/users', _projects2.default.getUsers);
+
   // GitHub Related
   // =========================================================
-  projectsRouter.get('/:projectId/github/overview', _github2.default.getOverview);
+  projectsRouter.get('/:projectId/github/repo', _github2.default.getRepo);
   projectsRouter.get('/:projectId/github/commits', _github2.default.getCommits);
+  projectsRouter.get('/:projectId/github/releases', _github2.default.getReleases);
+  projectsRouter.get('/:projectId/github/contributors', _github2.default.getContributors);
+  projectsRouter.get('/:projectId/github/stats', _github2.default.getStatistics);
 
   // Google Drive Related
   // =========================================================
-  projectsRouter.get('/:projectId/drive/overview', _drive2.default.getOverview);
   projectsRouter.get('/:projectId/drive/files', _drive2.default.getFiles);
-  projectsRouter.get('/:projectId/drive/revisions', _drive2.default.getRevisions);
+  projectsRouter.get('/:projectId/drive/changes', _drive2.default.getChanges);
+  projectsRouter.get('/:projectId/drive/activities', _drive2.default.getActivities);
+
+  // Tasks Related
+  // =========================================================
+  projectsRouter.get('/:projectId/tasks', _tasks2.default.getTasks);
+  projectsRouter.get('/:projectId/tasks/activities', _tasks2.default.getActivities);
+
+  // Milestones Related
+  // =========================================================
+  projectsRouter.get('/:projectId/milestones', _milestones2.default.getMilestones);
+  projectsRouter.get('/:projectId/milestones/activities', _milestones2.default.getActivities);
+  projectsRouter.get('/:projectId/milestones/tasks', _milestones2.default.getTasksByMilestones);
 
   // Cloud IDE Related
   // =========================================================
   projectsRouter.get('/:projectId/cloud/overview', _cloud2.default.getOverview);
-
-  // Tasks Related
-  // =========================================================
-  projectsRouter.get('/:projectId/tasks/overview', _tasks2.default.getOverview);
-  projectsRouter.get('/:projectId/tasks', _tasks2.default.getTasks);
-
-  // Milestones Related
-  // =========================================================
-  projectsRouter.get('/:projectId/milestones/overview', _milestones2.default.getOverview);
-  projectsRouter.get('/:projectId/milestones', _milestones2.default.getMilestones);
-
-  // Projects Retrieval Related
-  // =========================================================
-  projectsRouter.get('/:projectId', _projects2.default.getProject);
-  projectsRouter.get('/', _projects2.default.getProjects);
 
   return projectsRouter;
 };
