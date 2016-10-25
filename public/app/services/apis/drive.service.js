@@ -24,7 +24,7 @@
     };
 
     driveFactory.getChanges = (start, end) => {
-      return $http.get(`${urlBase}/changes?start=${start}&end=${end}`);
+      return $http.get(`${urlBase}/files/changes?start=${start}&end=${end}`);
     };
 
     driveFactory.getFileChanges = (fileId, start, end) => {
