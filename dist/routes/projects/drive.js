@@ -16,6 +16,10 @@ var _moment = require('moment');
 
 var _moment2 = _interopRequireDefault(_moment);
 
+var _constants = require('../../common/constants');
+
+var _constants2 = _interopRequireDefault(_constants);
+
 var _storageHelper = require('../../common/storage-helper');
 
 var _storageHelper2 = _interopRequireDefault(_storageHelper);
@@ -24,65 +28,73 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var models = new _storageHelper2.default();
 
-var ERROR_BAD_REQUEST = 'Unable to serve your content. Check your arguments.';
-var ERROR_MISSING_TEMPLATE = 'is a required parameter in GET request.';
-
-function getOverview(req, res, next) {
-  req.checkParams('projectId', 'projectId ' + ERROR_MISSING_TEMPLATE).notEmpty();
-  req.query.range = req.query.range || 7;
-  req.checkQuery('range', 'range ' + ERROR_MISSING_TEMPLATE).isInt();
-  var errors = req.validationErrors();
-  if (errors) return next(_boom2.default.badRequest(errors));
-
-  var projectId = req.params.projectId;
-  var dateRange = req.query.range;
-  var convertedRange = (0, _moment2.default)(new Date()).subtract(dateRange, 'day').format('YYYY-MM-DD HH:mm:ss');
-  var response = function response(info) {
-    if (_lodash2.default.isNil(info)) return next(_boom2.default.badRequest(ERROR_BAD_REQUEST));
-    res.status(200).json({ info: info });
-  };
-
-  return Promise.all([models.log.drive_log.getUniqueFiles(projectId, convertedRange), models.log.revision_log.getProjectRevisions(projectId, convertedRange)]).then(response).catch(next);
-}
-
 function getFiles(req, res, next) {
-  req.checkParams('projectId', 'projectId ' + ERROR_MISSING_TEMPLATE).notEmpty();
-  req.query.range = req.query.range || 7;
-  req.checkQuery('range', 'range ' + ERROR_MISSING_TEMPLATE).isInt();
+  req.query.start = parseInt(req.query.start, 10) || _constants2.default.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || _constants2.default.defaults.endDate;
+  req.checkParams('projectId', 'projectId ' + _constants2.default.templates.error.missingParam).notEmpty();
+  req.checkQuery('start', 'start ' + _constants2.default.templates.error.invalidData).isInt({ min: 0 });
+  req.checkQuery('end', 'end ' + _constants2.default.templates.error.invalidData).isInt({ min: 0 });
   var errors = req.validationErrors();
   if (errors) return next(_boom2.default.badRequest(errors));
 
   var projectId = req.params.projectId;
-  var dateRange = req.query.range;
-  var convertedRange = (0, _moment2.default)(new Date()).subtract(dateRange, 'day').format('YYYY-MM-DD HH:mm:ss');
+  var startDate = (0, _moment2.default)(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  var endDate = (0, _moment2.default)(req.query.end).format('YYYY-MM-DD HH:mm:ss');
 
   var response = function response(files) {
-    if (_lodash2.default.isNil(files)) return next(_boom2.default.badRequest(ERROR_BAD_REQUEST));
+    if (_lodash2.default.isNil(files)) return next(_boom2.default.badRequest(_constants2.default.templates.error.badRequest));
     res.status(200).json(files);
   };
 
-  return models.log.drive_log.getUniqueFiles(projectId, convertedRange).then(response).catch(next);
+  return models.log.file_log.getFiles(projectId, null, startDate, endDate).then(response).catch(next);
 }
 
-function getRevisions(req, res, next) {
-  req.checkParams('projectId', 'projectId ' + ERROR_MISSING_TEMPLATE).notEmpty();
-  req.query.range = req.query.range || 7;
-  req.checkQuery('range', 'range ' + ERROR_MISSING_TEMPLATE).isInt();
+function getChanges(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || _constants2.default.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || _constants2.default.defaults.endDate;
+  req.checkParams('projectId', 'projectId ' + _constants2.default.templates.error.missingParam).notEmpty();
+  req.checkQuery('start', 'start ' + _constants2.default.templates.error.invalidData).isInt({ min: 0 });
+  req.checkQuery('end', 'end ' + _constants2.default.templates.error.invalidData).isInt({ min: 0 });
   var errors = req.validationErrors();
   if (errors) return next(_boom2.default.badRequest(errors));
 
   var projectId = req.params.projectId;
-  var dateRange = req.query.range;
-  var convertedRange = (0, _moment2.default)(new Date()).subtract(dateRange, 'day').format('YYYY-MM-DD HH:mm:ss');
+  var startDate = (0, _moment2.default)(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  var endDate = (0, _moment2.default)(req.query.end).format('YYYY-MM-DD HH:mm:ss');
 
-  var response = function response(revisions) {
-    if (_lodash2.default.isNil(revisions)) return next(_boom2.default.badRequest(ERROR_BAD_REQUEST));
-    res.status(200).json(revisions);
+  var response = function response(changes) {
+    if (_lodash2.default.isNil(changes)) return next(_boom2.default.badRequest(_constants2.default.templates.error.badRequest));
+    res.status(200).json(changes);
   };
 
-  return models.log.revision_log.getProjectRevisions(projectId, convertedRange).then(response).catch(next);
+  return models.log.file_log.getProjectChanges(projectId, startDate, endDate).then(response).catch(next);
 }
 
-var driveAPI = { getOverview: getOverview, getFiles: getFiles, getRevisions: getRevisions };
+function getActivities(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || _constants2.default.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || _constants2.default.defaults.endDate;
+  req.checkParams('projectId', 'projectId ' + _constants2.default.templates.error.missingParam).notEmpty();
+  req.checkQuery('start', 'start ' + _constants2.default.templates.error.invalidData).isInt({ min: 0 });
+  req.checkQuery('end', 'end ' + _constants2.default.templates.error.invalidData).isInt({ min: 0 });
+  var errors = req.validationErrors();
+  if (errors) return next(_boom2.default.badRequest(errors));
+
+  var projectId = req.params.projectId;
+  var startDate = (0, _moment2.default)(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  var endDate = (0, _moment2.default)(req.query.end).format('YYYY-MM-DD HH:mm:ss');
+
+  var response = function response(activities) {
+    if (_lodash2.default.isNil(activities)) return next(_boom2.default.badRequest(_constants2.default.templates.error.badRequest));
+    res.status(200).json(activities);
+  };
+
+  return models.log.file_log.getProjectActivities(projectId, startDate, endDate).then(response).catch(next);
+}
+
+var driveAPI = {
+  getFiles: getFiles,
+  getChanges: getChanges,
+  getActivities: getActivities
+};
 
 exports.default = driveAPI;

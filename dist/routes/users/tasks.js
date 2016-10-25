@@ -16,6 +16,10 @@ var _moment = require('moment');
 
 var _moment2 = _interopRequireDefault(_moment);
 
+var _constants = require('../../common/constants');
+
+var _constants2 = _interopRequireDefault(_constants);
+
 var _storageHelper = require('../../common/storage-helper');
 
 var _storageHelper2 = _interopRequireDefault(_storageHelper);
@@ -24,74 +28,99 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var models = new _storageHelper2.default();
 
-var ERROR_BAD_REQUEST = 'Unable to serve your content. Check your arguments.';
-var ERROR_MISSING_TEMPLATE = 'is a required parameter in GET request.';
-
-function getOverview(req, res, next) {
-  req.query.range = req.query.range || 7;
-  req.checkParams('userId', 'userId ' + ERROR_MISSING_TEMPLATE).notEmpty();
-  req.checkQuery('projectId', 'projectId ' + ERROR_MISSING_TEMPLATE).notEmpty();
-  req.checkQuery('range', 'range ' + ERROR_MISSING_TEMPLATE).isInt();
-  var errors = req.validationErrors();
-  if (errors) return next(_boom2.default.badRequest(errors));
-
-  var projectId = req.query.projectId;
-  var userId = req.params.userId;
-  var dateRange = req.query.range;
-  var convertedRange = (0, _moment2.default)(new Date()).subtract(dateRange, 'day').format('YYYY-MM-DD HH:mm:ss');
-
-  var processLogs = function processLogs(logs) {
-    var payload = { tasks: {} };
-    if (_lodash2.default.isNil(logs)) return next(_boom2.default.badRequest(ERROR_BAD_REQUEST));
-    payload.logs = logs;
-
-    // Pseudo-map data structure to avoid duplicate pulls from database
-    logs.forEach(function (log) {
-      log = log.toJSON();
-      payload.tasks[log.taskId] = true;
-    });
-
-    var relevantTasks = [];
-    _lodash2.default.forOwn(payload.tasks, function (value, key) {
-      relevantTasks.push(models.app.task.getTask(key));
-    });
-
-    // Retrieve all tasks referenced by log
-    return Promise.all(relevantTasks).then(function (tasks) {
-      tasks.forEach(function (task) {
-        task = task.toJSON();
-        payload.tasks[task.id] = task;
-      });
-      return payload;
-    });
-  };
-
-  var response = function response(payload) {
-    res.status(200).json(payload);
-  };
-
-  return models.log.task_log.getByProject(userId, projectId, convertedRange).then(processLogs).then(response).catch(next);
-}
-
-function getTasksAssigned(req, res, next) {
-  req.checkParams('userId', ERROR_BAD_REQUEST).notEmpty();
-  req.query.range = req.query.range || 7;
-  req.checkQuery('range', ERROR_BAD_REQUEST).isInt();
+function getUserTasks(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || _constants2.default.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || _constants2.default.defaults.endDate;
+  req.checkParams('userId', 'userId ' + _constants2.default.templates.error.missingParam).notEmpty();
+  req.checkQuery('start', 'start ' + _constants2.default.templates.error.invalidData).isInt({ min: 0 });
+  req.checkQuery('end', 'end ' + _constants2.default.templates.error.invalidData).isInt({ min: 0 });
   var errors = req.validationErrors();
   if (errors) return next(_boom2.default.badRequest(errors));
 
   var userId = req.params.userId;
-  var projectId = req.query.projectId;
-  var dateRange = req.query.range || 7;
-  var convertedRange = (0, _moment2.default)(new Date()).subtract(dateRange, 'day').format('YYYY-MM-DD HH:mm:ss');
+  var startDate = (0, _moment2.default)(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  var endDate = (0, _moment2.default)(req.query.end).format('YYYY-MM-DD HH:mm:ss');
 
   var response = function response(tasks) {
+    if (_lodash2.default.isNil(tasks)) return next(_boom2.default.badRequest(_constants2.default.templates.error.badRequest));
     res.status(200).json(tasks);
   };
 
-  return models.app.tasks.getTasksByAssignee(userId, projectId, convertedRange).then(response).catch(next);
+  return models.app.task.getTasksByAssignee(userId, null, startDate, endDate).then(response).catch(next);
 }
 
-var tasksAPI = { getOverview: getOverview, getTasksAssigned: getTasksAssigned };
+function getUserActivities(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || _constants2.default.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || _constants2.default.defaults.endDate;
+  req.checkParams('userId', 'userId ' + _constants2.default.templates.error.missingParam).notEmpty();
+  req.checkQuery('start', 'start ' + _constants2.default.templates.error.invalidData).isInt({ min: 0 });
+  req.checkQuery('end', 'end ' + _constants2.default.templates.error.invalidData).isInt({ min: 0 });
+  var errors = req.validationErrors();
+  if (errors) return next(_boom2.default.badRequest(errors));
+
+  var userId = req.params.userId;
+  var startDate = (0, _moment2.default)(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  var endDate = (0, _moment2.default)(req.query.end).format('YYYY-MM-DD HH:mm:ss');
+
+  var response = function response(activities) {
+    if (_lodash2.default.isNil(activities)) return next(_boom2.default.badRequest(_constants2.default.templates.error.badRequest));
+    res.status(200).json(activities);
+  };
+
+  return models.log.task_log.getUserActivities(userId, startDate, endDate).then(response).catch(next);
+}
+
+function getProjectTasks(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || _constants2.default.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || _constants2.default.defaults.endDate;
+  req.checkParams('userId', 'userId ' + _constants2.default.templates.error.missingParam).notEmpty();
+  req.checkParams('projectId', 'projectId ' + _constants2.default.templates.error.missingParam).notEmpty();
+  req.checkQuery('start', 'start ' + _constants2.default.templates.error.invalidData).isInt({ min: 0 });
+  req.checkQuery('end', 'end ' + _constants2.default.templates.error.invalidData).isInt({ min: 0 });
+  var errors = req.validationErrors();
+  if (errors) return next(_boom2.default.badRequest(errors));
+
+  var userId = req.params.userId;
+  var projectId = req.params.projectId;
+  var startDate = (0, _moment2.default)(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  var endDate = (0, _moment2.default)(req.query.end).format('YYYY-MM-DD HH:mm:ss');
+
+  var response = function response(tasks) {
+    if (_lodash2.default.isNil(tasks)) return next(_boom2.default.badRequest(_constants2.default.templates.error.badRequest));
+    res.status(200).json(tasks);
+  };
+
+  return models.app.task.getTasksByAssignee(userId, projectId, startDate, endDate).then(response).catch(next);
+}
+
+function getProjectActivities(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || _constants2.default.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || _constants2.default.defaults.endDate;
+  req.checkParams('userId', 'userId ' + _constants2.default.templates.error.missingParam).notEmpty();
+  req.checkParams('projectId', 'projectId ' + _constants2.default.templates.error.missingParam).notEmpty();
+  req.checkQuery('start', 'start ' + _constants2.default.templates.error.invalidData).isInt({ min: 0 });
+  req.checkQuery('end', 'end ' + _constants2.default.templates.error.invalidData).isInt({ min: 0 });
+  var errors = req.validationErrors();
+  if (errors) return next(_boom2.default.badRequest(errors));
+
+  var userId = req.params.userId;
+  var projectId = req.params.projectId;
+  var startDate = (0, _moment2.default)(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  var endDate = (0, _moment2.default)(req.query.end).format('YYYY-MM-DD HH:mm:ss');
+
+  var response = function response(activities) {
+    if (_lodash2.default.isNil(activities)) return next(_boom2.default.badRequest(_constants2.default.templates.error.badRequest));
+    res.status(200).json(activities);
+  };
+
+  return models.log.task_log.getUserActivitiesByProject(userId, projectId, startDate, endDate).then(response).catch(next);
+}
+
+var tasksAPI = {
+  getUserTasks: getUserTasks,
+  getUserActivities: getUserActivities,
+  getProjectTasks: getProjectTasks,
+  getProjectActivities: getProjectActivities
+};
 
 exports.default = tasksAPI;
