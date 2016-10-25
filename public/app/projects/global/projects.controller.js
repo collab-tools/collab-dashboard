@@ -9,28 +9,59 @@
     .module('app')
     .controller('projectsCtrl', projectsCtrl);
 
-  projectsCtrl.$inject = ['$scope', '$log', '_', 'moment', 'Projects'];
+  projectsCtrl.$inject = [
+    '$scope', '$log', '$q', '_', 'moment', 'Milestones', 'Tasks', 'Drive', 'Github', 'Projects'
+  ];
 
-  function projectsCtrl($scope, $log, _, moment, Projects) {
+  function projectsCtrl($scope, $log, $q, _, moment,
+    Milestones, Tasks, Drive, Github, Projects) {
     const vm = this;
     const parent = $scope.$parent;
 
     vm.requestData = () => {
-      const start = parent.dateRange.selected.start;
-      const end = parent.dateRange.selected.end;
+      vm.range = {
+        start: parent.dateRange.selected.start,
+        end: parent.dateRange.selected.end,
+        days: moment(parent.dateRange.selected.end).diff(moment(parent.dateRange.selected.start), 'days')
+      };
 
-      const processProjects = (projects) => {
-        vm.projects = _.map(projects.data, (project) => {
+      const stripHeaders = response => _.map(response, 'data');
+      const processResponse = (projects, newProjects, milestonesPartial,
+        tasksPartial, githubPartial, drivePartial) => {
+        const projectsCount = projects.length;
+        newProjects = _.map(newProjects, (project) => {
           project.createdAt = moment(project.createdAt).format('Do MMM YY').toString();
           return project;
         });
-        vm.projectCount = vm.projects.length;
-        vm.usersMean = _.sumBy(vm.projects, project => project.users.length) / vm.projectCount;
+        const newProjectsCount = newProjects.length;
+        const meanProjectSize = _
+          .sumBy(newProjects, project => project.users.length) / newProjectsCount;
+
+        // calculate the number and percentage of active projects
+        const activeProjects = _.unionBy(milestonesPartial, tasksPartial, githubPartial, drivePartial, 'projectId');
+        const activeProjectsCount = activeProjects.length;
+        // build projects modal for view usages
+        vm.projects = {
+          data: projects,
+          count: projectsCount,
+          new: newProjects,
+          newCount: newProjectsCount,
+          meanSize: meanProjectSize,
+          activeCount: activeProjectsCount
+        };
       };
 
-      Projects
-        .getProjects(start, end)
-        .then(processProjects, $log.error);
+      $q
+        .all([
+          Projects.getProjects(0, vm.range.end),
+          Projects.getProjects(vm.range.start, vm.range.end),
+          Milestones.getParticipatingProjects(vm.range.start, vm.range.end),
+          Tasks.getParticipatingProjects(vm.range.start, vm.range.end),
+          Github.getParticipatingProjects(vm.range.start, vm.range.end),
+          Drive.getParticipatingProjects(vm.range.start, vm.range.end)
+        ])
+        .then(stripHeaders, $log.error)
+        .then(_.spread(processResponse), $log.error);
     };
 
     // Initialize controller by setting subtitle and data

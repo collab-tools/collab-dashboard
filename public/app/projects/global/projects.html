@@ -11,7 +11,7 @@
           </span>
         </div>
         <div class="clear">
-          <h4 class="m-a-0 text-md"><a href>{{vm.projectCount}} <span class="text-sm">New Projects</span></a></h4>
+          <h4 class="m-a-0 text-md"><a href>{{vm.projects.newCount}} <span class="text-sm">New Projects</span></a></h4>
         </div>
       </div>
     </div>
@@ -24,7 +24,7 @@
         </div>
         <div class="clear">
           <h4 class="m-a-0 text-md">
-            <a href>{{vm.usersMean}} <span class="text-sm">Mean Members</span></a>
+            <a href>{{vm.projects.meanSize}} <span class="text-sm">Average Project Size</span></a>
           </h4>
         </div>
       </div>
@@ -38,7 +38,7 @@
         </div>
         <div class="clear">
           <h4 class="m-a-0 text-md">
-            <a href>50% <span class="text-sm">Active Projects</span></a>
+            <a href>{{vm.projects.activeCount / vm.projects.count * 100}}% <span class="text-sm">Active Projects</span></a>
           </h4>
         </div>
       </div>
@@ -49,8 +49,8 @@
       <h2>Projects</h2>
     </div>
     <div class="table-responsive">
-      <table ng-if="vm.projects" ui-jp="dataTable" ui-options="{
-        data: {{vm.projects}},
+      <table ng-if="vm.projects.new" ui-jp="dataTable" ui-options="{
+        data: {{vm.projects.new}},
         aoColumns: [
           { mData: 'content',
             mRender: function(data, type, full) {
@@ -59,7 +59,7 @@
             }
           },
           { mRender: function(data, type, full) {
-              return full.githubRepoOwner + '/' + full.githubRepoName;
+              return '<a href=&quot;https://github.com/' + full.githubRepoOwner + '/' + full.githubRepoName + '&quot;>' + full.githubRepoOwner + '/' + full.githubRepoName + '</a>' || 'N/A';
             }
           },
           { mData: 'users',
