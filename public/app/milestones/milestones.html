@@ -44,8 +44,7 @@
           <small>Weight Distribution of Tasks</small>
         </div>
         <div class="box-body">
-          <div class="p-y-md">
-            <div ui-jp="plot" ui-refresh="vm.milestoneTasks" ui-options="
+          <div ui-jp="plot" ui-refresh="vm.milestoneTasks" ui-options="
               {{vm.milestoneTasks.distribution}},
               {
                 series: { pie: { show: true, innerRadius: 0, stroke: { width: 2, color: '#fff' }, label: { show: true, threshold: 0.05 }, tilt: 0.6, startAngle: 30 } },
@@ -55,8 +54,7 @@
                 tooltip: true,
                 tooltipOpts: { content: '%s Tasks: %p.0%' }
               }
-            " style="height:152px"></div>
-          </div>
+            " style="height:222px"></div>
         </div>
       </div>
     </div>
@@ -87,7 +85,7 @@
             tooltip: true,
             tooltipOpts: { content: '%x.0 is %y.4',  defaultTheme: false, shifts: { x: 0, y: -40 } }
             }
-            " style="height:200px"></div>
+            " style="height:222px"></div>
         </div>
       </div>
     </div>

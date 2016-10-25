@@ -45,7 +45,7 @@
         const commitsByDate = _
           .chain(commits)
           .groupBy(commit => moment(commit.date).startOf('day').valueOf())
-          .mapValues(commit => commit.length)
+          .mapValues(commits => commits.length)
           .toPairs()
           .value();
 
@@ -61,21 +61,25 @@
           return sum + Math.pow(pair[1] - meanCommits, 2);
         }, 0) / vm.range.days;
 
+      // build commits modal for view usages
         vm.commits = {
           data: commits,
           count: commitsCount,
           grouped: commitsByDate,
           mean: meanCommits,
-          max: maxPair,
-          min: minPair,
+          max: maxPair ? maxPair[1] : 0,
+          maxDate: maxPair ? moment(parseInt(maxPair[0], 10)).format('DD/MM/YY') : 'N/A',
+          min: minPair ? minPair[1] : 0,
+          minDate: minPair ? moment(parseInt(minPair[0], 10)).format('DD/MM/YY') : 'N/A',
           deviation: deviationCommits
         };
 
-        // build participation and users modal for viuew usages
         // calculate utilization rate using total users count and unique commits
         const participatingCount = participating.length;
         const usersCount = users.length;
         const utilizationRate = _.round(participatingCount / usersCount, 1);
+
+        // build participation and users modal for view usages
         vm.participation = {
           data: participating,
           count: participatingCount,

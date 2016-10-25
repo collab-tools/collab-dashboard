@@ -35,15 +35,17 @@
           return _.every(milestone.tasks, task => task.completedOn);
         });
         const completedMilestonesCount = completedMilestones.length;
-        const completedMilestonesTimes = _.map(completedMilestones, (milestone) => {
+        const completedMilestonesDuration = _.map(completedMilestones, (milestone) => {
           return moment(milestone.deadline).diff(moment(milestone.createdAt), 'hours', true);
         });
-        const completedMilestonesMax = _.max(completedMilestonesTimes);
-        const completedMilestonesMin = _.min(completedMilestonesTimes);
-        const completedMilestonesMean = _.sum(completedMilestonesTimes) / completedMilestonesCount;
-        const completedMilestonesDeviation = _.reduce(completedMilestonesTimes, (sum, time) => {
-          return sum + Math.pow(time - completedMilestonesMean, 2);
-        }, 0) / completedMilestonesCount;
+        const completedMilestonesMax = _.max(completedMilestonesDuration);
+        const completedMilestonesMin = _.min(completedMilestonesDuration);
+        const completedMilestonesMean = _
+          .sum(completedMilestonesDuration) / completedMilestonesCount;
+        const completedMilestonesDeviation = _
+          .reduce(completedMilestonesDuration, (sum, duration) => {
+            return sum + Math.pow(duration - completedMilestonesMean, 2);
+          }, 0) / completedMilestonesCount;
 
         // calculate the number of missed milestones
         const milestonesMissed = _.filter(elapsedMilestones, (milestone) => {

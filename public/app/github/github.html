@@ -51,10 +51,10 @@
       <div class="box">
         <div class="box-header">
           <h3>Commits</h3>
-          <small>Contributions to master logged over time</small>
+          <small>Contributions to <i>Master</i> Branches</small>
         </div>
         <div class="box-body">
-          <div ui-jp="plot" ui-refresh="vm.range" ui-options="
+          <div ng-if="vm.commits.grouped" ui-jp="plot" ui-refresh="vm.commits.grouped" ui-options="
             [{ data: {{vm.commits.grouped}},
               points: { show: true, radius: 3},
               splines: { show: true, tension: 0.45, lineWidth: 0, fill: 0.4}
@@ -100,7 +100,7 @@
               <h4 class="m-a-0 text-md">
                 <a href><span class="text-sm">Standard Deviation (Commits):</span> {{vm.commits.deviation.toFixed(2)}}</a>
               </h4>
-              <small class="text-muted">Max: {{vm.commits.max[1]}} ({{moment(parseInt(vm.commits.max[0]))}}) Min: {{vm.commits.min[1]}} {{vm.commits.min[0]}}</small>
+              <small class="text-muted">Max: {{vm.commits.max}} ({{vm.commits.maxDate}}) Min: {{vm.commits.min}} ({{vm.commits.minDate}})</small>
             </div>
           </div>
         </div>

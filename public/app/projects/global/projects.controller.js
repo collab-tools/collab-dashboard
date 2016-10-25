@@ -35,7 +35,7 @@
 
     // Initialize controller by setting subtitle and data
     (() => {
-      vm.subtitle = 'Projects within Collab';
+      vm.subtitle = 'Projects of Collab';
       vm.requestData();
     })();
   }
