@@ -101,12 +101,24 @@
       return $http.get(`${urlBase}/${userId}/milestones?start=${start}&end=${end}`);
     };
 
+    usersFactory.milestones.getUserActivities = (userId, start, end) => {
+      return $http.get(`${urlBase}/${userId}/milestones/activities?start=${start}&end=${end}`);
+    };
+
     usersFactory.milestones.getAssignedUserMilestones = (userId, start, end) => {
       return $http.get(`${urlBase}/${userId}/milestones/assigned?start=${start}&end=${end}`);
     };
 
     usersFactory.milestones.getTasksByMilestones = (userId, start, end) => {
       return $http.get(`${urlBase}/${userId}/milestones/tasks?start=${start}&end=${end}`);
+    };
+
+    usersFactory.milestones.getActivitiesByProjectMilestones = (userId, projectId, start, end) => {
+      return $http.get(`${urlBase}/${userId}/project/${projectId}/milestones/activities?start=${start}&end=${end}`);
+    };
+
+    usersFactory.milestones.getAssignedProjectMilestones = (userId, projectId, start, end) => {
+      return $http.get(`${urlBase}/${userId}/project/${projectId}/milestones/assigned?start=${start}&end=${end}`);
     };
 
     usersFactory.milestones.getTasksByProjectMilestones = (userId, projectId, start, end) => {
