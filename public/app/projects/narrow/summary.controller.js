@@ -9,30 +9,98 @@
     .module('app')
     .controller('projectSummaryCtrl', projectSummaryCtrl);
 
-  projectSummaryCtrl.$inject = ['$scope', '$stateParams', '$log', '$q', '_', 'moment', 'Projects'];
+  projectSummaryCtrl.$inject = ['$scope', '$state', '$stateParams', '$log', '$q', '_', 'moment', 'Projects'];
 
-  function projectSummaryCtrl($scope, $stateParams, $log, $q, _, moment, Projects) {
+  function projectSummaryCtrl($scope, $state, $stateParams, $log, $q, _, moment, Projects) {
     const vm = this;
     const parent = $scope.$parent;
     const projectId = $stateParams.projectId;
 
-    const retrievalFunctions = [
-      Projects.getProject(projectId),
-      Projects.drive.getFiles(projectId, parent.dateRange.selected.days),
-      Projects.drive.getRevisions(projectId, parent.dateRange.selected.days),
-      Projects.github.getCommits(projectId, parent.dateRange.selected.days),
-      Projects.tasks.getTasks(projectId, parent.dateRange.selected.days),
-      Projects.milestones.getMilestones(projectId, parent.dateRange.selected.days)
-    ];
+    vm.requestData = () => {
+      vm.range = {
+        start: parent.dateRange.selected.start,
+        end: parent.dateRange.selected.end,
+        days: moment(parent.dateRange.selected.end).diff(moment(parent.dateRange.selected.start), 'days')
+      };
 
-    // Helper function to strip metadata from HTTP response
-    const processResponse = (responses) => {
-      return _.map(responses, (response) => {
-        return response.data;
-      });
+      const stripHeaders = response => _.map(response, 'data');
+      const processResponse = (project, commits, releases, contributors, stats, files,
+        changes, tasks, taskActivities, milestones, milestonesActivities) => {
+        // build projects modal for view usages
+        vm.project = {
+          data: project
+        };
+
+        // build github modal for view usages
+        vm.github = {
+          commits: {
+            data: commits,
+          },
+          releases: {
+            data: releases
+          }
+        };
+
+        // build drive modal for view usages
+        vm.drive = {
+          files: {
+            data: files
+          },
+          changes: {
+            data: changes
+          }
+        };
+
+        // build tasks modal for view usages
+        vm.tasks = {
+          data: tasks,
+          activities: { data: taskActivities }
+        };
+
+        // build milestones modal for view usages
+        vm.milestones = {
+          data: milestones,
+          activities: { data: milestonesActivities }
+        };
+      };
+
+      $q
+        .all([
+          Projects.getProject(projectId),
+          Projects.github.getCommits(projectId, vm.range.start, vm.range.end),
+          Projects.github.getReleases(projectId, vm.range.start, vm.range.end),
+          Projects.github.getContributors(projectId),
+          Projects.github.getStatistics(projectId),
+          Projects.drive.getFiles(projectId, vm.range.start, vm.range.end),
+          Projects.drive.getChanges(projectId, vm.range.start, vm.range.end),
+          Projects.tasks.getTasks(projectId, vm.range.start, vm.range.end),
+          Projects.tasks.getActivities(projectId, vm.range.start, vm.range.end),
+          Projects.milestones.getMilestones(projectId, vm.range.start, vm.range.end),
+          Projects.milestones.getActivities(projectId, vm.range.start, vm.range.end)
+        ])
+        .then(stripHeaders, $log.error)
+        .then(_.spread(processResponse), $log.error);
     };
 
-    const processPayload = (project, files, revisions, commits, tasks, milestones) => {
+    (() => {
+      $state.current.data = { title: 'Project: Genesis' };
+      vm.subtitle = 'Summary on Project Genesis';
+      vm.requestData();
+    })();
+  }
+})();
+
+
+/**
+       vm.p_l_3 = [
+      [1, 2],
+      [2, 1.6],
+      [3, 2.4],
+      [4, 2.1],
+      [5, 1.7],
+      [6, 1.5],
+      [7, 1.7]
+    ];
       vm.project = project;
       vm.title = `Project Overview: ${project.content}`;
       vm.subtitle = `Statistics on ${project.content} Activities`;
@@ -175,16 +243,4 @@
       .all(retrievalFunctions)
       .then(processResponse)
       .then(processPayload);
-
-    // TODO: To be replaced with dynamic data
-    vm.p_l_3 = [
-      [1, 2],
-      [2, 1.6],
-      [3, 2.4],
-      [4, 2.1],
-      [5, 1.7],
-      [6, 1.5],
-      [7, 1.7]
-    ];
-  }
-})();
+  **/

@@ -25,8 +25,7 @@
       };
 
       const stripHeaders = response => _.map(response, 'data');
-      const processResponse = (newUsers, users, milestonesPartial, tasksPartial,
-        githubPartial, drivePartial) => {
+      const processResponse = (newUsers, users, milestonesPartial, tasksPartial, githubPartial, drivePartial) => {
         // format date of user createdAt to human readable format
         newUsers = _.map(newUsers, (user) => {
           user.createdAt = moment(user.createdAt).format('Do MMM YY').toString();

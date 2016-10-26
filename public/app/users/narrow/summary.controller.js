@@ -10,20 +10,94 @@
     .controller('userSummaryCtrl', userSummaryCtrl);
 
   userSummaryCtrl.$inject = [
-    '$scope', '$state', '$stateParams', '$log', '$q', '_', 'Users', 'Projects'
+    '$scope', '$state', '$stateParams', '$log', '$q', '_', 'moment', 'Users', 'Projects'
   ];
 
-  function userSummaryCtrl($scope, $state, $stateParams, $log, $q, _, Users, Projects) {
+  function userSummaryCtrl($scope, $state, $stateParams, $log, $q, _, moment, Users, Projects) {
     const vm = this;
     const parent = $scope.$parent;
+    const userId = $stateParams.userId;
 
-    $state.current.data.title = 'User: Hooi Tong';
-    vm.subtitle = 'Project:';
-    vm.displayProjects = true;
+    vm.requestData = () => {
+      vm.range = {
+        start: parent.dateRange.selected.start,
+        end: parent.dateRange.selected.end,
+        days: moment(parent.dateRange.selected.end).diff(moment(parent.dateRange.selected.start), 'days')
+      };
 
+      const stripHeaders = response => _.map(response, 'data');
+      const processResponse = (user, projects, commits, files, changes,
+        tasks, tasksActivities, milestones, milestonesActivities) => {
+        vm.user = {
+          data: user,
+          projects: { data: projects },
+          commits: { data: commits },
+          files: { data: files },
+          changes: { data: changes },
+          tasks: { data: tasks, activities: tasksActivities },
+          milestones: { data: milestones, activities: milestonesActivities }
+        };
+      };
+      const retrieveProjectsActivities = () => {
+        const promises = [];
+        _.forEach(vm.user.projects.data, (project) => {
+          promises.push($q.all([
+            Projects.github.getCommits(project.id, vm.range.start, vm.range.end),
+            Projects.drive.getFiles(project.id, vm.range.start, vm.range.end),
+            Projects.drive.getChanges(project.id, vm.range.start, vm.range.end),
+            Projects.tasks.getTasks(project.id, vm.range.start, vm.range.end),
+            Projects.tasks.getActivities(project.id, vm.range.start, vm.range.end),
+            Projects.milestones.getMilestones(project.id, vm.range.start, vm.range.end),
+            Projects.milestones.getActivities(project.id, vm.range.start, vm.range.end)
+          ]));
+        });
+        return $q.all(promises);
+      };
+      const processProjects = (projectsResponse) => {
+        vm.projects = {};
+        const processProject = (commits, files, changes, tasks, tasksActivities, milestones, milestonesActivities) => {
+          // build project modal
+          vm.projects[vm.user.projects.data[0].id] = {
+            commits: { data: commits },
+            files: { data: files },
+            changes: { data: changes },
+            tasks: { data: tasks, activities: tasksActivities },
+            milestones: { data: milestones, activities: milestonesActivities }
+          };
+        };
+        _.forEach(projectsResponse, (projectResponse) => {
+          projectResponse = _.map(projectResponse, 'data');
+          _.spread(processProject)(projectResponse);
+        });
+      };
+
+      $q
+        .all([
+          Users.getUser(userId),
+          Users.getUserProjects(userId),
+          Users.github.getUserCommits(userId, vm.range.start, vm.range.end),
+          Users.drive.getUserFiles(userId, vm.range.start, vm.range.end),
+          Users.drive.getUserChanges(userId, vm.range.start, vm.range.end),
+          Users.tasks.getUserTasks(userId, vm.range.start, vm.range.end),
+          Users.tasks.getUserActivities(userId, vm.range.start, vm.range.end),
+          Users.milestones.getUserMilestones(userId, vm.range.start, vm.range.end),
+          Users.milestones.getUserActivities(userId, vm.range.start, vm.range.end)
+        ])
+        .then(stripHeaders, $log.error)
+        .then(_.spread(processResponse), $log.error)
+        .then(retrieveProjectsActivities, $log.error)
+        .then(processProjects, $log.error);
+    };
+
+    // Initialize controller by setting subtitle and requesting data
+    (() => {
+      $state.current.data.title = 'User: Hooi Tong';
+      vm.subtitle = 'Project';
+      vm.displayProjects = true;
+      vm.defaultProject = $stateParams.projectId;
+      vm.requestData();
+    })();
     /**
-        const userId = $stateParams.userId;
-        const projectId = $stateParams.projectId;
 
         const retrievalFunctions = [
           Users.projects.getProject(userId, projectId),
