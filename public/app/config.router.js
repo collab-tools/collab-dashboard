@@ -41,8 +41,8 @@
     const cloud = 'cloud/cloud.html';
     const milestones = 'milestones/milestones.html';
     const tasks = 'tasks/tasks.html';
-    const userOverview = 'users/narrow/overview.html';
-    const projectOverview = 'projects/narrow/overview.html';
+    const userSummary = 'users/narrow/summary.html';
+    const projectSummary = 'projects/narrow/summary.html';
     const profile = 'profile/profile.html';
 
     // Misc Templates Relative Paths
@@ -88,11 +88,11 @@
       })
       .state('app.project', {
         url: '/project/:projectId',
-        templateUrl: projectOverview,
-        controller: 'projectOverviewCtrl',
+        templateUrl: projectSummary,
+        controller: 'projectSummaryCtrl',
         controllerAs: 'vm',
         resolve: load([
-          'ui.select', 'projects/narrow/overview.controller.js'
+          'ui.select', 'projects/narrow/summary.controller.js'
         ])
       })
       .state('app.users', {
@@ -109,11 +109,14 @@
       })
       .state('app.user', {
         url: '/user/:userId',
-        templateUrl: userOverview,
-        controller: 'userOverviewCtrl',
+        templateUrl: userSummary,
+        data: {
+          title: 'User'
+        },
+        controller: 'userSummaryCtrl',
         controllerAs: 'vm',
         resolve: load([
-          'ui.select', 'users/narrow/overview.controller.js'
+          'ui.select', 'users/narrow/summary.controller.js'
         ])
       })
       .state('app.github', {

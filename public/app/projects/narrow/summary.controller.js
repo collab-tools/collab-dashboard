@@ -1,17 +1,17 @@
 /**
  * Controller must populate all the information required by a project's interface.
  * Refer to documentation for specific requirements.
- * @namespace ProjectOverviewCtrl
+ * @namespace ProjectSummaryCtrl
  */
 
 (() => {
   angular
     .module('app')
-    .controller('projectOverviewCtrl', projectOverviewCtrl);
+    .controller('projectSummaryCtrl', projectSummaryCtrl);
 
-  projectOverviewCtrl.$inject = ['$scope', '$stateParams', '$log', '$q', '_', 'moment', 'Projects'];
+  projectSummaryCtrl.$inject = ['$scope', '$stateParams', '$log', '$q', '_', 'moment', 'Projects'];
 
-  function projectOverviewCtrl($scope, $stateParams, $log, $q, _, moment, Projects) {
+  function projectSummaryCtrl($scope, $stateParams, $log, $q, _, moment, Projects) {
     const vm = this;
     const parent = $scope.$parent;
     const projectId = $stateParams.projectId;
