@@ -31,6 +31,14 @@
           data: project
         };
 
+        // compute mean and deviation of commit time
+
+        // compute number of lines added and removed
+
+        // compute contribution deviation between members
+
+        // compute distribution of commits over time for everyone and project
+
         // build github modal for view usages
         vm.github = {
           commits: {
@@ -40,6 +48,12 @@
             data: releases
           }
         };
+
+        // map revision type and mime type of each file of activity
+
+        // compute mean and deviation of revision time
+
+        // compute contribution deviation of revisions between members
 
         // build drive modal for view usages
         vm.drive = {
