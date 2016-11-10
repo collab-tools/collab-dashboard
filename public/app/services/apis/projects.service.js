@@ -73,8 +73,8 @@
       return $http.get(`${urlBase}/${projectId}/tasks/activities?start=${start}&end=${end}`);
     };
 
-    projectsFactory.milestones.getMilestones = (projectId, start, end) => {
-      return $http.get(`${urlBase}/${projectId}/milestones?start=${start}&end=${end}`);
+    projectsFactory.milestones.getMilestones = (elapsed, projectId, start, end) => {
+      return $http.get(`${urlBase}/${projectId}/milestones?elapsed=${elapsed}&start=${start}&end=${end}`);
     };
 
     projectsFactory.milestones.getActivities = (projectId, start, end) => {

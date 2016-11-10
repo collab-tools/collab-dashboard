@@ -9,22 +9,31 @@ const models = new Storage();
 function getMilestones(req, res, next) {
   req.query.start = parseInt(req.query.start, 10) || constants.defaults.startDate;
   req.query.end = parseInt(req.query.end, 10) || constants.defaults.endDate;
+  if (req.query.elapsed) {
+    req.checkQuery('elapsed', `elapsed ${constants.templates.error.invalidData}`).isBoolean();
+  }
   req.checkParams('projectId', `projectId ${constants.templates.error.missingParam}`).notEmpty();
   req.checkQuery('start', `start ${constants.templates.error.invalidData}`).isInt({ min: 0 });
   req.checkQuery('end', `end ${constants.templates.error.invalidData}`).isInt({ min: 0 });
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
+  const elapsed = JSON.parse(req.query.elapsed);
   const projectId = req.params.projectId;
   const startDate = moment(req.query.start).format('YYYY-MM-DD HH:mm:ss');
   const endDate = moment(req.query.end).format('YYYY-MM-DD HH:mm:ss');
-
+  const evalQuery = () => {
+    if (elapsed) {
+      return models.app.milestone.getElapsedMilestonesByProject(projectId, startDate, endDate);
+    }
+    return models.app.milestone.getMilestonesByProject(projectId, startDate, endDate);
+  };
   const response = (milestones) => {
     if (_.isNil(milestones)) return next(boom.badRequest(constants.templates.error.badRequest));
     res.status(200).json(milestones);
   };
 
-  return models.app.milestone.getMilestonesByProject(projectId, startDate, endDate)
+  return evalQuery()
     .then(response)
     .catch(next);
 }

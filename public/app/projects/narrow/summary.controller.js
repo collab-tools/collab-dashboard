@@ -9,9 +9,11 @@
     .module('app')
     .controller('projectSummaryCtrl', projectSummaryCtrl);
 
-  projectSummaryCtrl.$inject = ['$scope', '$state', '$stateParams', '$log', '$q', '_', 'moment', 'Projects'];
+  projectSummaryCtrl.$inject = [
+    '$scope', '$state', '$stateParams', '$log', '$q', '_', 'moment', 'googleMIME', 'Projects'
+  ];
 
-  function projectSummaryCtrl($scope, $state, $stateParams, $log, $q, _, moment, Projects) {
+  function projectSummaryCtrl($scope, $state, $stateParams, $log, $q, _, moment, googleMIME, Projects) {
     const vm = this;
     const parent = $scope.$parent;
     const projectId = $stateParams.projectId;
@@ -24,58 +26,269 @@
       };
 
       const stripHeaders = response => _.map(response, 'data');
-      const processResponse = (project, commits, releases, contributors, stats, files,
-        changes, tasks, taskActivities, milestones, milestonesActivities) => {
+      const processResponse = (project, commits, releases, contributors, stats, driveActivities, files,
+        changes, tasks, taskActivities, milestones, elapsedMilestones, milestonesActivities) => {
+        const projectUsers = project.users;
+        const projectUsersCount = projectUsers.length;
+        const projectSpan = moment().diff(moment(project.createdAt), 'days');
+
         // build projects modal for view usages
         vm.project = {
-          data: project
+          data: project,
+          users: projectUsers,
+          usersCount: projectUsersCount,
+          span: projectSpan
         };
 
-        // compute mean and deviation of commit time
+        // create basic maps from alias to display name
+        vm.githubDisplay = {};
+        vm.emailDisplay = {};
+        vm.idDisplay = {};
+        _.forEach(projectUsers, (user) => {
+          vm.githubDisplay[user.githubLogin] = user.displayName;
+          vm.emailDisplay[user.email] = user.displayName;
+          vm.idDisplay[user.id] = user.displayName;
+        });
 
+        // configure titles and subtitles based on retrieved project
+        $state.current.data = { title: `Project: ${vm.project.data.content}` };
+        vm.subtitle = `Summary on ${vm.project.data.content}`;
+
+        // process commits to retrieve length, deviation, commits overtime
+        const commitsCount = commits.length;
+
+        // map each date grouping to number of commits on that day
+        const commitsByDate = _
+          .chain(commits)
+          .groupBy(commit => moment(commit.date).startOf('day').valueOf())
+          .mapValues(commits => commits.length)
+          .toPairs()
+          .value();
+
+        // calculate mean and standard deviation
+        const meanCommits = commitsCount / projectSpan;
+        const deviationCommits = _.reduce(commitsByDate, (sum, pair) => {
+          return sum + Math.pow(pair[1] - meanCommits, 2);
+        }, 0) / projectSpan;
         // compute number of lines added and removed
+        const linesChanged = _.reduce(stats.codes, (sum, week) => {
+          if (moment(week[0]).isSameOrAfter(vm.range.start, 'day')) {
+            sum[0] += week[1];
+            sum[1] += Math.abs(week[2]);
+          }
+          return sum;
+        }, [0, 0]);
 
-        // compute contribution deviation between members
+        // compute distribution of commits over time for each member
+        const commitsByUser = _
+          .chain(commits)
+          .groupBy(commits, 'githubLogin')
+          .mapKeys((value, key) => _.find(projectUsers, 'githubLogin').displayName)
+          .value();
+        const commitsCountByUser = _
+          .mapValues(commitsByUser, value => value.length);
+        const commitsCountByUserDate = _
+          .mapValues(commitsByUser, (commits) => {
+            return _
+              .chain(commits)
+              .groupBy(commit => moment(commit.date).startOf('day').valueOf())
+              .mapValues(commits => commits.length)
+              .toPairs()
+              .value();
+          });
+        const commitsPercentageByUser = _
+          .mapValues(commitsCountByUser, value => value / commitsCount);
 
-        // compute distribution of commits over time for everyone and project
+        // compute contribution mean and deviation between members
+        const meanUserCommits = commitsCount / projectUsersCount;
+        const deviationUserCommits = _.reduce(commitsCountByUser, (sum, count) => {
+          return sum + Math.pow(count - meanUserCommits, 2);
+        }, 0) / projectUsersCount;
 
         // build github modal for view usages
         vm.github = {
           commits: {
             data: commits,
+            count: commitsCount,
+            groupedDate: commitsByDate,
+            groupedUsers: commitsCountByUserDate,
+            groupedUsersPercentage: commitsPercentageByUser,
+            mean: meanCommits,
+            deviation: deviationCommits,
+            lines: linesChanged,
+            userMean: meanUserCommits,
+            userDeviation: deviationUserCommits
           },
           releases: {
             data: releases
           }
         };
 
-        // map revision type and mime type of each file of activity
+        // calculate number of changes made and distribution of changes over time
+        const filesCount = files.length;
+        const changesCount = changes.length;
+        const changesByDate = _
+          .chain(changes)
+          .groupBy(change => moment(change.date).startOf('day').valueOf())
+          .mapValues(changes => changes.length)
+          .toPairs()
+          .value();
 
-        // compute mean and deviation of revision time
+        // calculate mean and deviation of changes
+        const meanChanges = changesCount / projectSpan;
+        const maxChangePair = _.maxBy(changesByDate, (dateCount) => {
+          return dateCount[1];
+        });
+        const minChangePair = _.minBy(changesByDate, (dateCount) => {
+          return dateCount[1];
+        });
+        const deviationChanges = _.reduce(changesByDate, (sum, pair) => {
+          return sum + Math.pow(pair[1] - meanChanges, 2);
+        }, 0) / projectSpan;
 
-        // compute contribution deviation of revisions between members
+        // compute distribution of changes over time for each member
+        const changesByUser = _.groupBy(changes, 'email');
+        const changesCountByUser = _.map(changesByUser, value => value.length);
+
+        // compute contribution deviation of changes between members
+        const meanUserChanges = changesCount / projectUsersCount;
+        const deviationUserChanges = _.reduce(changesCountByUser, (sum, count) => {
+          return sum + Math.pow(count - meanUserChanges, 2);
+        }, 0) / projectUsersCount;
+
+        driveActivities = _.map(driveActivities, (activity) => {
+          if (!activity.fileExtension) activity.fileExtension = googleMIME[activity.fileMIME];
+          return activity;
+        });
+
+        const driveActivitiesCount = driveActivities.length;
 
         // build drive modal for view usages
         vm.drive = {
+          activities: {
+            data: driveActivities,
+            count: driveActivitiesCount
+          },
           files: {
-            data: files
+            data: files,
+            count: filesCount,
           },
           changes: {
-            data: changes
+            data: changes,
+            count: changesCount,
+            groupedDate: changesByDate,
+            groupedUsers: changesCountByUser,
+            mean: meanChanges,
+            max: maxChangePair ? maxChangePair[1] : 0,
+            maxDate: maxChangePair ? moment(parseInt(maxChangePair[0], 10)).format('DD/MM/YY') : 'N/A',
+            min: minChangePair ? minChangePair[1] : 0,
+            minDate: minChangePair ? moment(parseInt(minChangePair[0], 10)).format('DD/MM/YY') : 'N/A',
+            deviation: deviationChanges,
+            userMean: meanUserChanges,
+            userDeviation: deviationUserChanges
           }
         };
+
+        // calculate task activities breakdown
+        const tasksCount = tasks.length;
+        const createdTasks = _.filter(taskActivities, { activity: 'C' });
+        const createdTasksCount = createdTasks.length;
+        const doneTasks = _.filter(taskActivities, { activity: 'D' });
+        const doneTasksCount = doneTasks.length;
+        const pendingTasks = _.filter(tasks, { completedOn: null });
+        const pendingTasksCount = pendingTasks.length;
+        const assignedTasks = _.pull(tasks, { assigneeId: null });
+        const assignedTasksCount = assignedTasks.length;
+
+        // compute distribution of tasks over time for each member
+        const tasksByUser = _.groupBy(tasks, 'assigneeId');
+        const tasksCountByUser = _.map(tasksByUser, value => value.length);
+
+        // compute contribution deviation of tasks between members
+        const meanUserTasks = assignedTasksCount / projectUsersCount;
+        const meanUserDeviation = _.reduce(tasksCountByUser, (sum, count) => {
+          return sum + Math.pow(count - meanUserTasks, 2);
+        }, 0) / projectUsersCount;
+
+        const taskActivitiesCount = taskActivities.length;
+        taskActivities = _.map(taskActivities, (activity) => {
+          activity.task = _.find(tasks, { id: activity.taskId });
+          return activity;
+        });
 
         // build tasks modal for view usages
         vm.tasks = {
           data: tasks,
-          activities: { data: taskActivities }
+          count: tasksCount,
+          activities: {
+            data: taskActivities,
+            count: taskActivitiesCount
+          },
+          created: createdTasks,
+          createdCount: createdTasksCount,
+          done: doneTasks,
+          doneCount: doneTasksCount,
+          pending: pendingTasks,
+          pendingCount: pendingTasksCount,
+          assigned: assignedTasks,
+          assignedCount: assignedTasksCount,
+          userMean: meanUserTasks,
+          userDeviation: meanUserDeviation
         };
+
+        // calculate the number of milestones completed and time taken to complete
+        const milestonesCount = milestones.length;
+        const elapsedMilestonesCount = elapsedMilestones.length;
+        const completedMilestones = _.filter(elapsedMilestones, (milestone) => {
+          return _.every(milestone.tasks, task => task.completedOn);
+        });
+        const completedMilestonesCount = completedMilestones.length;
+        const completedMilestonesDuration = _.map(completedMilestones, (milestone) => {
+          return moment(milestone.deadline).diff(moment(milestone.createdAt), 'hours', true);
+        });
+        const completedMilestonesMax = _.max(completedMilestonesDuration);
+        const completedMilestonesMin = _.min(completedMilestonesDuration);
+        const completedMilestonesMean = _
+          .sum(completedMilestonesDuration) / completedMilestonesCount;
+        const completedMilestonesDeviation = _
+          .reduce(completedMilestonesDuration, (sum, duration) => {
+            return sum + Math.pow(duration - completedMilestonesMean, 2);
+          }, 0) / completedMilestonesCount;
+
+        // calculate the number of missed milestones
+        const milestonesMissed = _.filter(elapsedMilestones, (milestone) => {
+          return _.some(milestone.tasks, task => !task.completedOn);
+        });
+        const milestonesMissedCount = milestonesMissed.length;
+        const completionRate = completedMilestonesCount / elapsedMilestonesCount;
+
+        const milestonesActivitiesCount = milestonesActivities.length;
+        milestonesActivities = _.map(milestonesActivities, (activity) => {
+          activity.milestone = _.find(milestones, { id: activity.milestoneId });
+          return activity;
+        });
 
         // build milestones modal for view usages
         vm.milestones = {
           data: milestones,
-          activities: { data: milestonesActivities }
+          activities: {
+            data: milestonesActivities,
+            count: milestonesActivitiesCount,
+          },
+          count: milestonesCount,
+          elapsed: elapsedMilestones,
+          elapsedCount: elapsedMilestonesCount,
+          completed: completedMilestones,
+          completedMax: completedMilestonesMax,
+          completedMin: completedMilestonesMin,
+          completedCount: completedMilestonesCount,
+          completedMean: completedMilestonesMean,
+          completedDeviation: completedMilestonesDeviation,
+          missed: milestonesMissed,
+          missedCount: milestonesMissedCount,
+          rate: completionRate
         };
+
       };
 
       $q
@@ -85,11 +298,13 @@
           Projects.github.getReleases(projectId, vm.range.start, vm.range.end),
           Projects.github.getContributors(projectId),
           Projects.github.getStatistics(projectId),
+          Projects.drive.getActivities(projectId, vm.range.start, vm.range.end),
           Projects.drive.getFiles(projectId, vm.range.start, vm.range.end),
           Projects.drive.getChanges(projectId, vm.range.start, vm.range.end),
           Projects.tasks.getTasks(projectId, vm.range.start, vm.range.end),
           Projects.tasks.getActivities(projectId, vm.range.start, vm.range.end),
-          Projects.milestones.getMilestones(projectId, vm.range.start, vm.range.end),
+          Projects.milestones.getMilestones(false, projectId, vm.range.start, vm.range.end),
+          Projects.milestones.getMilestones(true, projectId, vm.range.start, vm.range.end),
           Projects.milestones.getActivities(projectId, vm.range.start, vm.range.end)
         ])
         .then(stripHeaders, $log.error)
@@ -97,164 +312,7 @@
     };
 
     (() => {
-      $state.current.data = { title: 'Project: Genesis' };
-      vm.subtitle = 'Summary on Project Genesis';
       vm.requestData();
     })();
   }
 })();
-
-
-/**
-       vm.p_l_3 = [
-      [1, 2],
-      [2, 1.6],
-      [3, 2.4],
-      [4, 2.1],
-      [5, 1.7],
-      [6, 1.5],
-      [7, 1.7]
-    ];
-      vm.project = project;
-      vm.title = `Project Overview: ${project.content}`;
-      vm.subtitle = `Statistics on ${project.content} Activities`;
-
-      vm.files = files;
-      vm.revisions = revisions;
-      vm.commits = commits;
-      vm.tasks = tasks;
-      vm.milestones = milestones;
-
-      // Retrieve relevant information from project
-      const projectCreationTime = moment(vm.project.created_at, 'YYYY-MM-DD HH:mm:ss');
-      const currentDate = moment();
-      const elapsedDuration = currentDate.diff(projectCreationTime, 'hours');
-      vm.members = vm.project.members;
-      vm.memberCount = project.members.length;
-
-      // Calculate breakdown of commits (team)
-      vm.commitCount = vm.commits.length;
-      vm.locAddition = _.sumBy(vm.commits, 'additions');
-      vm.locDeletion = _.sumBy(vm.commits, 'deletions');
-      vm.locChanged = vm.locAddition + vm.locDeletion;
-
-      vm.meanCommitTime = elapsedDuration / vm.commitCount;
-      vm.deviationCommitTime = (_.reduce(vm.commits, (vsum, hours) => {
-        return vsum + Math.pow(hours - vm.meanCommitTime, 2);
-      })) / vm.commitCount;
-
-      vm.memberCommits = _.map(vm.project.members, (member) => {
-        return _.filter(vm.commits, { githubLogin: member.github_login });
-      });
-
-      vm.memberPercentage = _.map(vm.memberCommits, (commits) => {
-        return commits.length;
-      });
-
-      // Calculate team comparison of commits
-      vm.commitMean = vm.commitCount / vm.memberCount;
-      vm.commitDeviation = _.reduce(vm.memberCommits, (vsum, commits) => {
-        return vsum + Math.pow(commits - vm.commitMean, 2);
-      }) / vm.commitCount;
-
-      // Calculate breakdown of revisions (team)
-      vm.revisionCount = vm.revisions.length;
-      vm.revisionTimeMean = elapsedDuration / vm.revisionCount;
-      vm.revisionTimeDeviation = _.reduce(vm.revisions, (vsum, hours) => {
-        return vsum + Math.pow(hours - vm.revisionTimeMean, 2);
-      }) / vm.revisionsCount;
-
-      // Calculate deviation of revisions (individual)
-      vm.memberRevisions = _.map(vm.project.members, (member) => {
-        return _.filter(vm.revisions, { googleId: member.google_id });
-      });
-      vm.revisionMean = vm.revisionCount / vm.memberCount;
-      vm.revisionDeviation = _.reduce(vm.memberRevisions, (vsum, revisions) => {
-        return vsum + Math.pow(revisions - vm.revisionMean, 2);
-      }) / vm.revisionCount;
-
-      // Calculate breakdown of files (team)
-      vm.fileCount = vm.files.length;
-
-      // Calculate breakdown of tasks (team)
-      vm.tCreated = _.filter(vm.tasks, { activity: 'C' });
-      vm.tCreatedCount = vm.tCreated.length;
-      vm.tDone = _.filter(vm.tasks, { activity: 'D' });
-      vm.tDoneCount = vm.tDone.length;
-      vm.tAssigned = _.filter(vm.tasks, { activity: 'A' });
-      vm.tAssignedCount = vm.tAssigned.length;
-      vm.tCompletedStart = _.sortBy(_.intersectionBy(vm.tCreated, vm.tDone, 'taskId'), 'taskId');
-      vm.tCompletedEnd = _.intersectionBy(vm.tDone, vm.tCreated, 'taskId');
-      vm.tCompletedCount = vm.tCompletedStart.length;
-
-      if (vm.tCompletedEnd.length !== vm.tCompletedStart.length) $log.error('Something went wrong.');
-      else {
-        // Compute time difference for each task
-        vm.tCompletionDurations = _.map(_.zip(vm.tCompletedStart, vm.tCompletedEnd),
-          (activityPair) => {
-            const startDate = moment(activityPair[0], 'YYYY-MM-DD HH:mm:ss');
-            const endDate = moment(activityPair[1], 'YYYY-MM-DD HH:mm:ss');
-            return endDate.diff(startDate, 'minutes');
-          });
-
-        // Calculate completion mean time as well as standard deviation
-        // Naive implementation: Double Reduce following formula for mean and SD
-        vm.tMeanCompletion = (_.reduce(vm.tCompletionDurations, (sum, minutes) => {
-          return sum + minutes;
-        })) / vm.tCompletionDurations.length;
-
-        vm.tDeviationCompletion = (_.reduce(vm.tCompletionDurations, (vsum, minutes) => {
-          return vsum + Math.pow(minutes - vm.tMeanCompletion, 2);
-        })) / vm.tCompletionDurations.length;
-      }
-
-      // Calculate deviation of tasks assignees (individual)
-      vm.memberTasksAssigned = _.map(vm.project.members, (member) => {
-        return _.filter(vm.tasks, { activity: 'A', userId: member.id });
-      });
-
-      vm.memberTasksAssignedCount = _.map(vm.memberTasksAssigned, (tasks) => {
-        return tasks.length;
-      });
-
-      vm.tasksAssignedMean = vm.tAssignedCount / vm.memberCount;
-      vm.tasksAssignedDeviation = _.reduce(vm.memberTasksAssignedCount, (vsum, assignedCount) => {
-        return vsum + Math.pow(assignedCount - vm.tasksAssignedMean, 2);
-      }) / vm.memberCount;
-
-      // Calculate breakdown of milestones (team)
-      vm.msCreated = _.filter(vm.milestones, { activity: 'C' });
-      vm.msCreatedCount = vm.msCreated.length;
-      vm.msDone = _.filter(vm.milestones, { activity: 'D' });
-      vm.msDoneCount = vm.msDone.length;
-      vm.msCompletedStart = _.sortBy(_.intersectionBy(vm.msCreated, vm.msDone, 'milestoneId'), 'milestoneId');
-      vm.msCompletedEnd = _.intersectionBy(vm.msDone, vm.msCreated, 'milestoneId');
-      vm.msCompletedCount = vm.msCompletedStart.length;
-
-      if (vm.msCompletedEnd.length !== vm.msCompletedStart.length) $log.error('Something went wrong.');
-      else {
-        // Compute time difference for each milestone
-        vm.msCompletedDurations = _.map(
-          _.zip(vm.msCompletedStart, vm.msCompletedEnd), (activityPair) => {
-            const startDate = moment(activityPair[0], 'YYYY-MM-DD HH:mm:ss');
-            const endDate = moment(activityPair[1], 'YYYY-MM-DD HH:mm:ss');
-            return endDate.diff(startDate, 'minutes');
-          });
-
-        // Calculate completion mean time as well as standard deviation
-        // Naive implementation: Double Reduce following formula for mean and SD
-        vm.msMeanCompleted = (_.reduce(vm.msCompletedDurations, (sum, minutes) => {
-          return sum + minutes;
-        })) / vm.msCompletedDurations.length;
-
-        vm.msDeviationCompleted = (_.reduce(vm.msCompletedDurations, (vsum, minutes) => {
-          return vsum + Math.pow(minutes - vm.msMeanCompleted, 2);
-        })) / vm.msCompletedDurations.length;
-      }
-    };
-
-    $q
-      .all(retrievalFunctions)
-      .then(processResponse)
-      .then(processPayload);
-  **/

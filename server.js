@@ -1,17 +1,18 @@
 // Packages & Dependencies
 // ====================================================
-import express from 'express';
-import compression from 'compression';
 import bodyParser from 'body-parser';
-import helmet from 'helmet';
-import morgan from 'morgan';
-import hpp from 'hpp';
-import config from 'config';
 import boom from 'boom';
+import compression from 'compression';
+import config from 'config';
+import cors from 'cors';
+import express from 'express';
+import fs from 'fs';
+import helmet from 'helmet';
+import hpp from 'hpp';
+import morgan from 'morgan';
 import validator from 'express-validator';
 import winston from 'winston';
 import winstonRotate from 'winston-daily-rotate-file';
-import fs from 'fs';
 
 const app = express();
 const isProduction = app.get('env') === 'production';
@@ -31,12 +32,7 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 // configure app to handle CORS requests
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
-  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization');
-  next();
-});
+app.use(cors());
 
 // log all API requests to console
 app.use(morgan('dev'));

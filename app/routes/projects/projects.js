@@ -15,7 +15,7 @@ function getProject(req, res, next) {
 
   const response = (project) => {
     if (_.isNil(project)) return next(boom.badRequest(constants.templates.error.badRequest));
-    res.status(200).json(project);
+    res.status(200).json(_.head(project));
   };
 
   return models.app.project.getProjectWithMembers(projectId)

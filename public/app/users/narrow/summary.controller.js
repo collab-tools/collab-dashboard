@@ -37,6 +37,9 @@
           tasks: { data: tasks, activities: tasksActivities },
           milestones: { data: milestones, activities: milestonesActivities }
         };
+
+        // configure titles based on user name
+        $state.current.data.title += vm.user.displayName;
       };
       const retrieveProjectsActivities = () => {
         const promises = [];
@@ -91,7 +94,6 @@
 
     // Initialize controller by setting subtitle and requesting data
     (() => {
-      $state.current.data.title = 'User: Hooi Tong';
       vm.subtitle = 'Project';
       vm.displayProjects = true;
       vm.defaultProject = $stateParams.projectId;

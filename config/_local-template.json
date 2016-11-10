@@ -8,5 +8,9 @@
     "password": ""
   },
   "jwt_secret": "",
-  "developer_key": ""
+  "developer_key": "",
+  "github": {
+    "client_id": "",
+    "client_secret": ""
+  }
 }

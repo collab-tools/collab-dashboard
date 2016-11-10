@@ -49,7 +49,8 @@
       <h2>Projects</h2>
     </div>
     <div class="table-responsive">
-      <table ng-if="vm.projects.new" ui-jp="dataTable" ui-options="{
+      <table ng-if="vm.projects.new" ui-jp="dataTable" ui-refresh="vm.projects.new" ui-options="{
+        destroy: true,
         data: {{vm.projects.new}},
         aoColumns: [
           { mData: 'content',

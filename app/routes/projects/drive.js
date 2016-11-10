@@ -24,7 +24,7 @@ function getFiles(req, res, next) {
     res.status(200).json(files);
   };
 
-  return models.log.file_log.getFiles(projectId, null, startDate, endDate)
+  return models.log.file_log.getFiles(null, projectId, startDate, endDate)
     .then(response)
     .catch(next);
 }
