@@ -15,7 +15,7 @@ function getUser(req, res, next) {
 
   const response = (user) => {
     if (_.isNil(user)) return next(boom.badRequest(constants.templates.error.badRequest));
-    res.status(200).json(user);
+    res.status(200).json(_.head(user));
   };
 
   return models.app.user.getUserWithProjects(userId)

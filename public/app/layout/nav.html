@@ -1,4 +1,13 @@
 <ul class="nav" ui-nav>
+  <li ng-class="{active:$state.includes('app.settings')}">
+    <a ui-sref="app.settings">
+      <span class="nav-icon">
+          <i class="fa fa-gears"></i>
+      </span>
+      <span class="nav-text">Settings</span>
+    </a>
+  </li>
+
   <li class="nav-header hidden-folded">
     <small class="text-muted">General</small>
   </li>

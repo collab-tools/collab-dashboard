@@ -1,0 +1,72 @@
+<div class="row-col">
+  <div class="col-sm-3 col-lg-2">
+    <div class="p-y">
+      <div class="nav-active-border left b-{{app.setting.theme.primary}}">
+        <ul class="nav nav-sm">
+          <li class="nav-item">
+            <a class="nav-link block active" data-toggle="tab" href="#account">Account Settings</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link block" data-toggle="tab" href="#ranges">Date Ranges</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link block" data-toggle="tab" href="#track">Tracked Milestones</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-9 col-lg-10 light lt bg-auto">
+    <div class="tab-content pos-rlt">
+      <div class="tab-pane active" id="account">
+        <div class="p-a-md dker _600">Account Settings</div>
+        <form role="form" class="p-a-md col-md-6">
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" class="form-control" ng-model="vm.account.name">
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" class="form-control" ng-model="vm.account.password">
+          </div>
+          <div class="form-group">
+            <label>Role</label>
+            <input type="text" class="form-control" ng-model="vm.account.role">
+          </div>
+          <button type="submit" class="btn btn-info m-t">Update</button>
+        </form>
+      </div>
+      <div class="tab-pane" id="ranges">
+        <div class="p-a-md dker _600">Date Ranges</div>
+        <form role="form" class="p-a-md col-md-6">
+          <div class="form-group row">
+            <label class="col-sm-4 form-control-label">New Range</label>
+            <div class="col-sm-8">
+              <input type="text" size="8" class="form-control w-auto inline"
+              ng-model="fromDate"
+              data-max-date="{{untilDate}}"
+              data-icon-left="fa fa-chevron-left"
+              data-icon-right="fa fa-chevron-right"
+              placeholder="From"
+              bs-datepicker>
+              <input type="text" size="8" class="form-control w-auto inline"
+              ng-model="untilDate"
+              data-min-date="{{fromDate}}"
+              data-icon-left="fa fa-chevron-left"
+              data-icon-right="fa fa-chevron-right"
+              placeholder="Until"
+              bs-datepicker>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-info m-t" ng-click="vm.updateAccount()">Update</button>
+        </form>
+      </div>
+      <div class="tab-pane" id="track">
+        <div class="p-a-md dker _600">Tracked Milestones</div>
+        <form role="form" class="p-a-md col-md-6">
+          <button type="submit" class="btn btn-info m-t">Update</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -19,7 +19,6 @@
     const vm = $scope;
 
     vm.currentUser = Auth.currentUser();
-
     vm.dateRange = [
       { display: 'Last 7 Days', start: moment().startOf('day').subtract(7, 'days').valueOf(), end: moment().valueOf() },
       { display: 'Last 30 Days', start: moment().startOf('day').subtract(30, 'days').valueOf(), end: moment().valueOf() },

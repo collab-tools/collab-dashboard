@@ -39,7 +39,7 @@
         };
 
         // configure titles based on user name
-        $state.current.data.title += vm.user.displayName;
+        $state.current.data.title += user.displayName;
       };
       const retrieveProjectsActivities = () => {
         const promises = [];
@@ -50,7 +50,7 @@
             Projects.drive.getChanges(project.id, vm.range.start, vm.range.end),
             Projects.tasks.getTasks(project.id, vm.range.start, vm.range.end),
             Projects.tasks.getActivities(project.id, vm.range.start, vm.range.end),
-            Projects.milestones.getMilestones(project.id, vm.range.start, vm.range.end),
+            Projects.milestones.getMilestones(false, project.id, vm.range.start, vm.range.end),
             Projects.milestones.getActivities(project.id, vm.range.start, vm.range.end)
           ]));
         });

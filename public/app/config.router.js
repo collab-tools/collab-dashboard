@@ -43,7 +43,7 @@
     const tasks = 'tasks/tasks.html';
     const userSummary = 'users/narrow/summary.html';
     const projectSummary = 'projects/narrow/summary.html';
-    const profile = 'profile/profile.html';
+    const settings = 'settings/settings.html';
 
     // Misc Templates Relative Paths
     const error404 = 'misc/404.html';
@@ -107,7 +107,7 @@
         ])
       })
       .state('app.user', {
-        url: '/user/:userId/:projectId',
+        url: '/user/:userId',
         templateUrl: userSummary,
         data: { title: 'User: ' },
         controller: 'userSummaryCtrl',
@@ -172,15 +172,16 @@
           'milestones/milestones.controller.js'
         ])
       })
-      .state('app.profile', {
-        url: '/profile',
-        templateUrl: profile,
-        data: { title: 'Your Profile' },
-        controller: 'profileCtrl',
+      .state('app.settings', {
+        url: '/settings',
+        templateUrl: settings,
+        data: { title: 'Settings' },
+        controller: 'settingsCtrl',
         controllerAs: 'vm',
         resolve: load([
           'ui.select',
-          'profile/profile.controller.js'
+          'mgcrea.ngStrap',
+          'settings/settings.controller.js'
         ])
       })
       .state('auth', {

@@ -33,7 +33,8 @@
       <h2>Users</h2>
     </div>
     <div class="table-responsive">
-      <table ng-if="vm.users.new" ui-jp="dataTable" ui-options="{
+      <table ng-if="vm.users.new" ui-jp="dataTable" ui-refresh="vm.users.new" ui-options="{
+        destroy: true,
         data: {{vm.users.new}},
         aoColumns: [
           { mData: 'displayName',
