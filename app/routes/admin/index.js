@@ -72,10 +72,22 @@ function createAdmin(req, res, next) {
 
 function updateAdmin(req, res, next) {
   const adminUpdate = req.body.admin;
-  const response = (success) => {
-    if (!success) return next(boom.badRequest(constants.templates.error.badRequest));
-    res.status(200).json({ success });
+  adminUpdate.username = req.auth.username;
+  const response = (updates) => {
+    if (!updates) return next(boom.badRequest(constants.templates.error.badRequest));
+    const user = updates[1][0];
+    const expiry = new Date();
+    expiry.setDate(expiry.getDate() + constants.defaults.jwtExpiry);
+    const payload = {
+      name: user.name,
+      username: user.username,
+      role: user.role,
+      exp: parseInt(expiry.getTime() / 1000, 10)
+    };
+    const token = jwt.sign(payload, config.jwt_secret);
+    res.status(200).json({ success: true, token, settings: user.settings });
   };
+
   return models.log.admin.updateUser(adminUpdate)
     .then(response)
     .catch(next);

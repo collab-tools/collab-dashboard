@@ -98,6 +98,13 @@
         '../libs/angular/angular-summernote/dist/angular-summernote.js'
       ]
     }, {
+      name: 'sortable',
+      module: true,
+      files: [
+        '../libs/angular/html.sortable/dist/html.sortable.angular.min.js',
+        '../libs/jquery/html.sortable/dist/html.sortable.min.js'
+      ]
+    }, {
       name: 'dataTable',
       module: false,
       files: [
@@ -153,12 +160,6 @@
         '../libs/jquery/fullcalendar/dist/fullcalendar.min.js',
         '../libs/jquery/fullcalendar/dist/fullcalendar.css',
         '../libs/jquery/fullcalendar/dist/fullcalendar.theme.css'
-      ]
-    }, {
-      name: 'sortable',
-      module: false,
-      files: [
-        '../libs/jquery/html.sortable/dist/html.sortable.min.js'
       ]
     }, {
       name: 'nestable',

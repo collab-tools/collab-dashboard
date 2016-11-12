@@ -24,6 +24,7 @@ module.exports = function (express) {
   globalRouter.get('/github/releases/:releaseId', github.getRelease);
   globalRouter.get('/github/users', github.getParticipatingUsers);
   globalRouter.get('/github/projects', github.getParticipatingProjects);
+  globalRouter.get('/github/assets', github.downloadAssets);
 
   // Google Drive Related
   // =========================================================

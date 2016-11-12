@@ -124,20 +124,31 @@
   </div>
   <div class="box">
     <div class="box-header">
-      <h2>Releases</h2>
+      <h2 style="display:inline">Releases</h2>
+      <div class="pull-right">
+        <a class="btn btn-sm white w-96" ng-click="vm.downloadAssets()">
+          <span class="pull-left m-r-sm">
+            <i class="fa fa-download pull-left"></i>
+          </span>
+          <span class="clear text-left l-h-1x">
+            <span class="text-black-dk text-xs">Download</span>
+          </span>
+        </a>
+      </div>
     </div>
     <div class="table-responsive">
-      <table ng-if="vm.releases.data" ui-jp="dataTable" ui-options="{
+      <table id="tb" ng-if="vm.releases.data" ui-refresh="vm.releases.data" ui-jp="dataTable" ui-options="{
+        destroy: true,
         data: {{vm.releases.data}},
         aoColumns: [
           { mData: 'projectId',
             mRender: function(data, type, full) {
-              return {{vm.projects.map}}[data].content;
+              return '<a href=&quot;/app/project/' + data + '&quot; ui-sref=&quot;app.project&quot;>' + {{vm.projects.map}}[data].content + '</a>';
             }
           },
           { mData: 'projectId',
             mRender: function(data, type, full) {
-              return {{vm.projects.map}}[data].githubRepoOwner + '/' + {{vm.projects.map}}[data].githubRepoName;
+              return '<a href=&quot;https://github.com/' + {{vm.projects.map}}[data].githubRepoOwner + '/' + {{vm.projects.map}}[data].githubRepoName + '&quot;>' + {{vm.projects.map}}[data].githubRepoOwner + '/' + {{vm.projects.map}}[data].githubRepoName + '</a>' || 'N/A';
             }
           },
           { mData: 'tagName' },
@@ -146,8 +157,11 @@
               var assets = JSON.parse(data);
               return (!assets || assets.length === 0) ? 'None' : function() {
                 var assetString = '';
+                var a = {{vm.projects.map}}[full.projectId].githubRepoOwner + '/' + {{vm.projects.map}}[full.projectId].githubRepoName;
+                var b = full.tagName;
+
                 assets.forEach(function(asset){
-                  assetString += asset.name + '<br>';
+                  assetString += '<a href=&quot;https://github.com/' + a + '/releases/download/' + b + '/' + asset.name + '&quot;>' + asset.name + '</a><br>';
                 })
                 return assetString.substring(0, assetString.length - 4);
               }();

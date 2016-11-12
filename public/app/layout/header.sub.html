@@ -1,28 +1,24 @@
-<div class="p-a p-y-sm white lt box-shadow">
-  <div class="row">
-    <div ng-if="!vm.displayProjects" class="col-md-8 col-lg-6">
-      <div class="m-t-sm text-md _300">{{vm.subtitle}}</div>
-    </div>
-    <div ng-if="vm.displayProjects" class="col-md-8 col-lg-6">
-      <div class="row no-gutter">
-        <label class="text-md _300 col-sm-2 form-control-label">{{vm.subtitle}}</label>
-        <div class="col-sm-6">
-          <ui-select theme="bootstrap" class="m-t-xs" ng-model="dateRange.selected" ng-change="vm.requestData()">
-            <ui-select-match class="ui-select-match" placeholder="Date Range">{{$select.selected.display}}</ui-select-match>
-            <ui-select-choices class="ui-select-choices" repeat="range in dateRange">
-              <div ng-bind-html="range.display"></div>
-            </ui-select-choices>
-          </ui-select>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4 col-lg-6">
-      <ui-select theme="bootstrap" class="m-t-xs p-r pull-right" ng-model="dateRange.selected" ng-change="vm.requestData()">
-        <ui-select-match class="ui-select-match" placeholder="Date Range">{{$select.selected.display}}</ui-select-match>
-        <ui-select-choices class="ui-select-choices" repeat="range in dateRange">
-          <div ng-bind-html="range.display"></div>
-        </ui-select-choices>
-      </ui-select>
-    </div>
+<div class="navbar navbar-sm white lt box-shadow">
+  <div class="navbar-item m-t-xs text-md _300 pull-left">{{vm.subtitle}}</div>
+  <div ng-if="vm.user.projects.data" class="navbar-item m-t-xs pull-left">
+    <ui-select search-enabled="false" theme="bootstrap" class="w-md" ng-model="vm.user.projects.data.selected"
+      ng-change="vm.changeProject()">
+      <ui-select-match class="ui-select-match" placeholder="Projects">{{$select.selected.content}}</ui-select-match>
+      <ui-select-choices class="ui-select-choices" repeat="project in vm.user.projects.data">
+        <div ng-bind-html="project.content"></div>
+      </ui-select-choices>
+    </ui-select>
+  </div>
+  <div class="pull-right m-y-sm">
+    <ui-select search-enabled="false" theme="bootstrap" class="w-md" ng-model="dateRange.selected" ng-change="vm.requestData()">
+      <ui-select-match class="ui-select-match" placeholder="Date Range">{{$select.selected.display}}</ui-select-match>
+      <ui-select-choices class="ui-select-choices" repeat="range in dateRange">
+        <div class="dropdown-divider" ng-show="$index == 4"></div>
+        <div ng-bind-html="range.display"></div>
+        <span class="text-black-lt text-xs">
+              {{range.start | amDateFormat: 'DD/MM/YYYY'}} - {{range.end | amDateFormat: 'DD/MM/YYYY'}}
+            </span>
+      </ui-select-choices>
+    </ui-select>
   </div>
 </div>

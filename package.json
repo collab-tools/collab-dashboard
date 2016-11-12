@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/collab-tools/collab-dashboard#readme",
   "dependencies": {
+    "archiver": "^1.2.0",
     "bcrypt": "^0.8.7",
     "bluebird": "^3.4.6",
     "body-parser": "^1.15.2",
@@ -29,6 +30,7 @@
     "compression": "^1.6.2",
     "config": "^1.21.0",
     "cors": "^2.8.1",
+    "download": "^5.0.2",
     "express": "^4.14.0",
     "express-jwt": "^5.0.0",
     "express-validator": "^2.20.10",

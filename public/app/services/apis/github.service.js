@@ -43,6 +43,9 @@
       return $http.get(`${urlBase}/projects?start=${start}&end=${end}`);
     };
 
+    githubFactory.downloadAssets = (releases) => {
+      return $http.get(`${urlBase}/assets?releases=${releases}`, { responseType: 'arraybuffer' });
+    };
     return githubFactory;
   }
 })();

@@ -1,8 +1,11 @@
 import _ from 'lodash';
+import archiver from 'archiver';
 import boom from 'boom';
+import download from 'download';
 import moment from 'moment';
 import constants from '../../common/constants';
 import Storage from '../../common/storage-helper';
+import fs from 'fs';
 
 const models = new Storage();
 
@@ -143,6 +146,41 @@ function getParticipatingProjects(req, res, next) {
     .catch(next);
 }
 
+function downloadAssets(req, res, next) {
+  const releases = JSON.parse(req.query.releases);
+  const archive = archiver('zip');
+  archive.on('error', (err) => {
+    res.status(500).send({ error: err.message });
+  });
+  archive.on('end', () => {
+    console.log('Archive wrote %d bytes', archive.pointer());
+  });
+  res.attachment('releases-assets.zip');
+
+  // flatten assets
+  const assets = [];
+  _.forEach(releases, (release) => {
+    _.forEach(release.assets, (asset) => {
+      assets.push({
+        fileName: asset,
+        directory: `${release.owner}-${release.repo}-${release.tagName}`,
+        url: `https://github.com/${release.owner}/${release.repo}/releases/download/${release.tagName}/${asset}`
+      });
+    });
+  });
+
+
+  Promise.all(_.map(assets, asset => download(asset.url)))
+    .then((payload) => {
+      // download files
+      archive.pipe(res);
+      _.forEach(assets, (asset, index) => {
+        archive.append(payload[index], { name: `${asset.directory}/${asset.fileName}` });
+      });
+      archive.finalize();
+    });
+}
+
 const githubAPI = {
   getRepositories,
   getCommits,
@@ -150,7 +188,8 @@ const githubAPI = {
   getReleases,
   getRelease,
   getParticipatingUsers,
-  getParticipatingProjects
+  getParticipatingProjects,
+  downloadAssets
 };
 
 export default githubAPI;

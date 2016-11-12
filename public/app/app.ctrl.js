@@ -7,26 +7,119 @@
 (() => {
   angular
     .module('app')
+    .filter('propsFilter', propsFilter)
     .controller('AppCtrl', AppCtrl);
 
+  function propsFilter() {
+    function filter(items, props) {
+      let out = [];
+
+      if (angular.isArray(items)) {
+        items.forEach((item) => {
+          let itemMatches = false;
+
+          const keys = Object.keys(props);
+          for (let i = 0; i < keys.length; i += 1) {
+            const prop = keys[i];
+            const text = props[prop].toLowerCase();
+            if (item[prop].toString().toLowerCase().indexOf(text) !== -1) {
+              itemMatches = true;
+              break;
+            }
+          }
+
+          if (itemMatches) {
+            out.push(item);
+          }
+        });
+      } else {
+        // Let the output be the input untouched
+        out = items;
+      }
+      return out;
+    }
+    return filter;
+  }
+
   AppCtrl.$inject = [
-    '$scope', '$localStorage', '$location', '$rootScope',
-    '$anchorScroll', '$timeout', '$window', 'moment', 'Auth'
+    '$scope', '$localStorage', '$location', '$rootScope', '$anchorScroll',
+    '$timeout', '$window', '_', 'moment', 'Auth', 'Users', 'Projects'
   ];
 
-  function AppCtrl($scope, $localStorage, $location, $rootScope,
-    $anchorScroll, $timeout, $window, moment, Auth) {
+  function AppCtrl($scope, $localStorage, $location, $rootScope, $anchorScroll,
+    $timeout, $window, _, moment, Auth, Users, Projects) {
     const vm = $scope;
 
-    vm.currentUser = Auth.currentUser();
-    vm.dateRange = [
-      { display: 'Last 7 Days', start: moment().startOf('day').subtract(7, 'days').valueOf(), end: moment().valueOf() },
-      { display: 'Last 30 Days', start: moment().startOf('day').subtract(30, 'days').valueOf(), end: moment().valueOf() },
-      { display: 'Last 90 Days', start: moment().startOf('day').subtract(90, 'days').valueOf(), end: moment().valueOf() },
-      { display: 'All Time', start: 0, end: moment().valueOf() }
-    ];
-    vm.dateRange.selected = vm.dateRange[0];
+    vm.searchables = [];
 
+    Users.getUsers(0, moment().valueOf())
+      .then((response) => {
+        _.forEach(response.data, (user) => {
+          vm.searchables.push({
+            type: 'user',
+            id: user.id,
+            name: user.displayName,
+            email: user.email,
+            displayPicture: user.displayImage,
+            repo: ''
+          });
+        });
+      });
+
+    Projects.getProjects(0, moment().valueOf())
+      .then((response) => {
+        _.forEach(response.data, (project) => {
+          vm.searchables.push({
+            type: 'project',
+            id: project.id,
+            name: project.content,
+            email: '',
+            displayPicture: '',
+            repo: `${project.githubRepoOwner}/${project.githubRepoName}`
+          });
+        });
+      });
+
+
+    vm.resetSearch = ($select) => {
+      $select.selected = '';
+    };
+
+    vm.groupSearchables = (searchable) => {
+      if (searchable.type === 'user') return 'Users';
+      else if (searchable.type === 'project') return 'Projects';
+    };
+
+    vm.updateUserDisplay = function () {
+      vm.currentUser = _.omit(Auth.currentUser(), 'settings');
+    };
+    vm.updateUserDisplay();
+    if (Auth.isLoggedIn()) {
+      vm.settings = Auth.currentUser().settings;
+      vm.settings.ranges = _.sortBy(vm.settings.ranges, range => range[0]) || [];
+
+      vm.defaultRange = [
+        { display: 'Last 7 Days', start: moment().startOf('day').subtract(7, 'days').valueOf(), end: moment().valueOf() },
+        { display: 'Last 30 Days', start: moment().startOf('day').subtract(30, 'days').valueOf(), end: moment().valueOf() },
+        { display: 'Last 90 Days', start: moment().startOf('day').subtract(90, 'days').valueOf(), end: moment().valueOf() },
+        { display: 'All Time', start: 1451577600000, end: moment().valueOf() }
+      ];
+
+      vm.updateRangeDisplay = function () {
+        vm.userRange = [];
+        _.forEach(vm.settings.ranges, (range) => {
+          vm.userRange.push({
+            display: range[1],
+            start: moment(range[2]).startOf('day').valueOf(),
+            end: moment(range[3]).startOf('day').valueOf()
+          });
+        });
+        vm.dateRange = _.concat(vm.defaultRange, vm.userRange);
+        vm.dateRange.selected = vm.dateRange[0];
+      };
+
+      vm.updateRangeDisplay();
+    }
     vm.isIE = isIE();
     vm.isMobile = isSmartDevice();
     vm.app = {

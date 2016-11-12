@@ -28,9 +28,9 @@
               <i class="fa fa-clock-o text-2x text-accent m-y-sm"></i>
             </div>
             <div class="clear">
-              <div class="text-white-dk">Mean Commits</div>
+              <div class="text-white-dk">Mean Commits </div>
               <h4 class="m-a-0 text-md _600">
-                <a href>{{vm.github.commits.mean.toFixed(2)}} Hours</a>
+                <a href>{{vm.github.commits.mean.toFixed(2)}} Commits <small> Per Day</small></a>
               </h4>
             </div>
           </div>
@@ -56,7 +56,7 @@
             <div class="clear">
               <div class="text-white-dk">Commits Deviation</div>
               <h4 class="m-a-0 text-md _600">
-                <a href>{{vm.github.commits.deviation.toFixed(2)}} Hours</a>
+                <a href>{{vm.github.commits.deviation.toFixed(2)}}</a>
               </h4>
             </div>
           </div>
@@ -110,7 +110,7 @@
         </div>
       </div>
     </div>
-    <div class="col-lg-12 col-xl-6" ng-if="vm.github.commits.groupedDate.length !== 0">
+    <div class="col-lg-12 col-xl-6" ng-if="vm.github.commits.groupedDate.length > 0">
       <div class="box">
         <div class="box-header">
           <h3>Commits</h3>
@@ -124,22 +124,23 @@
             }],
             { colors: ['{{app.color.primary}}'],
               series: { shadowSize: 3 },
-              xaxis: { show: true, mode: 'time', timezone: 'browser', minTickSize: [1, 'day'], min: {{vm.range.start}}, max: {{vm.range.end}}},
+              xaxis: { show: true, mode: 'time', timezone: 'browser', minTickSize: [1, 'day'], min: {{vm.range.start === 0 ? vm.project.origin : vm.range.start}}, max: {{vm.range.end}}},
               yaxis:{ show: true, font: { color: '#ccc' }, min:1, minTickSize: 1, tickDecimals: 0},
               grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(120,120,120,0.5)' },
               tooltip: true,
               tooltipOpts: { content: function(label, x, y) { return moment(parseInt(x)).format('DD/MM') + ': ' + y + ' Commit(s)' }, defaultTheme: false, shifts: { x: 0, y: -40 } }
-            }" style="height:526px">
+            }" style="min-height:210px" ng-style="{ height: vm.plotHeight }">
           </div>
         </div>
       </div>
     </div>
     <div class="col-lg-12 col-xl-6">
-      <div class="row no-gutter">
+      <div class="row ">
         <div class="col-sm-12 col-md-6" ng-repeat="(u, c) in vm.github.commits.groupedUsers">
           <div class="box">
             <div class="box-header">
-              <h3>{{u}} - {{vm.github.commits.groupedUsersPercentage[u].toFixed(4) * 100}} %</h3>
+              <h3>{{u}}</h3>
+              <small>Contribution Rate: {{vm.github.commits.groupedUsersPercentage[u].toFixed(4) * 100}} %</small>
             </div>
             <div class="box-body">
               <div ng-if="c" ui-jp="plot" ui-refresh="c" ui-options="
@@ -154,7 +155,7 @@
               grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(120,120,120,0.5)' },
               tooltip: true,
               tooltipOpts: { content: function(label, x, y) { return moment(parseInt(x)).format('DD/MM') + ': ' + y + ' Commit(s)' }, defaultTheme: false, shifts: { x: 0, y: -40 } }
-            }" style="height:222px">
+            }" style="height:210px">
               </div>
             </div>
           </div>
@@ -180,10 +181,6 @@
                 <i ng-if="a.activity === 'C'" class="fa fa-cloud-upload w-40 text-lg"></i>
               </a>
               <div class="list-body">
-                <div class="m-y-sm pull-right">
-                  <a href class="btn btn-xs white">View<i class="pull-right fa fa-pencil"></i>
-                  </a>
-                </div>
                 <div ng-if="a.activity === 'U'">
                   <strong>{{ vm.emailDisplay[a.email] }}</strong> made a change to '{{a.fileName}}' ({{a.fileExtension}}).
                 </div>
@@ -364,10 +361,6 @@
                 <i ng-if="a.activity === 'A'" class="fa fa-user-plus w-40 text-lg"></i>
               </a>
               <div class="list-body">
-                <div class="m-y-sm pull-right">
-                  <a href class="btn btn-xs white">View<i class="pull-right fa fa-pencil"></i>
-                  </a>
-                </div>
                 <div ng-if="a.activity === 'C'">
                   <strong>{{ vm.idDisplay[a.userId] }}</strong> created a new milestone '{{a.milestone.content}}'.
                 </div>
@@ -404,10 +397,6 @@
                 <i ng-if="a.activity === 'A'" class="fa fa-user-plus w-40 text-lg"></i>
               </a>
               <div class="list-body">
-                <div class="m-y-sm pull-right">
-                  <a href class="btn btn-xs white">View<i class="pull-right fa fa-pencil"></i>
-                  </a>
-                </div>
                 <div ng-if="a.activity === 'D'">
                   <strong>{{ vm.idDisplay[a.userId] }}</strong> completed a task '{{a.task.content}}'.'
                 </div>

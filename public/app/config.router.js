@@ -181,6 +181,7 @@
         resolve: load([
           'ui.select',
           'mgcrea.ngStrap',
+          'sortable',
           'settings/settings.controller.js'
         ])
       })

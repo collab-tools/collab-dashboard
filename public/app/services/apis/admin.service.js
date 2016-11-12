@@ -20,7 +20,7 @@
     };
 
     adminFactory.updateAdmin = (admin) => {
-      return $http.put(urlBase, admin);
+      return $http.put(urlBase, { admin });
     };
 
     return adminFactory;

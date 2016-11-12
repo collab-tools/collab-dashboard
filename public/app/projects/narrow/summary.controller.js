@@ -37,6 +37,7 @@
           data: project,
           users: projectUsers,
           usersCount: projectUsersCount,
+          origin: moment(project.createdAt).valueOf(),
           span: projectSpan
         };
 
@@ -123,7 +124,7 @@
             data: releases
           }
         };
-
+        vm.plotHeight = _.size(vm.github.commits.groupedUsers) <= 2 ? '210px' : '546px';
         // calculate number of changes made and distribution of changes over time
         const filesCount = files.length;
         const changesCount = changes.length;
@@ -288,7 +289,6 @@
           missedCount: milestonesMissedCount,
           rate: completionRate
         };
-
       };
 
       $q

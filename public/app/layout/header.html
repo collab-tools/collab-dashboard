@@ -3,16 +3,26 @@
     <i class="material-icons">&#xe5d2;</i>
   </a>
   <div class="navbar-item pull-left h5" ng-bind="$state.current.data.title" id="pageTitle"></div>
-  <div>
-    <form class="navbar-form form-inline pull-right navbar-item v-m" role="search">
-      <div class="form-group l-h m-a-0">
-        <div class="input-group">
-          <input type="text" class="form-control b-a form-control-sm" placeholder="Search">
-          <span class="input-group-btn">
-            <button type="submit" class="btn btn-sm white b-a no-shadow"><i class="fa fa-search"></i></button>
-          </span>
-        </div>
-      </div>
-    </form>
+  <div ng-if="displayPicture" class="navbar-item pull-left" ui-refresh="displayPicture">
+    <span class="avatar w-32">
+      <img src={{displayPicture}}>
+    </span>
+  </div>
+  <div class="p-t-sm" role="search">
+    <ui-select ng-model="searchables.selected" theme="bootstrap" reset-search-input="true" class="w-xl pull-right"
+      on-select="resetSearch($select)">
+      <ui-select-match class="ui-select-match" placeholder="Search Project/Users">{{$select.selected.name}}</ui-select-match>
+      <ui-select-choices class="ui-select-choices" group-by="groupSearchables" repeat="s in searchables | propsFilter: {name: $select.search, email: $select.search, repo: $select.search}">
+        <a ui-sref="app.{{s.type}}({userId: s.id, projectId: s.id})">
+          <div ng-bind-html="s.name | highlight: $select.search"></div>
+          <small ng-if="s.type === 'user'">
+          <i class="fa fa-envelope fa-fw"></i> <span ng-bind-html="'' + s.email | highlight: $select.search"></span>
+          </small>
+          <small ng-if="s.type === 'project'">
+          <i class="fa fa-github fa-fw"></i> <span ng-bind-html="'' + s.repo | highlight: $select.search"></span>
+         </small>
+        </a>
+      </ui-select-choices>
+    </ui-select>
   </div>
 </div>

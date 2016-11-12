@@ -9,11 +9,46 @@
     .module('app')
     .controller('githubCtrl', githubCtrl);
 
-  githubCtrl.$inject = ['$scope', '$log', '$q', '_', 'moment', 'Github', 'Users', 'Projects'];
+  githubCtrl.$inject = [
+    '$scope', '$log', '$q', '_', 'moment', 'Github', 'Users', 'Projects'
+  ];
 
   function githubCtrl($scope, $log, $q, _, moment, Github, Users, Projects) {
     const vm = this;
     const parent = $scope.$parent;
+    vm.downloadAssets = () => {
+      const table = $('#tb').DataTable(); // eslint-disable-line
+      const releases = _
+        .chain(table.rows({ search: 'applied' }).data())
+        .map((release) => {
+          release.assets = _.map(angular.fromJson(release.assets), (asset) => {
+            return asset.name;
+          });
+          release.owner = vm.projects.map[release.projectId].githubRepoOwner;
+          release.repo = vm.projects.map[release.projectId].githubRepoName;
+          return _.pick(release, 'assets', 'owner', 'repo', 'tagName');
+        })
+        .value();
+      Github.downloadAssets(angular.toJson(releases))
+        .then((response) => {
+          const fileName = response.headers('Content-Disposition').match(/filename="(.+)"/)[1];
+          const contentType = response.headers('Content-Type');
+          const linkElement = document.createElement('a'); // eslint-disable-line
+          const blob = new Blob([response.data], { type: contentType });
+          const url = window.URL.createObjectURL(blob); // eslint-disable-line
+
+          linkElement.setAttribute('href', url);
+          linkElement.setAttribute('download', fileName);
+
+          const clickEvent = new MouseEvent('click', {
+            view: window,
+            bubbles: true,
+            cancelable: false
+          });
+
+          linkElement.dispatchEvent(clickEvent);
+        });
+    };
 
     vm.requestData = () => {
       vm.range = {
