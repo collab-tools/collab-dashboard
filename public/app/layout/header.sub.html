@@ -9,6 +9,9 @@
       </ui-select-choices>
     </ui-select>
   </div>
+  <div class="navbar-item pull-left m-t-xs">
+    <a ng-click="vm.requestData()"><i class="fa fa-refresh" aria-hidden="true"></i></a>
+  </div>
   <div class="pull-right m-y-sm">
     <ui-select search-enabled="false" theme="bootstrap" class="w-md" ng-model="dateRange.selected" ng-change="vm.requestData()">
       <ui-select-match class="ui-select-match" placeholder="Date Range">{{$select.selected.display}}</ui-select-match>
