@@ -84,7 +84,7 @@
         const commitsByUser = _
           .chain(commits)
           .groupBy(commits, 'githubLogin')
-          .mapKeys((value, key) => _.find(projectUsers, 'githubLogin').displayName)
+          .mapKeys((value, key) => _.find(projectUsers, { githubLogin: key }).displayName)
           .value();
         const commitsCountByUser = _
           .mapValues(commitsByUser, value => value.length);
@@ -198,7 +198,7 @@
         const doneTasksCount = doneTasks.length;
         const pendingTasks = _.filter(tasks, { completedOn: null });
         const pendingTasksCount = pendingTasks.length;
-        const assignedTasks = _.pull(tasks, { assigneeId: null });
+        const assignedTasks = _.reject(tasks, { assigneeId: null });
         const assignedTasksCount = assignedTasks.length;
 
         // compute distribution of tasks over time for each member
