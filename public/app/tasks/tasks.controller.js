@@ -48,12 +48,13 @@
           .groupBy(duration => duration.toFixed(2))
           .mapValues(v => v.length)
           .toPairs()
+          .sortBy(t => t[0])
           .value();
         const doneTasksMax = _.max(doneTasksDuration);
         const doneTasksMin = _.min(doneTasksDuration);
         const doneTasksMean = _.sum(doneTasksDuration) / doneTasksCount;
         const doneTasksDeviation = _.reduce(doneTasksDuration, (sum, duration) => {
-          return sum + Math.pow(duration - doneTasksDuration, 2);
+          return sum + Math.pow(duration - doneTasksMean, 2);
         }, 0) / doneTasksCount;
 
         // calculate number of tasks that are still pending
