@@ -45,7 +45,7 @@
         });
         const doneTasksDistribution = _
           .chain(doneTasksDuration)
-          .groupBy(duration => duration.toFixed(1))
+          .groupBy(duration => duration.toFixed(2))
           .mapValues(v => v.length)
           .toPairs()
           .value();

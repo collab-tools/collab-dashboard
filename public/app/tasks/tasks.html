@@ -83,12 +83,12 @@
         <div class="box-body">
           <div ng-if="vm.tasks.doneCount" ui-jp="plot" ui-refresh="vm.tasks.doneDistribution" ui-options="
             [{ data: {{vm.tasks.doneDistribution}},
-              points: { show: true, radius: 3},
-              splines: { show: true, tension: 0.45, lineWidth: 0, fill: 0.4}
+              points: { show: true, radius: 5},
+              splines: { show: true, tension: 0.45, lineWidth: 4}
             }],
             { colors: ['{{app.color.primary}}'],
               series: { shadowSize: 3 },
-              xaxis: { position: 'bottom', font: { color: '#ccc' }, show: true,  minTickSize: '0.05', min: 0, max: {{vm.tasks.doneMax}}},
+              xaxis: { position: 'bottom', font: { color: '#ccc' }, show: true,  minTickSize: '0.05', min: 0, max: {{vm.tasks.doneMax.toFixed(1)}}},
               yaxis:{ show: true, font: { color: '#ccc' }, min: 0, minTickSize: 1, tickDecimals: 0},
               grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(120,120,120,0.5)' },
               tooltip: true,
