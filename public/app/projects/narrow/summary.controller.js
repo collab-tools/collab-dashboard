@@ -108,8 +108,8 @@
 
         commits = _
           .chain(commits)
-          .sortBy((a) => moment(a.date).unix())
-          .reverse
+          .sortBy(a => moment(a.date).unix())
+          .reverse()
           .value();
 
         // build github modal for view usages
@@ -169,8 +169,8 @@
             if (!activity.fileExtension) activity.fileExtension = googleMIME[activity.fileMIME];
             return activity;
           })
-          .sortBy((a) => moment(a.date).unix())
-          .reverse
+          .sortBy(a => moment(a.date).unix())
+          .reverse()
           .value();
 
         const driveActivitiesCount = driveActivities.length;
@@ -229,8 +229,8 @@
             activity.task = _.find(tasks, { id: activity.taskId });
             return activity;
           })
-          .sortBy((a) => moment(a.date).unix())
-          .reverse
+          .sortBy(a => moment(a.date).unix())
+          .reverse()
           .value();
 
         // build tasks modal for view usages
@@ -286,8 +286,8 @@
             activity.milestone = _.find(milestones, { id: activity.milestoneId });
             return activity;
           })
-          .sortBy((a) => moment(a.date).unix())
-          .reverse
+          .sortBy(a => moment(a.date).unix())
+          .reverse()
           .value();
 
         // build milestones modal for view usages
