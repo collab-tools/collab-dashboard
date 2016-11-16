@@ -117,7 +117,7 @@
               .value() / tl.length;
           })
           .toPairs()
-          .mapKeys((value, key) => trackedMap[key])
+          .map(point => [trackedMap[point[0]], point[1]])
           .value();
 
         trackedMilestones.push({
