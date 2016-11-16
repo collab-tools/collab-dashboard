@@ -46,6 +46,7 @@
         const doneTasksDistribution = _
           .chain(doneTasksDuration)
           .groupBy(duration => duration.toFixed(1))
+          .mapValues(v => v.length)
           .toPairs()
           .value();
         const doneTasksMax = _.max(doneTasksDuration);
