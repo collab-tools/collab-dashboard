@@ -9,7 +9,7 @@
 					</span>
         </div>
         <div class="clear">
-          <h4 class="m-a-0 text-md"><a href>70 <span class="text-sm">New Signups</span></a></h4>
+          <h4 class="m-a-0 text-md"><a href>{{vm.newUsers.count}} <span class="text-sm">New Users</span></a></h4>
         </div>
       </div>
     </div>
@@ -21,7 +21,7 @@
 					</span>
         </div>
         <div class="clear">
-          <h4 class="m-a-0 text-md"><a href>1200 <span class="text-sm">Unique Users</span></a></h4>
+          <h4 class="m-a-0 text-md"><a href>{{vm.projects.count}} <span class="text-sm">New Projects</span></a></h4>
         </div>
       </div>
     </div>
@@ -33,7 +33,7 @@
 					</span>
         </div>
         <div class="clear">
-          <h4 class="m-a-0 text-md"><a href>52% <span class="text-sm">Retention Rate</span></a></h4>
+          <h4 class="m-a-0 text-md"><a href>{{vm.users.retention * 100}}% <span class="text-sm">Retention Rate</span></a></h4>
         </div>
       </div>
     </div>
@@ -45,31 +45,20 @@
           <h3>Feature Popularity</h3>
           <small>Unique Users Last 7 Days</small>
         </div>
-        <div class="box-tool">
-          <ul class="nav">
-            <li class="nav-item inline">
-              <a class="nav-link">
-                <i class="material-icons md-18">&#xe863;</i>
-              </a>
-            </li>
-          </ul>
-        </div>
         <div class="box-body">
-          <div ui-jp="plot" ui-refresh="app.color" ui-options="
-						[
-						{ data: {{vm.p_b_2}} }
-						],
+          <div ng-if="vm.users.distribution" ui-jp="plot" ui-refresh="vm.users.distribution" ui-options="
+						[{ data: {{vm.users.distribution}} }],
 						{
 						bars: { horizontal: true, show: true, fill: true,  barWidth: 0.3, lineWidth: 1, fillColor: { colors: [{ opacity: 0.8 }, { opacity: 1}] }, align: 'center' },
 						colors: ['purple'],
 						series: { shadowSize: 3 },
-						xaxis: { show: true, font: { color: '#ccc' }, position: 'bottom'},
-						yaxis:{ show: true, font: { color: '#ccc' }, ticks: [[0, 'GitHub'], [1, 'Google Drive'], [2, 'Cloud IDE'], [3, 'Tasks'], [4, 'Milestones']] },
+						xaxis: { show: true, font: { color: '#919191' }, position: 'bottom', min: 0, minTickSize: 1, tickDecimals: 0},
+						yaxis:{ show: true, font: { color: '#919191' }, ticks: [[0, 'GitHub'], [1, 'Google Drive'], [2, 'Tasks'], [3, 'Milestones']] },
 						grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(120,120,120,0.5)' },
 						tooltip: true,
 						tooltipOpts: { content: '%x.0',  defaultTheme: false, shifts: { x: 0, y: -40 } }
 						}
-						" style="height:188px">
+						" style="height:274px">
           </div>
         </div>
       </div>
@@ -79,56 +68,78 @@
         <div class="col-xs-6">
           <div class="box p-a">
             <div class="pull-left m-r">
-              <i class="fa fa-newspaper-o text-2x text-danger m-y-sm"></i>
+              <i class="fa fa-fw fa-rocket text-2x text-danger m-y-sm"></i>
             </div>
             <div class="clear">
-              <div class="text-muted">Milestones Added</div>
-              <h4 class="m-a-0 text-md _600"><a href>7530</a></h4>
+              <div class="text-black-lt">Milestones Created</div>
+              <h4 class="m-a-0 text-md _600"><a href>{{vm.milestones.count}}</a></h4>
             </div>
           </div>
         </div>
         <div class="col-xs-6">
           <div class="box p-a">
             <div class="pull-left m-r">
-              <i class="fa fa-tasks text-2x text-info m-y-sm"></i>
+              <i class="fa fa-fw fa-tasks text-2x text-info m-y-sm"></i>
             </div>
             <div class="clear">
-              <div class="text-muted">Tasks Added</div>
-              <h4 class="m-a-0 text-md _600"><a href>2980</a></h4>
+              <div class="text-black-lt">Tasks Created</div>
+              <h4 class="m-a-0 text-md _600"><a href>{{vm.tasks.count}}</a></h4>
             </div>
           </div>
         </div>
         <div class="col-xs-6">
           <div class="box p-a">
             <div class="pull-left m-r">
-              <i class="fa fa-cloud text-2x text-accent m-y-sm"></i>
+              <i class="fa fa-fw fa-pencil text-2x text-accent m-y-sm"></i>
             </div>
             <div class="clear">
-              <div class="text-muted">Time on Cloud IDE</div>
-              <h4 class="m-a-0 text-md _600"><a href>630</a></h4>
+              <div class="text-black-lt">Changes Saved</div>
+              <h4 class="m-a-0 text-md _600"><a href>{{vm.changes.count}}</a></h4>
             </div>
           </div>
         </div>
         <div class="col-xs-6">
           <div class="box p-a">
             <div class="pull-left m-r">
-              <i class="fa fa-github-alt text-2x text-success m-y-sm"></i>
+              <i class="fa fa-fw fa-files-o text-2x text-success m-y-sm"></i>
             </div>
             <div class="clear">
-              <div class="text-muted">Number of Commits</div>
-              <h4 class="m-a-0 text-md _600"><a href>750</a></h4>
+              <div class="text-black-lt">Files Shared</div>
+              <h4 class="m-a-0 text-md _600"><a href>{{vm.files.count}}</a></h4>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-6">
+          <div class="box p-a">
+            <div class="pull-left m-r">
+              <i class="fa fa-fw fa-file-code-o text-2x text-accent m-y-sm"></i>
+            </div>
+            <div class="clear">
+              <div class="text-black-lt">Commits Pushed</div>
+              <h4 class="m-a-0 text-md _600"><a href>{{vm.commits.count}}</a></h4>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-6">
+          <div class="box p-a">
+            <div class="pull-left m-r">
+              <i class="fa fa-fw fa-github-square text-2x text-success m-y-sm"></i>
+            </div>
+            <div class="clear">
+              <div class="text-black-lt">Releases Submitted</div>
+              <h4 class="m-a-0 text-md _600"><a href>{{vm.releases.count}}</a></h4>
             </div>
           </div>
         </div>
         <div class="col-xs-12">
           <div class="row-col box-color text-center purple-300">
             <div class="row-cell p-a-2">
-              Registered Accounts
-              <h4 class="m-a-0 text-md _600"><a href>23500</a></h4>
+              Active Users
+              <h4 class="m-a-0 text-md _600"><a href>{{vm.users.activeCount}}</a></h4>
             </div>
             <div class="row-cell p-a-2 dker">
-              Monthly Active Accounts
-              <h4 class="m-a-0 text-md _600"><a href>7250</a></h4>
+              Inactive Users
+              <h4 class="m-a-0 text-md _600"><a href>{{vm.users.inactiveCount}}</a></h4>
             </div>
           </div>
         </div>
@@ -140,16 +151,7 @@
       <div class="box">
         <div class="box-header">
           <h3>Site Uptime</h3>
-          <small>Gathered from the past 7 days</small>
-        </div>
-        <div class="box-tool">
-          <ul class="nav">
-            <li class="nav-item inline">
-              <a class="nav-link">
-                <i class="material-icons md-18">&#xe863;</i>
-              </a>
-            </li>
-          </ul>
+          <small>Percentage Uptime Per Day</small>
         </div>
         <div class="box-body">
           <div ui-jp="plot" ui-refresh="app.color" ui-options="
@@ -160,13 +162,13 @@
 						bars: { show: true, fill: true,  barWidth: 0.25, lineWidth: 1, fillColor: { colors: [{ opacity: 0.8 }, { opacity: 1}] }, align: 'center' },
 						colors: ['orange'],
 						series: { shadowSize: 3 },
-						xaxis: { show: true, font: { color: '#ccc' }, position: 'bottom', ticks:[[1, 'Mon'], [2, 'Tues'], [3, 'Wed'], [4, 'Thurs'], [5, 'Fri'], [6, 'Sat'], [7, 'Sun']]},
-						yaxis:{ show: true, font: { color: '#ccc' }, max: 1 },
+						xaxis: { show: true, font: { color: '#919191' }, position: 'bottom', ticks:[[1, 'Mon'], [2, 'Tues'], [3, 'Wed'], [4, 'Thurs'], [5, 'Fri'], [6, 'Sat'], [7, 'Sun']]},
+						yaxis:{ show: true, font: { color: '#919191' }, max: 1 },
 						grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(120,120,120,0.5)' },
 						tooltip: true,
 						tooltipOpts: { content: '%y.3',  defaultTheme: false, shifts: { x: 0, y: -40 } }
 						}
-						" style="height:188px">
+						" style="height:218px">
           </div>
         </div>
       </div>
@@ -175,7 +177,7 @@
       <div class="box">
         <div class="box-header">
           <h3>Average API Load</h3>
-          <small>Calculated on server response of backend</small>
+          <small>Calculated Based On Google Analytics</small>
         </div>
         <div class="box-body">
           <div ui-jp="plot" ui-refresh="app.color" ui-options="
@@ -188,7 +190,7 @@
 						tooltip: true,
 						tooltipOpts: { content: '%s: %p.0%' }
 						}
-					" style="height:188px"></div>
+					" style="height:218px"></div>
         </div>
       </div>
     </div>

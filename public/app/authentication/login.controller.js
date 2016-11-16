@@ -1,3 +1,9 @@
+/**
+ * Controller must handle the login process of the application.
+ * Refer to documentation for specific requirements.
+ * @namespace LoginCtrl
+ */
+
 (() => {
   angular
     .module('app')

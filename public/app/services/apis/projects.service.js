@@ -1,3 +1,9 @@
+/**
+ * Service Factory that creates object that represent HTTP services
+ * for /api/projects Resources.
+ * @namespace ProjectsFactory
+ */
+
 (() => {
   angular
     .module('app')
@@ -10,57 +16,77 @@
     const projectsFactory = {
       github: {},
       drive: {},
-      cloud: {},
+      tasks: {},
       milestones: {},
-      tasks: {}
+      cloud: {}
+    };
+
+    projectsFactory.getProjects = (start, end) => {
+      return $http.get(`${urlBase}?start=${start}&end=${end}`);
     };
 
     projectsFactory.getProject = (projectId) => {
       return $http.get(`${urlBase}/${projectId}`);
     };
 
-    projectsFactory.getProjects = (range) => {
-      return $http.get(`${urlBase}?range=${range}`);
+    projectsFactory.getUsers = (projectId) => {
+      return $http.get(`${urlBase}/${projectId}/users`);
     };
 
-    projectsFactory.drive.getOverview = (projectId, range) => {
-      return $http.get(`${urlBase}/${projectId}/drive/overview?range=${range}`);
+    projectsFactory.github.getRepo = (projectId) => {
+      return $http.get(`${urlBase}/${projectId}/github/repo`);
     };
 
-    projectsFactory.drive.getFiles = (projectId, range) => {
-      return $http.get(`${urlBase}/${projectId}/drive/files?range=${range}`);
+    projectsFactory.github.getCommits = (projectId, start, end) => {
+      return $http.get(`${urlBase}/${projectId}/github/commits?start=${start}&end=${end}`);
     };
 
-    projectsFactory.drive.getRevisions = (projectId, range) => {
-      return $http.get(`${urlBase}/${projectId}/drive/revisions?range=${range}`);
+    projectsFactory.github.getReleases = (projectId, start, end) => {
+      return $http.get(`${urlBase}/${projectId}/github/releases?start=${start}&end=${end}`);
     };
 
-    projectsFactory.github.getOverview = (projectId, range) => {
-      return $http.get(`${urlBase}/${projectId}/github/overview?range=${range}`);
+    projectsFactory.github.getContributors = (projectId) => {
+      return $http.get(`${urlBase}/${projectId}/github/contributors`);
     };
 
-    projectsFactory.github.getCommits = (projectId, range) => {
-      return $http.get(`${urlBase}/${projectId}/github/commits?range=${range}`);
+    projectsFactory.github.getStatistics = (projectId) => {
+      return $http.get(`${urlBase}/${projectId}/github/stats`);
     };
 
-    projectsFactory.cloud.getOverview = (projectId, range) => {
-      return $http.get(`${urlBase}/${projectId}/cloud/overview?range=${range}`);
+    projectsFactory.drive.getFiles = (projectId, start, end) => {
+      return $http.get(`${urlBase}/${projectId}/drive/files?start=${start}&end=${end}`);
     };
 
-    projectsFactory.tasks.getOverview = (projectId, range) => {
-      return $http.get(`${urlBase}/${projectId}/tasks/overview?range=${range}`);
+    projectsFactory.drive.getChanges = (projectId, start, end) => {
+      return $http.get(`${urlBase}/${projectId}/drive/changes?start=${start}&end=${end}`);
     };
 
-    projectsFactory.tasks.getTasks = (projectId, range) => {
-      return $http.get(`${urlBase}/${projectId}/tasks?range=${range}`);
+    projectsFactory.drive.getActivities = (projectId, start, end) => {
+      return $http.get(`${urlBase}/${projectId}/drive/activities?start=${start}&end=${end}`);
     };
 
-    projectsFactory.milestones.getOverview = (projectId, range) => {
-      return $http.get(`${urlBase}/${projectId}/milestones/overview?range=${range}`);
+    projectsFactory.tasks.getTasks = (projectId, start, end) => {
+      return $http.get(`${urlBase}/${projectId}/tasks?start=${start}&end=${end}`);
     };
 
-    projectsFactory.milestones.getMilestones = (projectId, range) => {
-      return $http.get(`${urlBase}/${projectId}/milestones?range=${range}`);
+    projectsFactory.tasks.getActivities = (projectId, start, end) => {
+      return $http.get(`${urlBase}/${projectId}/tasks/activities?start=${start}&end=${end}`);
+    };
+
+    projectsFactory.milestones.getMilestones = (elapsed, projectId, start, end) => {
+      return $http.get(`${urlBase}/${projectId}/milestones?elapsed=${elapsed}&start=${start}&end=${end}`);
+    };
+
+    projectsFactory.milestones.getActivities = (projectId, start, end) => {
+      return $http.get(`${urlBase}/${projectId}/milestones/activities?start=${start}&end=${end}`);
+    };
+
+    projectsFactory.milestones.getTasksByMilestones = (projectId, start, end) => {
+      return $http.get(`${urlBase}/${projectId}/milestones/tasks?start=${start}&end=${end}`);
+    };
+
+    projectsFactory.cloud.getOverview = (projectId, start, end) => {
+      return $http.get(`${urlBase}/${projectId}/cloud/overview?start=${start}&end=${end}`);
     };
 
     return projectsFactory;

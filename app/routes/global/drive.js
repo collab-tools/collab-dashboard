@@ -1,112 +1,187 @@
 import _ from 'lodash';
 import boom from 'boom';
 import moment from 'moment';
+import constants from '../../common/constants';
 import Storage from '../../common/storage-helper';
 
 const models = new Storage();
 
-const ERROR_BAD_REQUEST = 'Unable to serve your content. Check your arguments.';
-const ERROR_MISSING_TEMPLATE = 'is a required parameter in GET request.';
-
-function getOverview(req, res, next) {
-  req.query.range = req.query.range || 7;
-  req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
+function getFiles(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || constants.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || constants.defaults.endDate;
+  req.checkQuery('start', `start ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  req.checkQuery('end', `end ${constants.templates.error.invalidData}`).isInt({ min: 0 });
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
-  const dateRange = req.query.range;
-  const convertedRange = moment(new Date())
-    .subtract(dateRange, 'day')
-    .format('YYYY-MM-DD HH:mm:ss');
+  const startDate = moment(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  const endDate = moment(req.query.end).format('YYYY-MM-DD HH:mm:ss');
 
-  const processPayload = ([activeUsersCount, revisions, files, usersCount, projectsCount]) => {
-    const payload = {};
-    payload.activeUsersCount = activeUsersCount;
-    payload.revisions = revisions;
-    payload.files = files;
-    payload.usersCount = usersCount;
-    payload.projectsCount = projectsCount;
-    return payload;
+  const response = (files) => {
+    if (_.isNil(files)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(files);
   };
 
-  const response = (payload) => {
-    if (_.isNil(payload)) return next(boom.badRequest(ERROR_BAD_REQUEST));
-    res.status(200).json(payload);
-  };
-
-  const retrievalFunctions = [
-    models.log.revision_log.getParticipationCount(convertedRange),
-    models.log.revision_log.getRevisions(convertedRange),
-    models.log.drive_log.getUniqueFiles(null, null, convertedRange),
-    models.app.user.getUsersCount(convertedRange),
-    models.app.project.getProjectsCount(convertedRange)
-  ];
-
-  return Promise.all(retrievalFunctions)
-    .then(processPayload)
-    .then(response)
-    .catch(next);
-}
-
-function getRevisions(req, res, next) {
-  req.query.range = req.query.range || 7;
-  req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
-  const errors = req.validationErrors();
-  if (errors) return next(boom.badRequest(errors));
-
-  const dateRange = req.query.range;
-  const convertedRange = moment(new Date())
-    .subtract(dateRange, 'day')
-    .format('YYYY-MM-DD HH:mm:ss');
-
-  const response = (commit) => {
-    if (_.isNil(commit)) return next(boom.badRequest(ERROR_BAD_REQUEST));
-    res.status(200).json(commit);
-  };
-
-  return models.log.revision_log.getRevisions(convertedRange)
-    .then(response)
-    .catch(next);
-}
-
-function getFileRevisions(req, res, next) {
-  req.checkParams('fileId', `fileId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
-  req.query.range = req.query.range || 7;
-  req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
-  const errors = req.validationErrors();
-  if (errors) return next(boom.badRequest(errors));
-
-  const fileId = req.params.fileId;
-  const dateRange = req.query.range;
-  const convertedRange = moment(new Date())
-    .subtract(dateRange, 'day')
-    .format('YYYY-MM-DD HH:mm:ss');
-  const response = (revisions) => {
-    if (_.isNil(revisions)) return next(boom.badRequest(ERROR_BAD_REQUEST));
-    res.status(200).json(revisions);
-  };
-
-  return models.log.revision_log.getFileRevisions(fileId, convertedRange)
+  return models.log.file_log.getFiles(null, null, startDate, endDate)
     .then(response)
     .catch(next);
 }
 
 function getFile(req, res, next) {
-  req.checkParams('fileId', `fileId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
+  req.checkParams('fileId', `fileId ${constants.templates.error.missingParam}`).notEmpty();
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
   const fileId = req.params.fileId;
   const response = (file) => {
-    if (_.isNil(file)) return next(boom.badRequest(ERROR_BAD_REQUEST));
+    if (_.isNil(file)) return next(boom.badRequest(constants.templates.error.badRequest));
     res.status(200).json(file);
   };
 
-  return models.log.drive_log.getFile(fileId)
+  return models.log.file_log.getFile(fileId)
     .then(response)
     .catch(next);
 }
 
-const driveAPI = { getOverview, getRevisions, getFileRevisions, getFile };
+function getChanges(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || constants.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || constants.defaults.endDate;
+  req.checkQuery('start', `start ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  req.checkQuery('end', `end ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  const errors = req.validationErrors();
+  if (errors) return next(boom.badRequest(errors));
+
+  const startDate = moment(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  const endDate = moment(req.query.end).format('YYYY-MM-DD HH:mm:ss');
+
+  const response = (changes) => {
+    if (_.isNil(changes)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(changes);
+  };
+
+  return models.log.file_log.getChanges(startDate, endDate)
+    .then(response)
+    .catch(next);
+}
+
+function getFileChanges(req, res, next) {
+  req.checkParams('fileId', `fileId ${constants.templates.error.missingParam}`).notEmpty();
+  req.query.start = parseInt(req.query.start, 10) || constants.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || constants.defaults.endDate;
+  req.checkQuery('start', `start ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  req.checkQuery('end', `end ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  const errors = req.validationErrors();
+  if (errors) return next(boom.badRequest(errors));
+
+  const fileId = req.params.fileId;
+  const startDate = moment(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  const endDate = moment(req.query.end).format('YYYY-MM-DD HH:mm:ss');
+
+  const response = (changes) => {
+    if (_.isNil(changes)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(changes);
+  };
+
+  return models.log.file_log.getFileChanges(fileId, startDate, endDate)
+    .then(response)
+    .catch(next);
+}
+
+function getActivities(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || constants.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || constants.defaults.endDate;
+  req.checkQuery('start', `start ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  req.checkQuery('end', `end ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  const errors = req.validationErrors();
+  if (errors) return next(boom.badRequest(errors));
+
+  const startDate = moment(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  const endDate = moment(req.query.end).format('YYYY-MM-DD HH:mm:ss');
+
+  const response = (activities) => {
+    if (_.isNil(activities)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(activities);
+  };
+
+  return models.log.file_log.getActivities(startDate, endDate)
+    .then(response)
+    .catch(next);
+}
+
+function getFileActivities(req, res, next) {
+  req.checkParams('fileId', `fileId ${constants.templates.error.missingParam}`).notEmpty();
+  req.query.start = parseInt(req.query.start, 10) || constants.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || constants.defaults.endDate;
+  req.checkQuery('start', `start ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  req.checkQuery('end', `end ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  const errors = req.validationErrors();
+  if (errors) return next(boom.badRequest(errors));
+
+  const fileId = req.params.fileId;
+  const startDate = moment(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  const endDate = moment(req.query.end).format('YYYY-MM-DD HH:mm:ss');
+
+  const response = (activities) => {
+    if (_.isNil(activities)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(activities);
+  };
+
+  return models.log.file_log.getFileActivities(fileId, startDate, endDate)
+    .then(response)
+    .catch(next);
+}
+
+function getParticipatingUsers(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || constants.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || constants.defaults.endDate;
+  req.checkQuery('start', `start ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  req.checkQuery('end', `end ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  const errors = req.validationErrors();
+  if (errors) next(boom.badRequest(errors));
+
+  const startDate = moment(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  const endDate = moment(req.query.end).format('YYYY-MM-DD HH:mm:ss');
+
+  const response = (users) => {
+    if (_.isNil(users)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(users);
+  };
+
+  return models.log.file_log.getParticipatingUsers(startDate, endDate)
+    .then(response)
+    .catch(next);
+}
+
+function getParticipatingProjects(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || constants.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || constants.defaults.endDate;
+  req.checkQuery('start', `start ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  req.checkQuery('end', `end ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  const errors = req.validationErrors();
+  if (errors) next(boom.badRequest(errors));
+
+  const startDate = moment(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  const endDate = moment(req.query.end).format('YYYY-MM-DD HH:mm:ss');
+
+  const response = (users) => {
+    if (_.isNil(users)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(users);
+  };
+
+  return models.log.file_log.getParticipatingProjects(startDate, endDate)
+    .then(response)
+    .catch(next);
+}
+
+const driveAPI = {
+  getFiles,
+  getFile,
+  getChanges,
+  getFileChanges,
+  getActivities,
+  getFileActivities,
+  getParticipatingUsers,
+  getParticipatingProjects
+};
 
 export default driveAPI;

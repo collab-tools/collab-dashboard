@@ -1,3 +1,9 @@
+/**
+ * Service Factory that creates object that represent HTTP services
+ * for /api/global/cloud Resources
+ * @namespace CloudFactory
+ */
+
 (() => {
   angular
     .module('app')

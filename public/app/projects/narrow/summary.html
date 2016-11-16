@@ -1,0 +1,491 @@
+<div flex-no-shrink>
+  <div ui-include="'layout/header.sub.html'"></div>
+</div>
+<div class="padding">
+  <div class="row grey m-b">
+    <div class="box-header">
+      <h2>
+        <i class="fa fa-fw fa-github-square pull-left"></i>GitHub</h2>
+    </div>
+    <div class="col-lg-12 col-xl-6">
+      <div class="row">
+        <div class="col-md-12 col-lg-6">
+          <div class="box p-a">
+            <div class="pull-left m-r">
+              <i class="fa fa-fw fa-upload text-2x text-danger m-y-sm"></i>
+            </div>
+            <div class="clear">
+              <div class="text-white-dk">Commits (Master)</div>
+              <h4 class="m-a-0 text-md _600">
+                <a href>{{vm.github.commits.count}}</a>
+              </h4>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 col-lg-6">
+          <div class="box p-a">
+            <div class="pull-left m-r p-r-sm">
+              <i class="fa fa-clock-o text-2x text-accent m-y-sm"></i>
+            </div>
+            <div class="clear">
+              <div class="text-white-dk">Mean Commits </div>
+              <h4 class="m-a-0 text-md _600">
+                <a href>{{vm.github.commits.mean.toFixed(2)}} Commits <small> Per Day</small></a>
+              </h4>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 col-lg-6">
+          <div class="box p-a">
+            <div class="pull-left m-r">
+              <i class="fa fa-fw fa-pencil-square-o text-2x text-success m-y-sm"></i>
+            </div>
+            <div class="clear">
+              <div class="text-white-dk">Lines Added / Removed</div>
+              <h4 class="m-a-0 text-md _600">
+                <a href>{{vm.github.commits.lines[0]}} / {{vm.github.commits.lines[1]}}</a>
+              </h4>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 col-lg-6">
+          <div class="box p-a">
+            <div class="pull-left m-r">
+              <i class="fa fa-fw fa-bar-chart-o text-2x text-info m-y-sm"></i>
+            </div>
+            <div class="clear">
+              <div class="text-white-dk">Commits Deviation</div>
+              <h4 class="m-a-0 text-md _600">
+                <a href>{{vm.github.commits.deviation.toFixed(2)}}</a>
+              </h4>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-12">
+          <div class="row-col box-color text-center teal">
+            <div class="row-cell p-a-2">
+              Contribution Mean
+              <h4 class="m-a-0 text-md _600">
+                <a href>{{vm.github.commits.userMean}} Commits</a>
+              </h4>
+            </div>
+            <div class="row-cell p-a-2 blue">
+              Contribution Deviation
+              <h4 class="m-a-0 text-md _600">
+                <a href>{{vm.github.commits.userDeviation}} Commits</a>
+              </h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-12 col-xl-6">
+      <div class="box">
+        <div class="box-header">
+          <h3>Commit History</h3>
+          <small>List of Commits (Master)</small>
+        </div>
+        <div class="box-body p-y-xs" style="overflow-y: auto; height:210px">
+          <ul class="list inset">
+            <li class="list-item" ng-repeat="c in vm.github.commits.data">
+              <a href class="list-left">
+                <span class="w-40 r-2x _600 text-lg">
+                  #
+                </span>
+              </a>
+              <div class="list-body">
+                <div class="m-y-sm pull-right">
+                  <a href="http://github.com/{{vm.projects.data.githubRepoOwner}}/{{vm.projects.data.githubRepoName}}/commit/{{c.sha}}" class="btn btn-xs white">View<i class="pull-right fa fa-pencil"></i>
+                  </a>
+                </div>
+                <div>
+                  <strong>{{ vm.githubDisplay[c.githubLogin] }}</strong> commited '{{c.message}}'.
+                </div>
+                <div class="text-sm">
+                  <span class="text-white-dk">on {{c.date | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}}</span>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-12 col-xl-6" ng-if="vm.github.commits.groupedDate.length > 0">
+      <div class="box">
+        <div class="box-header">
+          <h3>Commits</h3>
+          <small>Commits (Master) Over Time</small>
+        </div>
+        <div class="box-body">
+          <div ui-jp="plot" ui-refresh="vm.github.commits.groupedDate" ui-options="
+            [{ data: {{vm.github.commits.groupedDate}},
+              points: { show: true, radius: 3},
+              splines: { show: true, tension: 0.45, lineWidth: 0, fill: 0.4}
+            }],
+            { colors: ['{{app.color.primary}}'],
+              series: { shadowSize: 3 },
+              xaxis: { show: true, mode: 'time', font: { color: '#ccc' }, timezone: 'browser', minTickSize: [1, 'day'], min: {{vm.range.start === 0 ? vm.project.origin : vm.range.start}}, max: {{vm.range.end}}},
+              yaxis:{ show: true, font: { color: '#ccc' }, min:1, minTickSize: 1, tickDecimals: 0},
+              grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(255,255,255,0.5)' },
+              tooltip: true,
+              tooltipOpts: { content: function(label, x, y) { return moment(parseInt(x)).format('DD/MM') + ': ' + y + ' Commit(s)' }, defaultTheme: false, shifts: { x: 0, y: -40 } }
+            }" style="min-height:210px" ng-style="{ height: vm.plotHeight }">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-12 col-xl-6">
+      <div class="row ">
+        <div class="col-sm-12 col-md-6" ng-repeat="(u, c) in vm.github.commits.groupedUsers">
+          <div class="box">
+            <div class="box-header">
+              <h3>{{u}}</h3>
+              <small>Contribution Rate: {{vm.github.commits.groupedUsersPercentage[u].toFixed(2) * 100}} %</small>
+            </div>
+            <div class="box-body">
+              <div ng-if="c" ui-jp="plot" ui-refresh="c" ui-options="
+            [{ data: {{c}},
+              points: { show: true, radius: 3},
+              splines: { show: true, tension: 0.45, lineWidth: 0, fill: 0.4}
+            }],
+            { colors: ['{{app.color.primary}}'],
+              series: { shadowSize: 3 },
+              xaxis: { show: true, mode: 'time', font: { color: '#ccc' }, timezone: 'browser', minTickSize: [1, 'day'], min: {{vm.range.start}}, max: {{vm.range.end}}},
+              yaxis:{ show: true, font: { color: '#ccc' }, min:1, minTickSize: 1, tickDecimals: 0},
+              grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(255,255,255,0.5)' },
+              tooltip: true,
+              tooltipOpts: { content: function(label, x, y) { return moment(parseInt(x)).format('DD/MM') + ': ' + y + ' Commit(s)' }, defaultTheme: false, shifts: { x: 0, y: -40 } }
+            }" style="height:210px">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row m-y white">
+    <div class="box-header">
+      <h2><i class="fa fa-fw fa-google-plus-square pull-left"></i>Google Drive</h2>
+    </div>
+    <div class="col-lg-12 col-xl-6">
+      <div class="box">
+        <div class="box-header">
+          <h3>Drive History</h3>
+          <small>Changes Made To Shared Files</small>
+        </div>
+        <div class="box-body p-y-xs" style="overflow-y: auto; height:210px">
+          <ul class="list inset">
+            <li class="list-item" ng-repeat="a in vm.drive.activities.data">
+              <a href class="list-left">
+                <i ng-if="a.activity === 'U'" class="fa fa-pencil w-40 text-lg"></i>
+                <i ng-if="a.activity === 'C'" class="fa fa-cloud-upload w-40 text-lg"></i>
+              </a>
+              <div class="list-body">
+                <div ng-if="a.activity === 'U'">
+                  <strong>{{ vm.emailDisplay[a.email] }}</strong> made a change to '{{a.fileName}}' ({{a.fileExtension}}).
+                </div>
+                <div ng-if="a.activity === 'C'">
+                  <strong>{{ vm.emailDisplay[a.email] }}</strong> created a new file '{{a.fileName}}'
+                  ({{a.fileExtension}}).
+                </div>
+                <div class="text-sm">
+                  <span class="text-black-lt">on {{a.date | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}}</span>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-12 col-xl-6">
+      <div class="row">
+        <div class="col-xs-6">
+          <div class="box p-a">
+            <div class="pull-left m-r">
+              <i class="fa fa-fw fa-upload text-2x text-danger m-y-sm"></i>
+            </div>
+            <div class="clear">
+              <div class="text-black-lt">Files Uploaded</div>
+              <h4 class="m-a-0 text-md _600">
+                <a href>{{vm.drive.files.count}}</a>
+              </h4>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-6">
+          <div class="box p-a">
+            <div class="pull-left m-r p-r-sm">
+              <i class="fa fa-clock-o text-2x text-accent m-y-sm"></i>
+            </div>
+            <div class="clear">
+              <div class="text-black-lt">Mean Changes</div>
+              <h4 class="m-a-0 text-md _600">
+                <a href>{{vm.drive.changes.mean.toFixed(2)}} Hours</a>
+              </h4>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-6">
+          <div class="box p-a">
+            <div class="pull-left m-r">
+              <i class="fa fa-fw fa-pencil-square-o text-2x text-success m-y-sm"></i>
+            </div>
+            <div class="clear">
+              <div class="text-black-lt">Change Made</div>
+              <h4 class="m-a-0 text-md _600">
+                <a href>{{vm.drive.changes.count}}</a>
+              </h4>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-6">
+          <div class="box p-a">
+            <div class="pull-left m-r">
+              <i class="fa fa-fw fa-bar-chart-o text-2x text-info m-y-sm"></i>
+            </div>
+            <div class="clear">
+              <div class="text-black-lt">Changes Deviation</div>
+              <h4 class="m-a-0 text-md _600">
+                <a href>{{vm.drive.changes.deviation.toFixed(2)}} Hours</a>
+              </h4>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-12">
+          <div class="row-col box-color text-center teal">
+            <div class="row-cell p-a-2">
+              Contribution Mean
+              <h4 class="m-a-0 text-md _600">
+                <a href>{{vm.drive.changes.userMean}} Changes</a>
+              </h4>
+            </div>
+            <div class="row-cell p-a-2 blue">
+              Contribution Deviation
+              <h4 class="m-a-0 text-md _600">
+                <a href>{{vm.drive.changes.userDeviation}} Changes</a>
+              </h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row grey m-y">
+    <div class="box-header">
+      <h2>
+        <i class="fa fa-fw fa-rocket pull-left"></i>Milestones</h2>
+    </div>
+    <div class="col-lg-12 col-xl-6">
+      <div class="row">
+        <div class="col-xs-6">
+          <div class="box p-a">
+            <div class="pull-left m-r">
+              <i class="fa fa-upload text-2x text-danger m-y-sm"></i>
+            </div>
+            <div class="clear">
+              <div class="text-white-dk">Milestones Count</div>
+              <h4 class="m-a-0 text-md _600">
+                <a href>{{vm.milestones.count}}</a>
+              </h4>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-6">
+          <div class="box p-a">
+            <div class="pull-left m-r">
+              <i class="fa fa-bar-chart-o text-2x text-info m-y-sm"></i>
+            </div>
+            <div class="clear">
+              <div class="text-white-dk">Milestone Deviation</div>
+              <h4 class="m-a-0 text-md _600">
+                <a href>{{vm.milestones.completedDeviation.toFixed(2)}} Hours</a>
+              </h4>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-6">
+          <div class="box p-a">
+            <div class="pull-left m-r">
+              <i class="fa fa-pencil-square-o text-2x text-success m-y-sm"></i>
+            </div>
+            <div class="clear">
+              <div class="text-white-dk">Milestones Completed</div>
+              <h4 class="m-a-0 text-md _600">
+                <a href>{{vm.milestones.completedCount}}</a>
+              </h4>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-6">
+          <div class="box p-a">
+            <div class="pull-left m-r p-r-sm">
+              <i class="fa fa-clock-o text-2x text-accent m-y-sm"></i>
+            </div>
+            <div class="clear">
+              <div class="text-white-dk">Mean Milestone Completion</div>
+              <h4 class="m-a-0 text-md _600">
+                <a href>{{vm.milestones.completedMean.toFixed(2)}} Hours</a>
+              </h4>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-12">
+          <div class="row-col box-color text-center teal">
+            <div class="row-cell p-a-2">
+              Missed Milestones
+              <h4 class="m-a-0 text-md _600">
+                <a href>{{vm.milestones.missedCount}}</a>
+              </h4>
+            </div>
+            <div class="row-cell p-a-2 yellow-A700">
+              Completion Rate
+              <h4 class="m-a-0 text-md _600">
+                <a href>{{vm.milestones.rate.toFixed(2) * 100}} %</a>
+              </h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-12 col-xl-6">
+      <div class="box">
+        <div class="box-header">
+          <h3>Milestones History</h3>
+          <small>History of Milestone Activities</small>
+        </div>
+        <div class="box-body p-y-xs" style="overflow-y: auto; height:210px">
+          <ul class="list inset">
+            <li class="list-item" ng-repeat="a in vm.milestones.activities.data">
+              <a href class="list-left">
+                <i ng-if="a.activity === 'C'" class="fa fa-rocket w-40 text-lg"></i>
+                <i ng-if="a.activity === 'A'" class="fa fa-user-plus w-40 text-lg"></i>
+              </a>
+              <div class="list-body">
+                <div ng-if="a.activity === 'C'">
+                  <strong>{{ vm.idDisplay[a.userId] }}</strong> created a new milestone '{{a.milestone.content}}'.
+                </div>
+                <div ng-if="a.activity === 'A'">
+                  <strong>{{ vm.idDisplay[a.userId] }}</strong> assigned to milestone '{{a.milestone.content}}'.
+                </div>
+                <div class="text-sm">
+                  <span class="text-white-dk">on {{a.date | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}}</span>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row white m-y">
+    <div class="box-header">
+      <h2>
+        <i class="fa fa-fw fa-tasks pull-left"></i>Tasks</h2>
+    </div>
+    <div class="col-lg-12 col-xl-6">
+      <div class="box">
+        <div class="box-header">
+          <h3>Tasks History</h3>
+          <small>List of Task Activities</small>
+        </div>
+        <div class="box-body p-y-xs" style="overflow-y: auto; height:210px">
+          <ul class="list inset">
+            <li class="list-item" ng-repeat="a in vm.tasks.activities.data">
+              <a href class="list-left">
+                <i ng-if="a.activity === 'D'" class="fa fa-check w-40 text-lg"></i>
+                <i ng-if="a.activity === 'C'" class="fa fa-pencil-square-o w-40 text-lg"></i>
+                <i ng-if="a.activity === 'A'" class="fa fa-user-plus w-40 text-lg"></i>
+              </a>
+              <div class="list-body">
+                <div ng-if="a.activity === 'D'">
+                  <strong>{{ vm.idDisplay[a.userId] }}</strong> completed a task '{{a.task.content}}'.'
+                </div>
+                <div ng-if="a.activity === 'C'">
+                  <strong>{{ vm.idDisplay[a.userId] }}</strong> created a new task '{{a.task.content}}'.
+                </div>
+                <div ng-if="a.activity === 'A'">
+                  <strong>{{ vm.idDisplay[a.userId] }}</strong> assigned to task '{{a.task.content}}'.
+                </div>
+                <div class="text-sm">
+                  <span class="text-black-lt">on {{a.date | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}}</span>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-12 col-xl-6">
+      <div class="row">
+        <div class="col-xs-6">
+          <div class="box p-a">
+            <div class="pull-left m-r">
+              <i class="fa fa-fw fa-tasks text-2x text-danger m-y-sm"></i>
+            </div>
+            <div class="clear">
+              <div class="text-black-lt">Tasks Created</div>
+              <h4 class="m-a-0 text-md _600">
+                <a href>{{vm.tasks.createdCount}}</a>
+              </h4>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-6">
+          <div class="box p-a">
+            <div class="pull-left m-r">
+              <i class="fa fa-fw fa-users text-2x text-accent m-y-sm"></i>
+            </div>
+            <div class="clear">
+              <div class="text-black-lt">Tasks Assigned</div>
+              <h4 class="m-a-0 text-md _600">
+                <a href>{{vm.tasks.assignedCount}}</a>
+              </h4>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-6">
+          <div class="box p-a">
+            <div class="pull-left m-r">
+              <i class="fa fa-fw fa-close text-2x text-success m-y-sm"></i>
+            </div>
+            <div class="clear">
+              <div class="text-black-lt">Tasks Done</div>
+              <h4 class="m-a-0 text-md _600">
+                <a href>{{vm.tasks.doneCount}}</a>
+              </h4>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-6">
+          <div class="box p-a">
+            <div class="pull-left m-r">
+              <i class="fa fa-fw fa-clock-o text-2x text-info m-y-sm"></i>
+            </div>
+            <div class="clear">
+              <div class="text-black-lt">Tasks Pending</div>
+              <h4 class="m-a-0 text-md _600">
+                <a href>{{vm.tasks.pendingCount}}</a>
+              </h4>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-12">
+          <div class="row-col box-color text-center teal">
+            <div class="row-cell p-a-2">
+              Contribution Mean
+              <h4 class="m-a-0 text-md _600">
+                <a href>{{vm.drive.changes.userMean}} Changes</a>
+              </h4>
+            </div>
+            <div class="row-cell p-a-2 yellow-A700">
+              Assigned Deviation
+              <h4 class="m-a-0 text-md _600">
+                <a href>{{vm.drive.changes.userDeviation}} Changes</a>
+              </h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -2,74 +2,94 @@
   <div ui-include="'layout/header.sub.html'"></div>
 </div>
 <div class="padding">
-    <div class="row">
-        <div class="col-sm-6 col-md-4 col-lg-4">
-            <div class="box-color p-a indigo">
-                <div class="pull-right m-l">
-					<span class="w-20 dker text-center rounded">
-						<i class="material-icons">&#xE7F0;</i>
-					</span>
-                </div>
-                <div class="clear">
-                    <h4 class="m-a-0 text-md"><a href>1600 <span
-                            class="text-sm">Registered Projects</span></a></h4>
-                </div>
-            </div>
+  <div class="row">
+    <div class="col-sm-6 col-md-4 col-lg-4">
+      <div class="box-color p-a indigo">
+        <div class="pull-right m-l">
+          <span class="w-20 dker text-center rounded">
+            <i class="material-icons">&#xE7F0;</i>
+          </span>
         </div>
-        <div class="col-sm-6 col-md-4 col-lg-4">
-            <div class="box-color p-a deep-purple">
-                <div class="pull-right m-l">
-					<span class="w-20 dker text-center rounded">
-						<i class="fa fa-group"></i>
-					</span>
-                </div>
-                <div class="clear">
-                    <h4 class="m-a-0 text-md"><a href>100 <span class="text-sm">Projects This Semester</span></a>
-                    </h4>
-                </div>
-            </div>
+        <div class="clear">
+          <h4 class="m-a-0 text-md"><a href>{{vm.projects.newCount}} <span class="text-sm">New Projects</span></a></h4>
         </div>
-        <div class="col-sm-6 col-md-4 col-lg-4">
-            <div class="box-color p-a orange-300">
-                <div class="pull-right m-l">
-					<span class="w-20 dker text-center rounded">
-						<i class="material-icons">&#xE80E;</i>
-					</span>
-                </div>
-                <div class="clear">
-                    <h4 class="m-a-0 text-md"><a href>50% <span
-                            class="text-sm">Active Projects</span></a></h4>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
-    <div class="box">
-        <div class="box-header">
-            <h2>Projects</h2>
+    <div class="col-sm-6 col-md-4 col-lg-4">
+      <div class="box-color p-a deep-purple">
+        <div class="pull-right m-l">
+          <span class="w-20 dker text-center rounded">
+            <i class="fa fa-group"></i>
+          </span>
         </div>
-        <div class="table-responsive">
-            <table ui-jp="dataTable" ui-options="{
-				sAjaxSource: 'projects/global/projects.json',
-				aoColumns: [
-				{ mData: 'project_id', mRender: function(data, type, full) {return '<a href=&quot;/app/project&quot; ui-sref=&quot;app.project&quot;>' + data + '</a>'}},
-				{ mData: 'project_name' },
-				{ mData: 'members' },
-				{ mData: 'last_active' },
-				{ mData: 'batch' }
-				]
-				}" class="table table-striped b-t b-b table-hover">
-                <thead>
-                <tr>
-                    <th style="width:15%">Projects ID</th>
-                    <th style="width:30%">Projects Name</th>
-                    <th style="width:25%">Members</th>
-                    <th style="width:15%">Last Active</th>
-                    <th style="width:15%">Batch</th>
-                </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+        <div class="clear">
+          <h4 class="m-a-0 text-md">
+            <a href>{{vm.projects.meanSize}} <span class="text-sm">Average Project Size</span></a>
+          </h4>
         </div>
+      </div>
     </div>
+    <div class="col-sm-6 col-md-4 col-lg-4">
+      <div class="box-color p-a orange-300">
+        <div class="pull-right m-l">
+          <span class="w-20 dker text-center rounded">
+            <i class="material-icons">&#xE80E;</i>
+          </span>
+        </div>
+        <div class="clear">
+          <h4 class="m-a-0 text-md">
+            <a href>{{vm.projects.activeCount / vm.projects.count * 100}}% <span class="text-sm">Active Projects</span></a>
+          </h4>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="box">
+    <div class="box-header">
+      <h2>Projects</h2>
+    </div>
+    <div class="table-responsive">
+      <table ng-if="vm.projects.new" ui-jp="dataTable" ui-refresh="vm.projects.new" ui-options="{
+        destroy: true,
+        data: {{vm.projects.new}},
+        aoColumns: [
+          { mData: 'content',
+            mRender: function(data, type, full) {
+              var id = full.id;
+              return '<a href=&quot;/app/project/' + id + '&quot; ui-sref=&quot;app.project&quot;>' + data + '</a>';
+            }
+          },
+          { mRender: function(data, type, full) {
+              return '<a href=&quot;https://github.com/' + full.githubRepoOwner + '/' + full.githubRepoName + '&quot;>' + full.githubRepoOwner + '/' + full.githubRepoName + '</a>' || 'N/A';
+            }
+          },
+          { mData: 'users',
+            mRender: function(data, type, full) {
+              var userString = '';
+              data.forEach(function(user) {
+                userString += '<a href=&quot;/app/user/' + user.id + '&quot;>' + user.displayName + '<br></a>';
+              });
+              return userString;
+            }
+          },
+          { mRender: function(data, type, full) {
+              return full.users.length;
+            }
+          },
+          { mData: 'createdAt'},
+        ]}" class="table table-striped b-t b-b table-hover">
+        <thead>
+          <tr>
+            <th style="width:20%">Name</th>
+            <th style="width:25%">Repo</th>
+            <th style="width:30%">Members</th>
+            <th style="width:10%">Size</th>
+            <th style="width:15%">Created</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>

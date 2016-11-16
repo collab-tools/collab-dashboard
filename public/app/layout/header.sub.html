@@ -1,15 +1,27 @@
-<div class="p-a white lt box-shadow">
-  <div class="row">
-		<div class="col-sm-6 col-md-6">
-			<div class="m-t-sm text-md _300">{{vm.subtitle}}</div>
-		</div>
-		<div class="col-sm-3 offset-sm-3 col-xl-2 offset-xl-4">
-      <ui-select ng-model="dateRange.selected" theme="bootstrap" class="p-r pull-right">
-        <ui-select-match class="ui-select-match" placeholder="Date Range">{{$select.selected.display}}</ui-select-match>
-        <ui-select-choices class="ui-select-choices" repeat="range in dateRange">
-          <div ng-bind-html="range.display"></div>
-        </ui-select-choices>
-      </ui-select>
-		</div>
-	</div>
+<div class="navbar navbar-sm white lt box-shadow">
+  <div class="navbar-item m-t-xs text-md _300 pull-left">{{vm.subtitle}}</div>
+  <div ng-if="vm.user.projects.data" class="navbar-item m-t-xs pull-left">
+    <ui-select search-enabled="false" theme="bootstrap" class="w-md" ng-model="vm.user.projects.data.selected"
+      ng-change="vm.changeProject()">
+      <ui-select-match class="ui-select-match" placeholder="Projects">{{$select.selected.content}}</ui-select-match>
+      <ui-select-choices class="ui-select-choices" repeat="project in vm.user.projects.data">
+        <div ng-bind-html="project.content"></div>
+      </ui-select-choices>
+    </ui-select>
+  </div>
+  <div class="navbar-item pull-left m-t-xs">
+    <a ng-click="vm.requestData()"><i class="fa fa-refresh" aria-hidden="true"></i></a>
+  </div>
+  <div class="pull-right m-y-sm">
+    <ui-select search-enabled="false" theme="bootstrap" class="w-md" ng-model="dateRange.selected" ng-change="vm.requestData()">
+      <ui-select-match class="ui-select-match" placeholder="Date Range">{{$select.selected.display}}</ui-select-match>
+      <ui-select-choices class="ui-select-choices" repeat="range in dateRange">
+        <div class="dropdown-divider" ng-show="$index == 4"></div>
+        <div ng-bind-html="range.display"></div>
+        <span class="text-black-lt text-xs">
+              {{range.start | amDateFormat: 'DD/MM/YYYY'}} - {{range.end | amDateFormat: 'DD/MM/YYYY'}}
+            </span>
+      </ui-select-choices>
+    </ui-select>
+  </div>
 </div>

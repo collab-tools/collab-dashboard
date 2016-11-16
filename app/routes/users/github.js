@@ -1,151 +1,182 @@
 import _ from 'lodash';
 import boom from 'boom';
-import config from 'config';
 import moment from 'moment';
-import octokat from 'octokat';
+import constants from '../../common/constants';
 import Storage from '../../common/storage-helper';
 
 const models = new Storage();
 
-const ERROR_BAD_REQUEST = 'Unable to serve your content. Check your arguments.';
-const ERROR_MISSING_TEMPLATE = 'is a required parameter in GET request.';
-
-function getOverview(req, res, next) {
-  req.checkParams('userId', `userId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
-  req.checkQuery('projectId', `projectId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
-  req.query.range = req.query.range || 7;
-  req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
+function getUserRepos(req, res, next) {
+  req.checkParams('userId', `userId ${constants.templates.error.missingParam}`).notEmpty();
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
   const userId = req.params.userId;
-  const projectId = req.query.projectId;
-  const dateRange = req.query.range;
 
-  // Access GitHub with user's token and retrieve relevant statistics
-  // Dev Token for testing purposes
-  const token = config.github_dev;
-  const mockOwner = 'collab-tools';
-  const mockProject = 'collab-dashboard';
-  const mockRange = 'month';
-
-  // Setup GitHub wrapper to retrieve information from GitHub
-  const octoConfig = { token };
-  const octo = octokat(octoConfig);
-  const repo = octo.repos(mockOwner, mockProject);
-  const overviewPayload = { success: true };
-  let since = null; // Default - Everything
-  if (mockRange === 'month') since = moment().startOf('month').format('X');
-  else if (mockRange === 'week') since = moment().startOf('week').format('X');
-  let githubName;
-
-  const processUser = (user) => {
-    githubName = user.login;
-
-    // Get all commits of the user and process
-    return repo.commits.fetch({ since, author: githubName })
-      .then((commits) => {
-        overviewPayload.commits = commits;
-      });
+  const retrieveRepos = (projects) => {
+    if (_.isNil(projects)) return next(boom.badRequest(constants.templates.error.badRequest));
+    return _.map(projects, project => _.pick(project, ['githubRepoName', 'githubRepoOwner']));
   };
 
-  const getRepoStats = (contributors) => {
-    const contribStats = {};
-    const defaultAcc = { a: 0, d: 0, c: 0 };
+  const response = (repos) => {
+    if (_.isNil(repos)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(repos);
+  };
 
-    contributors.forEach((contributor) => {
-      const rangeWeeks = since ? _.filter(contributor.weeks, (week) => { return week.w >= since; }) : contributor.weeks;
-      contribStats[contributor.author.login] = rangeWeeks.reduce((previous, current) =>
-        ({ a: (previous.a + current.a), d: (previous.d + current.d), c: previous.c + current.c }),
-        defaultAcc);
+  return models.app.user.getUserProjects(userId)
+    .then(retrieveRepos)
+    .then(response)
+    .catch(next);
+}
+
+function getUserCommits(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || constants.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || constants.defaults.endDate;
+  req.checkParams('userId', `userId ${constants.templates.error.missingParam}`).notEmpty();
+  req.checkQuery('start', `start ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  req.checkQuery('end', `end ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  const errors = req.validationErrors();
+  if (errors) return next(boom.badRequest(errors));
+
+  const userId = req.params.userId;
+  const startDate = moment(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  const endDate = moment(req.query.end).format('YYYY-MM-DD HH:mm:ss');
+
+  const retrieveCommits = (user) => {
+    if (_.isNil(user)) return next(boom.badRequest(constants.templates.error.badRequest));
+    return models.log.commit_log.getUserCommits(user.githubLogin, null, startDate, endDate);
+  };
+
+  const response = (commmits) => {
+    if (_.isNil(commmits)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(commmits);
+  };
+
+  return models.app.user.getUserById(userId)
+    .then(retrieveCommits)
+    .then(response)
+    .catch(next);
+}
+
+function getUserReleases(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || constants.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || constants.defaults.endDate;
+  req.checkParams('userId', `userId ${constants.templates.error.missingParam}`).notEmpty();
+  req.checkQuery('start', `start ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  req.checkQuery('end', `end ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  const errors = req.validationErrors();
+  if (errors) return next(boom.badRequest(errors));
+
+  const userId = req.params.userId;
+  const startDate = moment(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  const endDate = moment(req.query.end).format('YYYY-MM-DD HH:mm:ss');
+
+  const retrieveReleases = (projects) => {
+    if (_.isNil(projects)) return next(boom.badRequest(constants.templates.error.badRequest));
+    const retrieval = [];
+    _.forEach(projects, (project) => {
+      retrieval.push(models.log.release_log.getProjectReleases(project.id, startDate, endDate));
     });
-
-    const userStats = contribStats[githubName];
-    const aggregatedStats = _.transform(contribStats, (result, value) => {
-      result.a += value.a;
-      result.d += value.d;
-      result.c += value.c;
-    }, defaultAcc);
-
-    userStats.cpercent = userStats.c / parseFloat(aggregatedStats.c);
-    userStats.apercent = userStats.a / parseFloat(aggregatedStats.a);
-    userStats.dpercent = userStats.d / parseFloat(aggregatedStats.d);
-    overviewPayload.contributors = userStats;
+    return Promise.all(retrieval);
   };
 
-  const response = () => {
-    if (!overviewPayload.success) return next(boom.badRequest(ERROR_BAD_REQUEST));
-    res.status(200).json(overviewPayload);
+  const response = (releases) => {
+    if (_.isNil(releases)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(releases);
   };
 
-  return octo.user.fetch()
-    .then(processUser)
-    .then(repo.stats.contributors.fetch)
-    .then(getRepoStats)
+  return models.app.user.getUserProjects(userId)
+    .then(retrieveReleases)
     .then(response)
     .catch(next);
 }
 
-function getCommits(req, res, next) {
-  req.checkParams('userId', `userId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
-  req.checkQuery('projectId', `projectId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
-  req.query.range = req.query.range || 7;
-  req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
+function getProjectRepo(req, res, next) {
+  req.checkParams('userId', `userId ${constants.templates.error.missingParam}`).notEmpty();
+  req.checkParams('projectId', `projectId ${constants.templates.error.missingParam}`).notEmpty();
+  const errors = req.validationErrors();
+  if (errors) return next(boom.badRequest(errors));
+
+  const projectId = req.params.projectId;
+
+  const retrieveRepo = (project) => {
+    if (_.isNil(project)) return next(boom.badRequest(constants.templates.error.badRequest));
+    return _.pick(project, ['githubRepoName', 'githubRepoOwner']);
+  };
+
+  const response = (repo) => {
+    if (_.isNil(repo)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(repo);
+  };
+
+  return models.app.project.findProjectById(projectId)
+    .then(retrieveRepo)
+    .then(response)
+    .catch(next);
+}
+
+function getProjectCommits(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || constants.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || constants.defaults.endDate;
+  req.checkParams('userId', `userId ${constants.templates.error.missingParam}`).notEmpty();
+  req.checkParams('projectId', `projectId ${constants.templates.error.missingParam}`).notEmpty();
+  req.checkQuery('start', `start ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  req.checkQuery('end', `end ${constants.templates.error.invalidData}`).isInt({ min: 0 });
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
   const userId = req.params.userId;
-  const projectId = req.query.projectId;
-  const dateRange = req.query.range;
-  const convertedRange = moment(new Date())
-    .subtract(dateRange, 'day')
-    .format('YYYY-MM-DD HH:mm:ss');
+  const projectId = req.params.projectId;
+  const startDate = moment(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  const endDate = moment(req.query.end).format('YYYY-MM-DD HH:mm:ss');
 
   const retrieveCommits = (user) => {
-    const githubLogin = user.github_login;
-    return models.log.commit_log.getUserCommits(githubLogin, projectId, convertedRange);
+    if (_.isNil(user)) return next(boom.badRequest(constants.templates.error.badRequest));
+    return models.log.commit_log.getUserCommits(user.githubLogin, projectId, startDate, endDate);
   };
 
   const response = (commits) => {
+    if (_.isNil(commits)) return next(boom.badRequest(constants.templates.error.badRequest));
     res.status(200).json(commits);
   };
 
-  return this.models.app.user.getUserById(userId)
+  return models.app.user.getUserById(userId)
     .then(retrieveCommits)
     .then(response)
     .catch(next);
 }
 
-function getCommitsCount(req, res, next) {
-  req.checkParams('userId', `userId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
-  req.checkQuery('projectId', `projectId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
-  req.query.range = req.query.range || 7;
-  req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
+function getProjectReleases(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || constants.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || constants.defaults.endDate;
+  req.checkParams('userId', `userId ${constants.templates.error.missingParam}`).notEmpty();
+  req.checkParams('projectId', `projectId ${constants.templates.error.missingParam}`).notEmpty();
+  req.checkQuery('start', `start ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  req.checkQuery('end', `end ${constants.templates.error.invalidData}`).isInt({ min: 0 });
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
-  const userId = req.params.userId;
-  const projectId = req.query.projectId;
-  const dateRange = req.query.range;
-  const convertedRange = moment(new Date())
-    .subtract(dateRange, 'day')
-    .format('YYYY-MM-DD HH:mm:ss');
+  const projectId = req.params.projectId;
+  const startDate = moment(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  const endDate = moment(req.query.end).format('YYYY-MM-DD HH:mm:ss');
 
-  const retrieveCommits = (user) => {
-    const githubLogin = user.github_login;
-    return models.log.commit_log.getUserCommitsCount(githubLogin, projectId, convertedRange);
+  const response = (releases) => {
+    if (_.isNil(releases)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(releases);
   };
 
-  const response = (commits) => {
-    res.status(200).json(commits);
-  };
-
-  return this.models.app.user.getUserById(userId)
-    .then(retrieveCommits)
+  return models.log.release_log.getProjectReleases(projectId, startDate, endDate)
     .then(response)
     .catch(next);
 }
 
-const githubAPI = { getOverview, getCommits, getCommitsCount };
+const githubAPI = {
+  getUserRepos,
+  getUserCommits,
+  getUserReleases,
+  getProjectRepo,
+  getProjectCommits,
+  getProjectReleases
+};
 
 export default githubAPI;

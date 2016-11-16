@@ -1,80 +1,64 @@
 import _ from 'lodash';
+import archiver from 'archiver';
 import boom from 'boom';
+import download from 'download';
 import moment from 'moment';
+import constants from '../../common/constants';
 import Storage from '../../common/storage-helper';
+import fs from 'fs';
 
 const models = new Storage();
 
-const ERROR_BAD_REQUEST = 'Unable to serve your content. Check your arguments.';
-const ERROR_MISSING_TEMPLATE = 'is a required parameter in GET request.';
-
-function getOverview(req, res, next) {
-  req.query.range = req.query.range || 7;
-  req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
+function getRepositories(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || constants.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || constants.defaults.endDate;
+  req.checkQuery('start', `start ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  req.checkQuery('end', `end ${constants.templates.error.invalidData}`).isInt({ min: 0 });
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
-  const dateRange = req.query.range;
-  const convertedRange = moment(new Date())
-    .subtract(dateRange, 'day')
-    .format('YYYY-MM-DD HH:mm:ss');
+  const startDate = moment(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  const endDate = moment(req.query.end).format('YYYY-MM-DD HH:mm:ss');
 
-  const processPayload = ([reposCount, commits, releases, usersCount]) => {
-    const payload = {};
-    payload.reposCount = reposCount;
-    payload.commits = commits;
-    payload.releases = releases;
-    payload.usersCount = usersCount;
-    return payload;
+  const response = (repos) => {
+    if (_.isNil(repos)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(repos);
   };
 
-  const response = (payload) => {
-    if (_.isNil(payload)) return next(boom.badRequest(ERROR_BAD_REQUEST));
-    res.status(200).json(payload);
-  };
-
-  const retrievalFunctions = [
-    models.app.project.getRepositoriesCount(convertedRange),
-    models.log.commit_log.getCommits(convertedRange),
-    models.log.release_log.getReleases(convertedRange),
-    models.app.user.getUsersCount(convertedRange)
-  ];
-
-  return Promise.all(retrievalFunctions)
-    .then(processPayload)
+  return models.app.project.getRepositories(startDate, endDate)
     .then(response)
     .catch(next);
 }
 
 function getCommits(req, res, next) {
-  req.query.range = req.query.range || 7;
-  req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
+  req.query.start = parseInt(req.query.start, 10) || constants.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || constants.defaults.endDate;
+  req.checkQuery('start', `start ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  req.checkQuery('end', `end ${constants.templates.error.invalidData}`).isInt({ min: 0 });
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
-  const dateRange = req.query.range;
-  const convertedRange = moment(new Date())
-    .subtract(dateRange, 'day')
-    .format('YYYY-MM-DD HH:mm:ss');
+  const startDate = moment(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  const endDate = moment(req.query.end).format('YYYY-MM-DD HH:mm:ss');
 
   const response = (commits) => {
-    if (_.isNil(commits)) return next(boom.badRequest(ERROR_BAD_REQUEST));
+    if (_.isNil(commits)) return next(boom.badRequest(constants.templates.error.badRequest));
     res.status(200).json(commits);
   };
 
-  return models.log.commit_log.getCommits(convertedRange)
+  return models.log.commit_log.getCommits(startDate, endDate)
     .then(response)
     .catch(next);
 }
 
 function getCommit(req, res, next) {
-  req.checkParams('commitId', `commitId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
+  req.checkParams('commitId', `commitId ${constants.templates.error.missingParam}`).notEmpty();
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
   const commitId = req.params.commitId;
   const response = (commit) => {
-    if (_.isNil(commit)) return next(boom.badRequest(ERROR_BAD_REQUEST));
+    if (_.isNil(commit)) return next(boom.badRequest(constants.templates.error.badRequest));
     res.status(200).json(commit);
   };
 
@@ -84,34 +68,34 @@ function getCommit(req, res, next) {
 }
 
 function getReleases(req, res, next) {
-  req.query.range = req.query.range || 7;
-  req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
+  req.query.start = parseInt(req.query.start, 10) || constants.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || constants.defaults.endDate;
+  req.checkQuery('start', `start ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  req.checkQuery('end', `end ${constants.templates.error.invalidData}`).isInt({ min: 0 });
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
-  const dateRange = req.query.range;
-  const convertedRange = moment(new Date())
-    .subtract(dateRange, 'day')
-    .format('YYYY-MM-DD HH:mm:ss');
+  const startDate = moment(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  const endDate = moment(req.query.end).format('YYYY-MM-DD HH:mm:ss');
 
   const response = (releases) => {
-    if (_.isNil(releases)) return next(boom.badRequest(ERROR_BAD_REQUEST));
+    if (_.isNil(releases)) return next(boom.badRequest(constants.templates.error.badRequest));
     res.status(200).json(releases);
   };
 
-  return models.log.release_log.getReleases(convertedRange)
+  return models.log.release_log.getReleases(startDate, endDate)
     .then(response)
     .catch(next);
 }
 
 function getRelease(req, res, next) {
-  req.checkParams('releaseId', `releaseId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
+  req.checkParams('releaseId', `releaseId ${constants.templates.error.missingParam}`).notEmpty();
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
   const releaseId = req.params.releaseId;
   const response = (release) => {
-    if (_.isNil(release)) return next(boom.badRequest(ERROR_BAD_REQUEST));
+    if (_.isNil(release)) return next(boom.badRequest(constants.templates.error.badRequest));
     res.status(200).json(release);
   };
 
@@ -120,6 +104,92 @@ function getRelease(req, res, next) {
     .catch(next);
 }
 
-const githubAPI = { getOverview, getCommits, getCommit, getReleases, getRelease };
+function getParticipatingUsers(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || constants.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || constants.defaults.endDate;
+  req.checkQuery('start', `start ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  req.checkQuery('end', `end ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  const errors = req.validationErrors();
+  if (errors) next(boom.badRequest(errors));
+
+  const startDate = moment(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  const endDate = moment(req.query.end).format('YYYY-MM-DD HH:mm:ss');
+
+  const response = (users) => {
+    if (_.isNil(users)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(users);
+  };
+
+  return models.log.commit_log.getParticipatingUsers(startDate, endDate)
+    .then(response)
+    .catch(next);
+}
+
+function getParticipatingProjects(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || constants.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || constants.defaults.endDate;
+  req.checkQuery('start', `start ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  req.checkQuery('end', `end ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  const errors = req.validationErrors();
+  if (errors) next(boom.badRequest(errors));
+
+  const startDate = moment(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  const endDate = moment(req.query.end).format('YYYY-MM-DD HH:mm:ss');
+
+  const response = (users) => {
+    if (_.isNil(users)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(users);
+  };
+
+  return models.log.commit_log.getParticipatingProjects(startDate, endDate)
+    .then(response)
+    .catch(next);
+}
+
+function downloadAssets(req, res, next) {
+  const releases = JSON.parse(req.query.releases);
+  const archive = archiver('zip');
+  archive.on('error', (err) => {
+    res.status(500).send({ error: err.message });
+  });
+  archive.on('end', () => {
+    console.log('Archive wrote %d bytes', archive.pointer());
+  });
+  res.attachment('releases-assets.zip');
+
+  // flatten assets
+  const assets = [];
+  _.forEach(releases, (release) => {
+    _.forEach(release.assets, (asset) => {
+      assets.push({
+        fileName: asset,
+        directory: `${release.owner}-${release.repo}-${release.tagName}`,
+        url: `https://github.com/${release.owner}/${release.repo}/releases/download/${release.tagName}/${asset}`
+      });
+    });
+  });
+
+
+  Promise.all(_.map(assets, asset => download(asset.url)))
+    .then((payload) => {
+      // download files
+      archive.pipe(res);
+      _.forEach(assets, (asset, index) => {
+        archive.append(payload[index], { name: `${asset.directory}/${asset.fileName}` });
+      });
+      archive.finalize();
+    });
+}
+
+const githubAPI = {
+  getRepositories,
+  getCommits,
+  getCommit,
+  getReleases,
+  getRelease,
+  getParticipatingUsers,
+  getParticipatingProjects,
+  downloadAssets
+};
 
 export default githubAPI;

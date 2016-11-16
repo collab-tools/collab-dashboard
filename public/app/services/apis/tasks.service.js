@@ -1,3 +1,9 @@
+/**
+ * Service Factory that creates object that represent HTTP services
+ * for /api/global/tasks Resources.
+ * @namespace TasksFactory
+ */
+
 (() => {
   angular
     .module('app')
@@ -9,20 +15,28 @@
     const urlBase = '/api/global/tasks';
     const tasksFactory = {};
 
-    tasksFactory.getOverview = (range) => {
-      return $http.get(`${urlBase}/overview?range=${range}`);
-    };
-
-    tasksFactory.getTasks = (range) => {
-      return $http.get(`${urlBase}?range=${range}&count=0`);
-    };
-
-    tasksFactory.getCount = (range) => {
-      return $http.get(`${urlBase}?range=${range}&count=1`);
+    tasksFactory.getTasks = (start, end) => {
+      return $http.get(`${urlBase}?start=${start}&end=${end}`);
     };
 
     tasksFactory.getTask = (taskId) => {
       return $http.get(`${urlBase}/${taskId}`);
+    };
+
+    tasksFactory.getActivities = (start, end) => {
+      return $http.get(`${urlBase}/activities?start=${start}&end=${end}`);
+    };
+
+    tasksFactory.getTaskActivities = (taskId, start, end) => {
+      return $http.get(`${urlBase}/${taskId}/activities?start=${start}&end=${end}`);
+    };
+
+    tasksFactory.getParticipatingUsers = (start, end) => {
+      return $http.get(`${urlBase}/users?start=${start}&end=${end}`);
+    };
+
+    tasksFactory.getParticipatingProjects = (start, end) => {
+      return $http.get(`${urlBase}/projects?start=${start}&end=${end}`);
     };
 
     return tasksFactory;

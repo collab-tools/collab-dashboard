@@ -2,63 +2,80 @@
   <div ui-include="'layout/header.sub.html'"></div>
 </div>
 <div class="padding">
-    <div class="row">
-        <div class="col-sm-6 col-md-6 col-lg-6">
-            <div class="box-color p-a light-green">
-                <div class="pull-right m-l">
-					<span class="w-20 dker text-center rounded">
-						<i class="material-icons">&#xE63D;</i>
-					</span>
-                </div>
-                <div class="clear">
-                    <h4 class="m-a-0 text-md"><a href>20000 <span
-                            class="text-sm">Registered Users</span></a></h4>
-                </div>
-            </div>
+  <div class="row">
+    <div class="col-sm-6 col-md-6 col-lg-6">
+      <div class="box-color p-a light-green">
+        <div class="pull-right m-l">
+          <span class="w-20 dker text-center rounded">
+            <i class="material-icons">&#xE63D;</i>
+          </span>
         </div>
-        <div class="col-sm-6 col-md-6 col-lg-6">
-            <div class="box-color p-a light-blue">
-                <div class="pull-right m-l">
-					<span class="w-20 dker text-center rounded">
-						<i class="material-icons">&#xE80C;</i>
-					</span>
-                </div>
-                <div class="clear">
-                    <h4 class="m-a-0 text-md"><a href>5000 <span
-                            class="text-sm">Semester Users</span></a></h4>
-                </div>
-            </div>
+        <div class="clear">
+          <h4 class="m-a-0 text-md"><a href>{{vm.users.newCount}} <span class="text-sm">New Users</span></a></h4>
         </div>
+      </div>
     </div>
-    <div class="box">
-        <div class="box-header">
-            <h2>Users</h2>
+    <div class="col-sm-6 col-md-6 col-lg-6">
+      <div class="box-color p-a light-blue">
+        <div class="pull-right m-l">
+          <span class="w-20 dker text-center rounded">
+            <i class="material-icons">&#xE80C;</i>
+          </span>
         </div>
-        <div class="table-responsive">
-            <table ui-jp="dataTable" ui-options="{
-				sAjaxSource: 'users/global/users.json',
-				aoColumns: [
-				{ mData: 'user_id', mRender: function(data, type, full) {return '<a href=&quot;/app/user&quot; ui-sref=&quot;app.user&quot;>' + data + '</a>'}},
-				{ mData: 'user_name' },
-				{ mData: 'project_id' },
-				{ mData: 'project_name' },
-				{ mData: 'batch' }
-				]
-				}" class="table table-striped b-t b-b table-hover">
-                <thead>
-                <tr>
-                    <th style="width:15%">User ID</th>
-                    <th style="width:30%">User Name</th>
-                    <th style="width:15%">Project ID</th>
-                    <th style="width:30%">Project Name</th>
-                    <th style="width:10%">Batch</th>
-                </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+        <div class="clear">
+          <h4 class="m-a-0 text-md"><a href>{{vm.users.activeCount}} <span class="text-sm">Active Users</span></a></h4>
         </div>
+      </div>
     </div>
+  </div>
+  <div class="box">
+    <div class="box-header">
+      <h2>Users</h2>
+    </div>
+    <div class="table-responsive">
+      <table ng-if="vm.users.new" ui-jp="dataTable" ui-refresh="vm.users.new" ui-options="{
+        destroy: true,
+        data: {{vm.users.new}},
+        aoColumns: [
+          { mData: 'displayName',
+            mRender: function(data, type, full) {
+              var id = full.id;
+              return '<a href=&quot;/app/user/' + id + '&quot; ui-sref=&quot;app.project&quot;>' + data + '</a>';
+            }
+          },
+          { mData: 'email',
+            mRender: function(data, type, full) {
+              return '<a href=&quot;mailto:' + data + '&quot;>' + data + '</a>';
+            }
+          },
+          { mData: 'githubLogin',
+            mRender: function(data, type, full) {
+              return '<a href=&quot;https://github.com/' + data + '&quot;>' + data + '</a>' || 'N/A';
+            }
+          },
+          { mData: 'projects',
+            mRender: function(data, type, full) {
+              var projectString = '';
+              data.forEach(function(project) {
+                projectString += '<a href=&quot;/app/project/' + project.id + '&quot;>' + project.content + '\n';
+              });
+              return projectString;
+            }
+          },
+          { mData: 'createdAt'},
+        ]}" class="table table-striped b-t b-b table-hover">
+        <thead>
+          <tr>
+            <th style="width:20%">Name</th>
+            <th style="width:20%">Email</th>
+            <th style="width:20%">Github</th>
+            <th style="width:25%">Projects</th>
+            <th style="width:15%">Join Date</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
-
-<a href="dashboard.html" ui-sref="app.dashboard">

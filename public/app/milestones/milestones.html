@@ -12,8 +12,8 @@
         </div>
         <div class="clear">
           <h4 class="m-a-0 text-md">
-            <a href>1562
-              <span class="text-sm">Milestones Created</span>
+            <a href>{{vm.activities.createdCount}}
+              <span class="text-sm"> Milestones Created</span>
             </a>
           </h4>
         </div>
@@ -28,8 +28,8 @@
         </div>
         <div class="clear">
           <h4 class="m-a-0 text-md">
-            <a href>205
-              <span class="text-sm">Milestones Completed</span>
+            <a href>{{vm.milestones.completedCount}}
+              <span class="text-sm"> Milestones Completed</span>
             </a>
           </h4>
         </div>
@@ -40,54 +40,55 @@
     <div class="col-lg-12 col-xl-4">
       <div class="box">
         <div class="box-header">
-          <h3>Milestones Composition</h3>
-          <small>Recorded over the past 7 days</small>
+          <h3>Milestone Distribution</h3>
+          <small>Distribution of Tasks Per Milestone</small>
         </div>
         <div class="box-body">
-          <div class="p-y-md">
-            <div ui-jp="plot" ui-refresh="app.color" ui-options="
-							{{vm.p_p_2}},
-							{
-							series: { pie: { show: true, innerRadius: 0, stroke: { width: 2, color: '#fff' }, label: { show: true, threshold: 0.05 }, tilt: 0.5, startAngle: 30 } },
-							legend: {backgroundColor: 'transparent'},
-							colors: ['{{app.color.warn}}','{{app.color.info}}', '{{app.color.success}}'],
-							grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(120,120,120,0.5)' },
-							tooltip: true,
-							tooltipOpts: { content: '%s: %p.0%' }
-							}
-						" style="height:152px"></div>
-          </div>
+          <div ng-if="vm.milestoneTasks.distribution !== 'undefined' && vm.milestoneTasks.distribution.length > 0"
+            ui-jp="plot" ui-refresh="vm.milestoneTasks" ui-options="
+              {{vm.milestoneTasks.distribution}},
+              {
+                series: { pie: { show: true, innerRadius: 0, stroke: { width: 2, color: '#fff' }, label: { show: true, threshold: 0.05 }, tilt: 0.6, startAngle: 30 } },
+                legend: { show: false },
+                colors: ['{{app.color.warn}}','{{app.color.info}}', '{{app.color.success}}'],
+                grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(120,120,120,0.5)' },
+                tooltip: true,
+                tooltipOpts: { content: '%s Tasks: %p.0%' }
+              }" style="height:242px"></div>
         </div>
       </div>
     </div>
     <div class="col-lg-12 col-xl-8">
       <div class="box dark">
         <div class="box-header">
+          <div class="pull-right">
+            <ui-select search-enabled="false" theme="bootstrap" class="w-md h-auto pull-right" ng-model="vm.dateRange.selected"
+              ng-change="vm.changeComparison()" ng-if="vm.dateRange">
+              <ui-select-match class="ui-select-match" placeholder="Range">{{$select.selected.display}}</ui-select-match>
+              <ui-select-choices class="ui-select-choices" repeat="range in vm.dateRange">
+                <div class="dropdown-divider" ng-show="$index == 4"></div>
+                <div ng-bind-html="range.display"></div>
+                <span class="text-black-lt text-xs">
+                  {{range.start | amDateFormat: 'DD/MM/YYYY'}} - {{range.end | amDateFormat: 'DD/MM/YYYY'}}
+                </span>
+              </ui-select-choices>
+            </ui-select>
+          </div>
           <h3>Milestones Tracked</h3>
-          <small>Mean time to complete</small>
+          <small>Mean Time to Complete</small>
         </div>
         <div class="box-body">
-          <div ui-jp="plot" ui-refresh="app.color" ui-options="
-						[
-						{
-						data: {{vm.p_b_1}},
-						bars: { show: true, barWidth: 0.25, lineWidth: 1, fillColor: { colors: [{ opacity: 0.8 }, { opacity: 1}] }, order:1 }
-						},
-						{
-						data: {{vm.p_b_3}},
-						bars: { show: true, barWidth: 0.25, lineWidth: 1, fillColor: { colors: [{ opacity: 0.8 }, { opacity: 1}] }, order:2 }
-						}
-						],
-						{
-						colors: ['{{app.color.primary}}','{{app.color.warn}}'],
-						series: { shadowSize: 3 },
-						xaxis: { show: true, font: { color: '#ccc' }, position: 'bottom' },
-						yaxis:{ show: true, font: { color: '#ccc' }},
-						grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(120,120,120,0.5)' },
-						tooltip: true,
-						tooltipOpts: { content: '%x.0 is %y.4',  defaultTheme: false, shifts: { x: 0, y: -40 } }
-						}
-						" style="height:200px"></div>
+          <div ng-if="vm.milestones.tracked.length > 0" ui-jp="plot" ui-refresh="vm.milestones.tracked" ui-options="
+            {{vm.milestones.tracked}},
+            {
+              colors: ['{{app.color.primary}}','{{app.color.warn}}'],
+              series: { shadowSize: 3 },
+              xaxis: { ticks: {{vm.milestones.ticks}}, show: true, font: { color: '#ccc' }, position: 'bottom', min: 1, max: {{vm.milestones.ticks.length}} },
+              yaxis:{ show: true, font: { color: '#ccc' }},
+              grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(120,120,120,0.5)' },
+              tooltip: true,
+              tooltipOpts: { content: '%x.0 is %y.4',  defaultTheme: false, shifts: { x: 0, y: -40 } }
+            }" style="height:242px"></div>
         </div>
       </div>
     </div>
@@ -96,15 +97,16 @@
     <div class="col-lg-6 col-xl-4">
       <div class="box p-a">
         <div class="pull-left m-r">
-          <span ui-jp="sparkline" ui-refresh="app.color" ui-options="[34,66], {type:'pie', height:36, sliceColors:['{{app.color.light}}','{{app.color.primary}}']}" class="sparkline inline"></span>
+          <span ui-jp="sparkline" ui-refresh="vm.milestones" ui-options="[{{vm.milestones.completedCount}}, {{vm.milestones.missedCount}}], {type:'pie', height:36, sliceColors:['{{app.color.light}}','{{app.color.primary}}']}"
+            class="sparkline inline"></span>
         </div>
         <div class="clear">
           <h4 class="m-a-0 text-md">
-            <a href>66%
-              <span class="text-sm">Feature Utilization Rate</span>
+            <a href>
+              {{(1 - vm.milestones.rate) * 100}}% <span class="text-sm">Deadlines Missed</span>
             </a>
           </h4>
-          <small class="text-muted">5243 Unique Milestones Activities</small>
+          <small class="text-black-lt">from {{vm.milestones.elapsedCount}} Elapsed Milestones</small>
         </div>
       </div>
     </div>
@@ -116,10 +118,10 @@
         <div class="clear">
           <h4 class="m-a-0 text-md">
             <a href>
-              <span class="text-sm">Standard Deviation (Mean Time):</span>
-              85.43</a>
+              <span class="text-sm">Standard Deviation (Hours):</span> {{vm.milestones.completedDeviation.toFixed(2) || 0}}
+            </a>
           </h4>
-          <small class="text-muted">Max: 152 Hours Min: 53 Hours</small>
+          <small class="text-white-lt">Max: {{vm.milestones.completedMax.toFixed(2) || 0}} Hours Min: {{vm.milestones.completedMin.toFixed(2) || 0}} Hours</small>
         </div>
       </div>
     </div>
@@ -132,11 +134,11 @@
         </div>
         <div class="clear">
           <h4 class="m-a-0 text-md">
-            <a href>182 Hours
-              <span class="text-sm">Completion Mean</span>
+            <a href>{{ vm.milestones.completedMean.toFixed(2) || 0 }}
+              <span class="text-sm">Completion Mean (Hours)</span>
             </a>
           </h4>
-          <small class="text-muted">Based on 205 Completed Tasks</small>
+          <small class="text-black-lt">from {{vm.milestones.completedCount}} Completed Tasks</small>
         </div>
       </div>
     </div>

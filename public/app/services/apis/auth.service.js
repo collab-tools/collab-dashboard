@@ -1,13 +1,26 @@
+/**
+ * Service Factory that creates object that represent HTTP services
+ * for /api/admin Resources
+ * @namespace AuthTokenFactory
+ * @namespace AuthFactory
+ *
+ * Service Factory that creates object which intercepts HTTP methods
+ * and attach JWT token information for authenticating API calls.
+ * @namespace AuthInterceptorFactory
+ */
+
 (() => {
   angular
     .module('app')
     .factory('AuthToken', authTokenFactory)
+    .factory('Settings', settingsFactory)
     .factory('Auth', authFactory)
     .factory('AuthInterceptor', authInterceptorFactory);
 
-  authFactory.$inject = ['$window', '$http', 'AuthToken'];
 
-  function authFactory($window, $http, AuthToken) {
+  authFactory.$inject = ['$window', '$http', 'AuthToken', 'Settings'];
+
+  function authFactory($window, $http, AuthToken, Settings) {
     const isLoggedIn = () => {
       const token = AuthToken.getToken();
       if (token) {
@@ -22,20 +35,25 @@
       return $http.post('/api/admin/authenticate', user)
         .success((data) => {
           AuthToken.saveToken(data.token, isLocal);
+          Settings.saveSettings(data.settings, isLocal);
         });
     };
 
     const logout = () => {
       AuthToken.deleteToken();
+      Settings.deleteSettings();
     };
 
     const currentUser = () => {
       if (isLoggedIn()) {
         const token = AuthToken.getToken();
+        const settings = angular.fromJson(Settings.getSettings());
         const payload = angular.fromJson($window.atob(token.split('.')[1]));
         return {
           name: payload.name,
-          role: payload.role
+          username: payload.username,
+          role: payload.role,
+          settings
         };
       }
 
@@ -74,6 +92,33 @@
       saveToken,
       getToken,
       deleteToken
+    };
+  }
+
+  settingsFactory.$inject = ['$localStorage', '$sessionStorage'];
+
+  function settingsFactory($localStorage, $sessionStorage) {
+    const saveSettings = (settings, isLocal) => {
+      if (isLocal) {
+        $localStorage.settings = settings;
+      } else {
+        $sessionStorage.settings = settings;
+      }
+    };
+
+    const getSettings = () => {
+      return $localStorage.settings || $sessionStorage.settings;
+    };
+
+    const deleteSettings = () => {
+      delete $localStorage.settings;
+      delete $sessionStorage.settings;
+    };
+
+    return {
+      saveSettings,
+      getSettings,
+      deleteSettings
     };
   }
 

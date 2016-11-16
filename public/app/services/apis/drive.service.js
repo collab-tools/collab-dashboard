@@ -1,3 +1,9 @@
+/**
+ * Service Factory that creates object that represent HTTP services
+ * for /api/global/drive Resources.
+ * @namespace DriveFactory
+ */
+
 (() => {
   angular
     .module('app')
@@ -9,20 +15,36 @@
     const urlBase = '/api/global/drive';
     const driveFactory = {};
 
-    driveFactory.getOverview = (range) => {
-      return $http.get(`${urlBase}/overview?range=${range}`);
-    };
-
-    driveFactory.getRevisions = (range) => {
-      return $http.get(`${urlBase}/revisions?range=${range}`);
+    driveFactory.getFiles = (start, end) => {
+      return $http.get(`${urlBase}/files?start=${start}&end=${end}`);
     };
 
     driveFactory.getFile = (fileId) => {
       return $http.get(`${urlBase}/files/${fileId}`);
     };
 
-    driveFactory.getFileRevisions = (fileId, range) => {
-      return $http.get(`${urlBase}/files/${fileId}/revisions?range=${range}`);
+    driveFactory.getChanges = (start, end) => {
+      return $http.get(`${urlBase}/files/changes?start=${start}&end=${end}`);
+    };
+
+    driveFactory.getFileChanges = (fileId, start, end) => {
+      return $http.get(`${urlBase}/files/${fileId}/changes?start=${start}&end=${end}`);
+    };
+
+    driveFactory.getActivities = (start, end) => {
+      return $http.get(`${urlBase}/files/activities?start=${start}&end=${end}`);
+    };
+
+    driveFactory.getFileActivities = (fileId, start, end) => {
+      return $http.get(`${urlBase}/files/${fileId}/activities?start=${start}&end=${end}`);
+    };
+
+    driveFactory.getParticipatingUsers = (start, end) => {
+      return $http.get(`${urlBase}/users?start=${start}&end=${end}`);
+    };
+
+    driveFactory.getParticipatingProjects = (start, end) => {
+      return $http.get(`${urlBase}/projects?start=${start}&end=${end}`);
     };
 
     return driveFactory;

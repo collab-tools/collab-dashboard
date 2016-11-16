@@ -98,6 +98,13 @@
         '../libs/angular/angular-summernote/dist/angular-summernote.js'
       ]
     }, {
+      name: 'sortable',
+      module: true,
+      files: [
+        '../libs/angular/html.sortable/dist/html.sortable.angular.min.js',
+        '../libs/jquery/html.sortable/dist/html.sortable.min.js'
+      ]
+    }, {
       name: 'dataTable',
       module: false,
       files: [
@@ -131,6 +138,7 @@
         '../libs/jquery/flot/jquery.flot.js',
         '../libs/jquery/flot/jquery.flot.resize.js',
         '../libs/jquery/flot/jquery.flot.pie.js',
+        '../libs/jquery/flot/jquery.flot.time.js',
         '../libs/jquery/flot.tooltip/js/jquery.flot.tooltip.min.js',
         '../libs/jquery/flot-spline/js/jquery.flot.spline.min.js',
         '../libs/jquery/flot.orderbars/js/jquery.flot.orderBars.js'
@@ -145,12 +153,6 @@
         '../libs/jquery/bower-jvectormap/jquery-jvectormap-us-aea-en.js'
       ]
     }, {
-      name: 'moment',
-      module: false,
-      files: [
-        '../libs/js/moment/moment.js'
-      ]
-    }, {
       name: 'fullcalendar',
       module: false,
       files: [
@@ -158,12 +160,6 @@
         '../libs/jquery/fullcalendar/dist/fullcalendar.min.js',
         '../libs/jquery/fullcalendar/dist/fullcalendar.css',
         '../libs/jquery/fullcalendar/dist/fullcalendar.theme.css'
-      ]
-    }, {
-      name: 'sortable',
-      module: false,
-      files: [
-        '../libs/jquery/html.sortable/dist/html.sortable.min.js'
       ]
     }, {
       name: 'nestable',

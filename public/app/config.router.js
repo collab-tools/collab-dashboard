@@ -13,12 +13,12 @@
     $rootScope.$stateParams = $stateParams;
     /* eslint-disable */
     $rootScope.$on('$locationChangeStart', (event, next, current) => {
-      if (!auth.isLoggedIn() && $location.path() !== LOGIN_PATH ) {
-          event.preventDefault();
-          $location.path(LOGIN_PATH);
+      if (!auth.isLoggedIn() && $location.path() !== LOGIN_PATH) {
+        event.preventDefault();
+        $location.path(LOGIN_PATH);
       } else if (auth.isLoggedIn() && $location.path() === LOGIN_PATH) {
-          event.preventDefault();
-          $location.path(DEFAULT_PATH);
+        event.preventDefault();
+        $location.path(DEFAULT_PATH);
       }
     });
     /* eslint-enable */
@@ -31,7 +31,7 @@
     const authLayout = 'layout/layout.auth.html';
     const login = 'authentication/login.html';
 
-    // App Templates
+    // App Templates Relative Paths
     const appLayout = 'layout/layout.html';
     const dashboard = 'dashboard/dashboard.html';
     const projects = 'projects/global/projects.html';
@@ -41,11 +41,11 @@
     const cloud = 'cloud/cloud.html';
     const milestones = 'milestones/milestones.html';
     const tasks = 'tasks/tasks.html';
-    const userOverview = 'users/narrow/overview.html';
-    const projectOverview = 'projects/narrow/overview.html';
-    const profile = 'profile/profile.html';
+    const userSummary = 'users/narrow/summary.html';
+    const projectSummary = 'projects/narrow/summary.html';
+    const settings = 'settings/settings.html';
 
-    // Misc Templates
+    // Misc Templates Relative Paths
     const error404 = 'misc/404.html';
 
     const defaultRoute = '/app/dashboard';
@@ -65,112 +65,125 @@
       .state('app.dashboard', {
         url: '/dashboard',
         templateUrl: dashboard,
-        data: {
-          title: 'Collab Dashboard'
-        },
+        data: { title: 'Collab Dashboard' },
         controller: 'dashboardCtrl',
         controllerAs: 'vm',
-        resolve: load(['ui.select', 'dashboard/dashboard.controller.js'])
+        resolve: load([
+          'ui.select',
+          'dashboard/dashboard.controller.js'
+        ])
       })
       .state('app.projects', {
         url: '/projects',
         templateUrl: projects,
-        data: {
-          title: 'Projects'
-        },
+        data: { title: 'Projects' },
         controller: 'projectsCtrl',
         controllerAs: 'vm',
-        resolve: load(['projects/global/projects.controller.js'])
+        resolve: load([
+          'ui.select',
+          'projects/global/projects.controller.js'
+        ])
+      })
+      .state('app.project', {
+        url: '/project/:projectId',
+        templateUrl: projectSummary,
+        data: { title: 'Project: ' },
+        controller: 'projectSummaryCtrl',
+        controllerAs: 'vm',
+        resolve: load([
+          'ui.select',
+          'projects/narrow/summary.controller.js'
+        ])
       })
       .state('app.users', {
         url: '/users',
         templateUrl: users,
-        data: {
-          title: 'Users'
-        },
+        data: { title: 'Users' },
         controller: 'usersCtrl',
         controllerAs: 'vm',
-        resolve: load(['users/global/users.controller.js'])
+        resolve: load([
+          'ui.select',
+          'users/global/users.controller.js'
+        ])
+      })
+      .state('app.user', {
+        url: '/user/:userId',
+        templateUrl: userSummary,
+        data: { title: 'User: ' },
+        controller: 'userSummaryCtrl',
+        controllerAs: 'vm',
+        resolve: load([
+          'ui.select',
+          'users/narrow/summary.controller.js'
+        ])
       })
       .state('app.github', {
         url: '/github',
         templateUrl: github,
-        data: {
-          title: 'GitHub'
-        },
+        data: { title: 'GitHub' },
         controller: 'githubCtrl',
         controllerAs: 'vm',
-        resolve: load(['github/github.controller.js'])
+        resolve: load([
+          'ui.select',
+          'github/github.controller.js'
+        ])
       })
       .state('app.drive', {
         url: '/drive',
         templateUrl: drive,
-        data: {
-          title: 'Google Drive'
-        },
+        data: { title: 'Google Drive' },
         controller: 'driveCtrl',
         controllerAs: 'vm',
-        resolve: load(['drive/drive.controller.js'])
+        resolve: load([
+          'ui.select',
+          'drive/drive.controller.js'
+        ])
       })
       .state('app.cloud', {
         url: '/cloud',
         templateUrl: cloud,
-        data: {
-          title: 'Cloud IDE'
-        },
+        data: { title: 'Cloud IDE' },
         controller: 'cloudCtrl',
         controllerAs: 'vm',
-        resolve: load(['cloud/cloud.controller.js'])
+        resolve: load([
+          'ui.select',
+          'cloud/cloud.controller.js'
+        ])
       })
       .state('app.tasks', {
         url: '/tasks',
         templateUrl: tasks,
-        data: {
-          title: 'Tasks'
-        },
+        data: { title: 'Tasks' },
         controller: 'tasksCtrl',
         controllerAs: 'vm',
-        resolve: load(['moment', 'tasks/tasks.controller.js'])
+        resolve: load([
+          'ui.select',
+          'tasks/tasks.controller.js'
+        ])
       })
       .state('app.milestones', {
         url: '/milestones',
         templateUrl: milestones,
-        data: {
-          title: 'Milestones'
-        },
+        data: { title: 'Milestones' },
         controller: 'milestonesCtrl',
         controllerAs: 'vm',
-        resolve: load(['moment', 'milestones/milestones.controller.js'])
+        resolve: load([
+          'ui.select',
+          'milestones/milestones.controller.js'
+        ])
       })
-      .state('app.user', {
-        url: '/user',
-        templateUrl: userOverview,
-        data: {
-          title: 'User Overview: Hooi Tong'
-        },
-        controller: 'userOverviewCtrl',
+      .state('app.settings', {
+        url: '/settings',
+        templateUrl: settings,
+        data: { title: 'Settings' },
+        controller: 'settingsCtrl',
         controllerAs: 'vm',
-        resolve: load(['users/narrow/overview.controller.js'])
-      })
-      .state('app.project', {
-        url: '/project',
-        templateUrl: projectOverview,
-        data: {
-          title: 'Project Overview: Project Gene'
-        },
-        controller: 'projectOverviewCtrl',
-        controllerAs: 'vm',
-        resolve: load(['projects/narrow/overview.controller.js'])
-      })
-      .state('app.profile', {
-        url: '/profile',
-        templateUrl: profile,
-        data: {
-          title: 'Your Profile'
-        },
-        controller: 'profileCtrl',
-        controllerAs: 'vm',
-        resolve: load(['profile/profile.controller.js'])
+        resolve: load([
+          'ui.select',
+          'mgcrea.ngStrap',
+          'sortable',
+          'settings/settings.controller.js'
+        ])
       })
       .state('auth', {
         abstract: true,
@@ -186,7 +199,10 @@
         templateUrl: login,
         controller: 'loginCtrl',
         controllerAs: 'vm',
-        resolve: load(['ui.bootstrap', 'authentication/login.controller.js'])
+        resolve: load([
+          'ui.bootstrap',
+          'authentication/login.controller.js'
+        ])
       })
       .state('404', {
         url: '/404',

@@ -1,87 +1,97 @@
 import _ from 'lodash';
 import boom from 'boom';
 import moment from 'moment';
+import constants from '../../common/constants';
 import Storage from '../../common/storage-helper';
 
 const models = new Storage();
 
-const ERROR_BAD_REQUEST = 'Unable to serve your content. Check your arguments.';
-const ERROR_MISSING_TEMPLATE = 'is a required parameter in GET request.';
-
-
-function getOverview(req, res, next) {
-  req.query.range = req.query.range || 7;
-  req.checkParams('projectId', `projectId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
-  req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
-  const errors = req.validationErrors();
-  if (errors) return next(boom.badRequest(errors));
-
-  const projectId = req.params.projectId;
-  const dateRange = req.query.range;
-  const convertedRange = moment(new Date())
-    .subtract(dateRange, 'day')
-    .format('YYYY-MM-DD HH:mm:ss');
-
-
-  const processLogs = (logs) => {
-    const payload = { milestones: {} };
-    if (_.isNil(logs)) return next(boom.badRequest(ERROR_BAD_REQUEST));
-    payload.logs = logs;
-
-    // Pseudo-map data structure to avoid duplicate pulls from database
-    logs.forEach((log) => {
-      log = log.toJSON();
-      payload.milestones[log.milestoneId] = true;
-    });
-
-    const relevantMilestones = [];
-    _.forOwn(payload.milestones, (value, key) => {
-      relevantMilestones.push(models.app.milestone.getMilestone(key));
-    });
-
-    // Retrieve all milestones referenced by log
-    return Promise.all(relevantMilestones)
-      .then((milestones) => {
-        milestones.forEach((milestone) => {
-          milestone = milestone.toJSON();
-          payload.milestones[milestone.id] = milestone;
-        });
-        return payload;
-      });
-  };
-
-  const response = (payload) => {
-    res.status(200).json(payload);
-  };
-
-  return models.log.milestone_log.getByProject(projectId, convertedRange)
-    .then(processLogs)
-    .then(response)
-    .catch(next);
-}
-
 function getMilestones(req, res, next) {
-  req.query.range = req.query.range || 7;
-  req.checkParams('projectId', `projectId ${ERROR_MISSING_TEMPLATE}`).notEmpty();
-  req.checkQuery('range', `range ${ERROR_MISSING_TEMPLATE}`).isInt();
+  req.query.start = parseInt(req.query.start, 10) || constants.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || constants.defaults.endDate;
+  if (req.query.elapsed) {
+    req.checkQuery('elapsed', `elapsed ${constants.templates.error.invalidData}`).isBoolean();
+  }
+  req.checkParams('projectId', `projectId ${constants.templates.error.missingParam}`).notEmpty();
+  req.checkQuery('start', `start ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  req.checkQuery('end', `end ${constants.templates.error.invalidData}`).isInt({ min: 0 });
   const errors = req.validationErrors();
   if (errors) return next(boom.badRequest(errors));
 
+  const elapsed = JSON.parse(req.query.elapsed);
   const projectId = req.params.projectId;
-  const dateRange = req.query.range;
-  const convertedRange = moment(new Date())
-    .subtract(dateRange, 'day')
-    .format('YYYY-MM-DD HH:mm:ss');
+  const startDate = moment(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  const endDate = moment(req.query.end).format('YYYY-MM-DD HH:mm:ss');
+  const evalQuery = () => {
+    if (elapsed) {
+      return models.app.milestone.getElapsedMilestonesByProject(projectId, startDate, endDate);
+    }
+    return models.app.milestone.getMilestonesByProject(projectId, startDate, endDate);
+  };
   const response = (milestones) => {
-    if (_.isNil(milestones)) return next(boom.badRequest(ERROR_BAD_REQUEST));
+    if (_.isNil(milestones)) return next(boom.badRequest(constants.templates.error.badRequest));
     res.status(200).json(milestones);
   };
 
-  return models.app.milestone.getMilestonesByProject(projectId, convertedRange)
+  return evalQuery()
     .then(response)
     .catch(next);
 }
 
-const milestonesAPI = { getOverview, getMilestones };
+function getActivities(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || constants.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || constants.defaults.endDate;
+  req.checkParams('projectId', `projectId ${constants.templates.error.missingParam}`).notEmpty();
+  req.checkQuery('start', `start ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  req.checkQuery('end', `end ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  const errors = req.validationErrors();
+  if (errors) return next(boom.badRequest(errors));
+
+  const projectId = req.params.projectId;
+  const startDate = moment(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  const endDate = moment(req.query.end).format('YYYY-MM-DD HH:mm:ss');
+
+  const response = (milestonesActivities) => {
+    if (_.isNil(milestonesActivities)) {
+      return next(boom.badRequest(constants.templates.error.badRequest));
+    }
+    res.status(200).json(milestonesActivities);
+  };
+
+  return models.log.milestone_log.getProjectActivities(projectId, startDate, endDate)
+    .then(response)
+    .catch(next);
+}
+
+function getTasksByMilestones(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || constants.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || constants.defaults.endDate;
+  req.checkParams('projectId', `projectId ${constants.templates.error.missingParam}`).notEmpty();
+  req.checkQuery('start', `start ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  req.checkQuery('end', `end ${constants.templates.error.invalidData}`).isInt({ min: 0 });
+  const errors = req.validationErrors();
+  if (errors) next(boom.badRequest(errors));
+
+  const projectId = req.params.projectId;
+  const startDate = moment(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  const endDate = moment(req.query.end).format('YYYY-MM-DD HH:mm:ss');
+
+  const groupByMilestone = (tasks) => {
+    if (_.isNil(tasks)) return next(boom.badRequest(constants.templates.error.badRequest));
+    return _.groupBy(tasks, 'milestoneId');
+  };
+
+  const response = (groupedTasks) => {
+    if (_.isNil(groupedTasks)) return next(boom.badRequest(constants.templates.error.badRequest));
+    res.status(200).json(groupedTasks);
+  };
+
+  return models.app.task.getTasksByProject(projectId, startDate, endDate)
+    .then(groupByMilestone)
+    .then(response)
+    .catch(next);
+}
+
+const milestonesAPI = { getMilestones, getActivities, getTasksByMilestones };
 
 export default milestonesAPI;

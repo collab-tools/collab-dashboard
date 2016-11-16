@@ -1,15 +1,18 @@
 // Packages & Dependencies
 // ====================================================
-import express from 'express';
-import compression from 'compression';
 import bodyParser from 'body-parser';
-import morgan from 'morgan';
-import config from 'config';
 import boom from 'boom';
+import compression from 'compression';
+import config from 'config';
+import cors from 'cors';
+import express from 'express';
+import fs from 'fs';
+import helmet from 'helmet';
+import hpp from 'hpp';
+import morgan from 'morgan';
 import validator from 'express-validator';
 import winston from 'winston';
 import winstonRotate from 'winston-daily-rotate-file';
-import fs from 'fs';
 
 const app = express();
 const isProduction = app.get('env') === 'production';
@@ -17,6 +20,7 @@ const rootApp = isProduction ? `${__dirname}/dist` : `${__dirname}/app`;
 const rootPublic = isProduction ? `${__dirname}/public/dist` : `${__dirname}/public`;
 const rootLogging = `${__dirname}/logs`;
 
+// eslint-disable-next-line import/no-dynamic-require
 require(`${rootApp}/common/mixins`)();
 
 // App & Middleware Configurations
@@ -28,12 +32,7 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 // configure app to handle CORS requests
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
-  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization');
-  next();
-});
+app.use(cors());
 
 // log all API requests to console
 app.use(morgan('dev'));
@@ -44,13 +43,20 @@ app.use(compression());
 // enable validator middle-ware for endpoints
 app.use(validator());
 
+// further secure by modifying various http headers
+app.use(helmet());
+
+// middleware to protect against HTTP parameter pollution attacks
+app.use(hpp());
+
 // serve front-end static assets and angular application
 app.use(express.static(`${rootPublic}/app`));
 app.use('/assets', express.static(`${rootPublic}/assets`));
 app.use('/libs', express.static(`${rootPublic}/libs`));
 
 // API Routes
-// =====================================================
+// =====================================================\
+// eslint-disable-next-line import/no-dynamic-require
 require(`${rootApp}/routes`)(app, express);
 
 // Catch-All Routing - Sends user to front-end
