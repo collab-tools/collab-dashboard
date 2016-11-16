@@ -18,6 +18,9 @@
     const parent = $scope.$parent;
     const projectId = $stateParams.projectId;
 
+    vm.sortDate = () {
+
+    }
     vm.requestData = () => {
       vm.range = {
         start: parent.dateRange.selected.start,
@@ -73,7 +76,7 @@
         }, 0) / projectSpan;
         // compute number of lines added and removed
         const linesChanged = _.reduce(stats.codes, (sum, week) => {
-          if (moment(week[0]).isSameOrAfter(vm.range.start, 'day')) {
+          if (moment.unix(week[0]).isSameOrAfter(vm.range.start, 'day')) {
             sum[0] += week[1];
             sum[1] += Math.abs(week[2]);
           }
@@ -83,7 +86,7 @@
         // compute distribution of commits over time for each member
         const commitsByUser = _
           .chain(commits)
-          .groupBy(commits, 'githubLogin')
+          .groupBy('githubLogin')
           .mapKeys((value, key) => _.find(projectUsers, { githubLogin: key }).displayName)
           .value();
         const commitsCountByUser = _
@@ -105,6 +108,12 @@
         const deviationUserCommits = _.reduce(commitsCountByUser, (sum, count) => {
           return sum + Math.pow(count - meanUserCommits, 2);
         }, 0) / projectUsersCount;
+
+        commits = _
+          .chain(commits)
+          .sortBy((a) => moment(a.date).unix())
+          .reverse
+          .value();
 
         // build github modal for view usages
         vm.github = {
@@ -157,10 +166,15 @@
           return sum + Math.pow(count - meanUserChanges, 2);
         }, 0) / projectUsersCount;
 
-        driveActivities = _.map(driveActivities, (activity) => {
-          if (!activity.fileExtension) activity.fileExtension = googleMIME[activity.fileMIME];
-          return activity;
-        });
+        driveActivities = _
+          .chain(driveActivities)
+          .map((activity) => {
+            if (!activity.fileExtension) activity.fileExtension = googleMIME[activity.fileMIME];
+            return activity;
+          })
+          .sortBy((a) => moment(a.date).unix())
+          .reverse
+          .value();
 
         const driveActivitiesCount = driveActivities.length;
 
@@ -212,10 +226,15 @@
         }, 0) / projectUsersCount;
 
         const taskActivitiesCount = taskActivities.length;
-        taskActivities = _.map(taskActivities, (activity) => {
-          activity.task = _.find(tasks, { id: activity.taskId });
-          return activity;
-        });
+        taskActivities = _
+          .chain(taskActivities)
+          .map((activity) => {
+            activity.task = _.find(tasks, { id: activity.taskId });
+            return activity;
+          })
+          .sortBy((a) => moment(a.date).unix())
+          .reverse
+          .value();
 
         // build tasks modal for view usages
         vm.tasks = {
@@ -264,10 +283,15 @@
         const completionRate = completedMilestonesCount / elapsedMilestonesCount;
 
         const milestonesActivitiesCount = milestonesActivities.length;
-        milestonesActivities = _.map(milestonesActivities, (activity) => {
-          activity.milestone = _.find(milestones, { id: activity.milestoneId });
-          return activity;
-        });
+        milestonesActivities = _
+          .chain(milestonesActivities)
+          .map((activity) => {
+            activity.milestone = _.find(milestones, { id: activity.milestoneId });
+            return activity;
+          })
+          .sortBy((a) => moment(a.date).unix())
+          .reverse
+          .value();
 
         // build milestones modal for view usages
         vm.milestones = {
