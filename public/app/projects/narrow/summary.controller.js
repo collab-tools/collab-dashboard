@@ -18,9 +18,6 @@
     const parent = $scope.$parent;
     const projectId = $stateParams.projectId;
 
-    vm.sortDate = () {
-
-    }
     vm.requestData = () => {
       vm.range = {
         start: parent.dateRange.selected.start,
