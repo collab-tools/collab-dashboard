@@ -45,7 +45,7 @@
         });
         const doneTasksDistribution = _
           .chain(doneTasksDuration)
-          .groupBy(duration => duration.toFixed(3))
+          .groupBy(duration => duration.toFixed(1))
           .toPairs()
           .value();
         const doneTasksMax = _.max(doneTasksDuration);

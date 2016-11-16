@@ -67,7 +67,7 @@
             mRender: function(data, type, full) {
               var userString = '';
               data.forEach(function(user) {
-                userString += '<a href=&quot;/app/user/' + user.id + '&quot;>' + user.displayName + '\n';
+                userString += '<a href=&quot;/app/user/' + user.id + '&quot;>' + user.displayName + '<br></a>';
               });
               return userString;
             }

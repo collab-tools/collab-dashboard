@@ -118,10 +118,10 @@
         <div class="clear">
           <h4 class="m-a-0 text-md">
             <a href>
-              <span class="text-sm">Standard Deviation (Hours):</span> {{vm.milestones.completedDeviation || 0}}
+              <span class="text-sm">Standard Deviation (Hours):</span> {{vm.milestones.completedDeviation.toFixed(2) || 0}}
             </a>
           </h4>
-          <small class="text-muted">Max: {{vm.milestones.completedMax || 0}} Hours Min: {{vm.milestones.completedMin || 0}} Hours</small>
+          <small class="text-muted">Max: {{vm.milestones.completedMax.toFixed(2) || 0}} Hours Min: {{vm.milestones.completedMin.toFixed(2) || 0}} Hours</small>
         </div>
       </div>
     </div>
@@ -134,7 +134,7 @@
         </div>
         <div class="clear">
           <h4 class="m-a-0 text-md">
-            <a href>{{ vm.milestones.completedMean || 0 }}
+            <a href>{{ vm.milestones.completedMean.toFixed(2) || 0 }}
               <span class="text-sm">Completion Mean (Hours)</span>
             </a>
           </h4>
