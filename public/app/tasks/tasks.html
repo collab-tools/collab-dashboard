@@ -88,11 +88,11 @@
             }],
             { colors: ['{{app.color.primary}}'],
               series: { shadowSize: 3 },
-              xaxis: { show: true,  minTickSize: '0.1', min: {{vm.tasks.doneMin}}, max: {{vm.tasks.doneMax}}},
+              xaxis: { position: 'bottom', font: { color: '#ccc' }, show: true,  minTickSize: '0.05', min: 0, max: {{vm.tasks.doneMax}}},
               yaxis:{ show: true, font: { color: '#ccc' }, min: 0, minTickSize: 1, tickDecimals: 0},
               grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(120,120,120,0.5)' },
               tooltip: true,
-              tooltipOpts: { content: '%x', defaultTheme: false, shifts: { x: 0, y: -40 } }
+              tooltipOpts: { content: '%x.0 is %y.4', defaultTheme: false, shifts: { x: 0, y: -40 } }
             }" style="height:222px">
           </div>
         </div>
