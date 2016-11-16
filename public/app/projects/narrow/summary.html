@@ -95,14 +95,14 @@
               </a>
               <div class="list-body">
                 <div class="m-y-sm pull-right">
-                  <a href class="btn btn-xs white">View<i class="pull-right fa fa-pencil"></i>
+                  <a href="http://github.com/{{vm.projects.data.githubRepoOwner}}/{{vm.projects.data.githubRepoName}}/commit/{{c.sha}}" class="btn btn-xs white">View<i class="pull-right fa fa-pencil"></i>
                   </a>
                 </div>
                 <div>
                   <strong>{{ vm.githubDisplay[c.githubLogin] }}</strong> commited '{{c.message}}'.
                 </div>
                 <div class="text-sm">
-                  <span class="text-muted">on {{c.date | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}}</span>
+                  <span class="text-white-dk">on {{c.date | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}}</span>
                 </div>
               </div>
             </li>
@@ -126,7 +126,7 @@
               series: { shadowSize: 3 },
               xaxis: { show: true, mode: 'time', timezone: 'browser', minTickSize: [1, 'day'], min: {{vm.range.start === 0 ? vm.project.origin : vm.range.start}}, max: {{vm.range.end}}},
               yaxis:{ show: true, font: { color: '#ccc' }, min:1, minTickSize: 1, tickDecimals: 0},
-              grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(120,120,120,0.5)' },
+              grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(255,255,255,0.5)' },
               tooltip: true,
               tooltipOpts: { content: function(label, x, y) { return moment(parseInt(x)).format('DD/MM') + ': ' + y + ' Commit(s)' }, defaultTheme: false, shifts: { x: 0, y: -40 } }
             }" style="min-height:210px" ng-style="{ height: vm.plotHeight }">
@@ -152,7 +152,7 @@
               series: { shadowSize: 3 },
               xaxis: { show: true, mode: 'time', timezone: 'browser', minTickSize: [1, 'day'], min: {{vm.range.start}}, max: {{vm.range.end}}},
               yaxis:{ show: true, font: { color: '#ccc' }, min:1, minTickSize: 1, tickDecimals: 0},
-              grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(120,120,120,0.5)' },
+              grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(255,255,255,0.5)' },
               tooltip: true,
               tooltipOpts: { content: function(label, x, y) { return moment(parseInt(x)).format('DD/MM') + ': ' + y + ' Commit(s)' }, defaultTheme: false, shifts: { x: 0, y: -40 } }
             }" style="height:210px">
@@ -368,7 +368,7 @@
                   <strong>{{ vm.idDisplay[a.userId] }}</strong> assigned to milestone '{{a.milestone.content}}'.
                 </div>
                 <div class="text-sm">
-                  <span class="text-muted">on {{a.date | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}}</span>
+                  <span class="text-white-dk">on {{a.date | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}}</span>
                 </div>
               </div>
             </li>

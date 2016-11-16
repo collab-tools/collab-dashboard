@@ -87,7 +87,7 @@
               <h4 class="m-a-0 text-md">
                 <a href>{{vm.participation.utilization * 100}}% <span class="text-sm">Feature Utilization Rate</span></a>
               </h4>
-              <small class="text-muted">{{vm.participation.count}} Github User(s)</small>
+              <small class="text-black-lt">{{vm.participation.count}} Github User(s)</small>
             </div>
           </div>
         </div>
@@ -100,7 +100,7 @@
               <h4 class="m-a-0 text-md">
                 <a href><span class="text-sm">Standard Deviation (Commits):</span> {{vm.commits.deviation.toFixed(2)}}</a>
               </h4>
-              <small class="text-muted">Max: {{vm.commits.max}} ({{vm.commits.maxDate}}) Min: {{vm.commits.min}} ({{vm.commits.minDate}})</small>
+              <small class="text-white-lt">Max: {{vm.commits.max}} ({{vm.commits.maxDate}}) Min: {{vm.commits.min}} ({{vm.commits.minDate}})</small>
             </div>
           </div>
         </div>
@@ -115,7 +115,7 @@
               <h4 class="m-a-0 text-md">
                 <a href>{{vm.releases.trackedCount}} <span class="text-sm">Tracked Releases</span></a>
               </h4>
-              <small class="text-muted">{{vm.releases.count - vm.releases.trackedCount}} Releases Untracked</small>
+              <small class="text-black-lt">{{vm.releases.count - vm.releases.trackedCount}} Releases Untracked</small>
             </div>
           </div>
         </div>
