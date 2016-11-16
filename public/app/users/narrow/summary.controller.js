@@ -80,7 +80,7 @@
         const processProject = (project, commits, contributors, stats, driveActivities, files,
           changes, tasks, tasksActivities, milestones, milestonesActivities, projectIndex) => {
           const projectId = vm.user.projects.data[projectIndex].id;
-          const projectSpan = moment().diff(moment(vm.projects[projectId].createdAt), 'days');
+          const projectSpan = moment().diff(moment(vm.user.projects[projectId].createdAt), 'days');
           const projectUsers = project.users;
           const projectUsersCount = projectUsers.length;
 

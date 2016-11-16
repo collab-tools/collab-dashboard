@@ -124,7 +124,7 @@
             }],
             { colors: ['{{app.color.primary}}'],
               series: { shadowSize: 3 },
-              xaxis: { show: true, mode: 'time', timezone: 'browser', minTickSize: [1, 'day'], min: {{vm.range.start === 0 ? vm.project.origin : vm.range.start}}, max: {{vm.range.end}}},
+              xaxis: { show: true, mode: 'time', font: { color: '#ccc' }, timezone: 'browser', minTickSize: [1, 'day'], min: {{vm.range.start === 0 ? vm.project.origin : vm.range.start}}, max: {{vm.range.end}}},
               yaxis:{ show: true, font: { color: '#ccc' }, min:1, minTickSize: 1, tickDecimals: 0},
               grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(255,255,255,0.5)' },
               tooltip: true,
@@ -150,7 +150,7 @@
             }],
             { colors: ['{{app.color.primary}}'],
               series: { shadowSize: 3 },
-              xaxis: { show: true, mode: 'time', timezone: 'browser', minTickSize: [1, 'day'], min: {{vm.range.start}}, max: {{vm.range.end}}},
+              xaxis: { show: true, mode: 'time', font: { color: '#ccc' }, timezone: 'browser', minTickSize: [1, 'day'], min: {{vm.range.start}}, max: {{vm.range.end}}},
               yaxis:{ show: true, font: { color: '#ccc' }, min:1, minTickSize: 1, tickDecimals: 0},
               grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(255,255,255,0.5)' },
               tooltip: true,
@@ -189,7 +189,7 @@
                   ({{a.fileExtension}}).
                 </div>
                 <div class="text-sm">
-                  <span class="text-muted">on {{a.date | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}}</span>
+                  <span class="text-black-lt">on {{a.date | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}}</span>
                 </div>
               </div>
             </li>
@@ -407,7 +407,7 @@
                   <strong>{{ vm.idDisplay[a.userId] }}</strong> assigned to task '{{a.task.content}}'.
                 </div>
                 <div class="text-sm">
-                  <span class="text-muted">on {{a.date | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}}</span>
+                  <span class="text-black-lt">on {{a.date | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}}</span>
                 </div>
               </div>
             </li>
