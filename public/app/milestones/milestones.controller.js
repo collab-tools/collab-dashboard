@@ -112,9 +112,7 @@
           .mapValues((tl) => {
             return _
               .chain(tl)
-              .map(tl, (t) => {
-                return moment(t.deadline).diff(moment(t.createdAt), 'hours', true);
-              })
+              .map(t => moment(t.deadline).diff(moment(t.createdAt), 'hours', true))
               .sum()
               .value() / tl.length;
           })
