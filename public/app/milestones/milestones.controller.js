@@ -108,6 +108,7 @@
           .keyBy('content')
           .at(trackedKeys)
           .groupBy('content')
+          .omit('undefined')
           .mapValues((tl) => {
             return _
               .chain(tl)
@@ -150,7 +151,7 @@
           tracked: trackedMilestones,
           ticks
         };
-        console.log(vm.milestones.ticks);
+
         // compute number of milestones created
         const activitiesCount = activities.length;
         const activitesCreated = _.filter(activities, { activity: 'C' });
