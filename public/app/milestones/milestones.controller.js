@@ -26,23 +26,22 @@
           // filter only tracked milestones from content
           const trackedKeys = _.map(parent.settings.milestones, milestone => milestone[1]);
           const ticks = parent.settings.milestones;
-          const trackedMap = _.chain(ticks).fromPairs().invert();
+          const trackedMap = _.chain(ticks).fromPairs().invert().value();
           const trackedAverage = _
             .chain(completedMilestones)
             .keyBy('content')
             .at(trackedKeys)
             .groupBy('content')
+            .omit('undefined')
             .mapValues((tl) => {
               return _
                 .chain(tl)
-                .map(tl, (t) => {
-                  return moment(t.deadline).diff(moment(t.createdAt), 'hours', true);
-                })
+                .map(t => moment(t.deadline).diff(moment(t.createdAt), 'hours', true))
                 .sum()
                 .value() / tl.length;
             })
             .toPairs()
-            .mapKeys((value, key) => trackedMap[key])
+            .map(point => [trackedMap[point[0]], point[1]])
             .value();
 
           vm.milestones.tracked.push({
@@ -102,7 +101,7 @@
         // filter only tracked milestones from content
         const trackedKeys = _.map(parent.settings.milestones, milestone => milestone[1]);
         const ticks = parent.settings.milestones;
-        const trackedMap = _.chain(ticks).fromPairs().invert();
+        const trackedMap = _.chain(ticks).fromPairs().invert().value();
         const trackedAverage = _
           .chain(completedMilestones)
           .keyBy('content')
