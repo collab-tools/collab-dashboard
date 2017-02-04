@@ -35,7 +35,7 @@
       return $http.post('/api/admin/authenticate', user)
         .success((data) => {
           AuthToken.saveToken(data.token, isLocal);
-          Settings.saveSettings(data.settings, isLocal);
+          Settings.saveSettings(data.settings || '{}', isLocal);
         });
     };
 
