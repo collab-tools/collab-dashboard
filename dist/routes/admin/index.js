@@ -12,6 +12,10 @@ var _jsonwebtoken = require('jsonwebtoken');
 
 var _jsonwebtoken2 = _interopRequireDefault(_jsonwebtoken);
 
+var _expressJwt = require('express-jwt');
+
+var _expressJwt2 = _interopRequireDefault(_expressJwt);
+
 var _config = require('config');
 
 var _config2 = _interopRequireDefault(_config);
@@ -54,7 +58,7 @@ function authenticate(req, res, next) {
       exp: parseInt(expiry.getTime() / 1000, 10)
     };
     var token = _jsonwebtoken2.default.sign(payload, _config2.default.jwt_secret);
-    res.status(200).json({ success: true, token: token });
+    res.status(200).json({ success: true, token: token, settings: user.settings });
   };
 
   return models.log.admin.findOne(searchParameter).then(authenticateUser).catch(next);
@@ -66,6 +70,7 @@ function createAdmin(req, res, next) {
   var password = req.body.password;
   var name = req.body.name;
   var role = req.body.role;
+  var settings = req.body.settings || {};
 
   if (!checkDevAccess(devKey)) {
     return next(_boom2.default.unauthorized(_constants2.default.templates.error.unauthorized));
@@ -73,7 +78,7 @@ function createAdmin(req, res, next) {
 
   // Validate that all mandatory fields are given
   if (!_lodash2.default.isNil(username) && !_lodash2.default.isNil(password) && !_lodash2.default.isNil(name) && !_lodash2.default.isNil(role)) {
-    var payload = { username: username, password: password, name: name, role: role };
+    var payload = { username: username, password: password, name: name, role: role, settings: JSON.stringify(settings) };
     var response = function response(success) {
       if (!success) return next(_boom2.default.badRequest(_constants2.default.templates.error.badRequest));
       res.status(200).json({ success: success });
@@ -84,7 +89,33 @@ function createAdmin(req, res, next) {
   return next(_boom2.default.unauthorized(_constants2.default.templates.error.unauthorized));
 }
 
+function updateAdmin(req, res, next) {
+  var adminUpdate = req.body.admin;
+  adminUpdate.username = req.auth.username;
+  var response = function response(updates) {
+    if (!updates) return next(_boom2.default.badRequest(_constants2.default.templates.error.badRequest));
+    var user = updates[1][0];
+    var expiry = new Date();
+    expiry.setDate(expiry.getDate() + _constants2.default.defaults.jwtExpiry);
+    var payload = {
+      name: user.name,
+      username: user.username,
+      role: user.role,
+      exp: parseInt(expiry.getTime() / 1000, 10)
+    };
+    var token = _jsonwebtoken2.default.sign(payload, _config2.default.jwt_secret);
+    res.status(200).json({ success: true, token: token, settings: user.settings });
+  };
+
+  return models.log.admin.updateUser(adminUpdate).then(response).catch(next);
+}
+
 module.exports = function (express) {
+  var auth = (0, _expressJwt2.default)({
+    secret: _config2.default.jwt_secret,
+    userProperty: 'auth'
+  });
+
   var adminRouter = express.Router();
 
   // Dashboard Administration Endpoints
@@ -94,5 +125,6 @@ module.exports = function (express) {
   // Developer Accessible Endpoints
   // =========================================================
   adminRouter.post('/', createAdmin);
+  adminRouter.put('/', auth, updateAdmin);
   return adminRouter;
 };

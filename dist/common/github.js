@@ -4,6 +4,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _config = require('config');
+
+var _config2 = _interopRequireDefault(_config);
+
 var _github = require('github');
 
 var _github2 = _interopRequireDefault(_github);
@@ -20,4 +24,11 @@ var libConfig = {
   Promise: _bluebird2.default
 };
 
-exports.default = new _github2.default(libConfig);
+var github = new _github2.default(libConfig);
+github.authenticate({
+  type: 'oauth',
+  key: _config2.default.get('github.client_id'),
+  secret: _config2.default.get('github.client_secret')
+});
+
+exports.default = github;

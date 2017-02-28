@@ -152,13 +152,33 @@ function getParticipatingUsers(req, res, next) {
   return models.log.milestone_log.getParticipatingUsers(startDate, endDate).then(response).catch(next);
 }
 
+function getParticipatingProjects(req, res, next) {
+  req.query.start = parseInt(req.query.start, 10) || _constants2.default.defaults.startDate;
+  req.query.end = parseInt(req.query.end, 10) || _constants2.default.defaults.endDate;
+  req.checkQuery('start', 'start ' + _constants2.default.templates.error.invalidData).isInt({ min: 0 });
+  req.checkQuery('end', 'end ' + _constants2.default.templates.error.invalidData).isInt({ min: 0 });
+  var errors = req.validationErrors();
+  if (errors) next(_boom2.default.badRequest(errors));
+
+  var startDate = (0, _moment2.default)(req.query.start).format('YYYY-MM-DD HH:mm:ss');
+  var endDate = (0, _moment2.default)(req.query.end).format('YYYY-MM-DD HH:mm:ss');
+
+  var response = function response(users) {
+    if (_lodash2.default.isNil(users)) return next(_boom2.default.badRequest(_constants2.default.templates.error.badRequest));
+    res.status(200).json(users);
+  };
+
+  return models.log.milestone_log.getParticipatingProjects(startDate, endDate).then(response).catch(next);
+}
+
 var milestonesAPI = {
   getMilestones: getMilestones,
   getMilestone: getMilestone,
   getActivities: getActivities,
   getMilestoneActivities: getMilestoneActivities,
   getTasksByMilestones: getTasksByMilestones,
-  getParticipatingUsers: getParticipatingUsers
+  getParticipatingUsers: getParticipatingUsers,
+  getParticipatingProjects: getParticipatingProjects
 };
 
 exports.default = milestonesAPI;

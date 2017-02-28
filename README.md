@@ -27,20 +27,26 @@ This will take care of the databases and various shared dependencies.
     bower install
     ```
 
-3. Run the server
+3. Build the server
+
+    ```bash
+    npm run compile
+    ```
+
+4. Run the server
 
     ```bash
     npm run dev
     ```
 
-4. Create an admin user
+5. Create an admin user
 
     ```bash
     # (Assuming your developer_key is set to 12341234 in config/local-dev.json)
     curl -X POST -H "Content-Type: application/x-www-form-urlencoded" -d 'devKey=12341234&username=admin&password=veryverysecretpassword&name=admin&role=admin' "http://localhost:4000/api/admin"
     ```
 
-5. Serve the client files
+6. Serve the client files
 
     - Since I'm not an Angular guy and the previous maintainer left out documentation, I'm not too sure what's the best way to go about serving the client files while reverse proxying `/api/*` requests to the server.
     - Feel free to update this documentation!

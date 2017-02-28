@@ -32,13 +32,15 @@ function getTasks(req, res, next) {
   req.query.start = parseInt(req.query.start, 10) || _constants2.default.defaults.startDate;
   req.query.end = parseInt(req.query.end, 10) || _constants2.default.defaults.endDate;
   req.checkParams('projectId', 'projectId ' + _constants2.default.templates.error.missingParam).notEmpty();
-  req.checkQuery('range', 'range ' + _constants2.default.templates.error.missingParam).isInt();
+  req.checkQuery('start', 'start ' + _constants2.default.templates.error.invalidData).isInt({ min: 0 });
+  req.checkQuery('end', 'end ' + _constants2.default.templates.error.invalidData).isInt({ min: 0 });
   var errors = req.validationErrors();
   if (errors) return next(_boom2.default.badRequest(errors));
 
   var projectId = req.params.projectId;
   var startDate = (0, _moment2.default)(req.query.start).format('YYYY-MM-DD HH:mm:ss');
   var endDate = (0, _moment2.default)(req.query.end).format('YYYY-MM-DD HH:mm:ss');
+
   var response = function response(tasks) {
     if (_lodash2.default.isNil(tasks)) return next(_boom2.default.badRequest(_constants2.default.templates.error.badRequest));
     res.status(200).json(tasks);

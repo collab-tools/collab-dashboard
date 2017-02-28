@@ -77,8 +77,11 @@ module.exports = function (express) {
   // Milestones Related
   // =========================================================
   usersRouter.get('/:userId/milestones', _milestones2.default.getUserMilestones);
+  usersRouter.get('/:userId/milestones/activities', _milestones2.default.getUserActivities);
   usersRouter.get('/:userId/milestones/assigned', _milestones2.default.getAssignedUserMilestones);
   usersRouter.get('/:userId/milestones/tasks', _milestones2.default.getTasksByMilestones);
+  usersRouter.get('/:userId/project/:projectId/milestones/activities', _milestones2.default.getActivitiesByProjectMilestones);
+  usersRouter.get('/:userId/project/:projectId/milestones/assigned', _milestones2.default.getAssignedProjectMilestones);
   usersRouter.get('/:userId/project/:projectId/milestones/tasks', _milestones2.default.getTasksByProjectMilestones);
 
   // Cloud IDE Related

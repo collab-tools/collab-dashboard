@@ -46,7 +46,7 @@ function getFiles(req, res, next) {
     res.status(200).json(files);
   };
 
-  return models.log.file_log.getFiles(projectId, null, startDate, endDate).then(response).catch(next);
+  return models.log.file_log.getFiles(null, projectId, startDate, endDate).then(response).catch(next);
 }
 
 function getChanges(req, res, next) {

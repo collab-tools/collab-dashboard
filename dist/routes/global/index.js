@@ -47,6 +47,8 @@ module.exports = function (express) {
   globalRouter.get('/github/releases', _github2.default.getReleases);
   globalRouter.get('/github/releases/:releaseId', _github2.default.getRelease);
   globalRouter.get('/github/users', _github2.default.getParticipatingUsers);
+  globalRouter.get('/github/projects', _github2.default.getParticipatingProjects);
+  globalRouter.get('/github/assets', _github2.default.downloadAssets);
 
   // Google Drive Related
   // =========================================================
@@ -57,12 +59,14 @@ module.exports = function (express) {
   globalRouter.get('/drive/files/:fileId/changes', _drive2.default.getFileChanges);
   globalRouter.get('/drive/files/:fileId/activities', _drive2.default.getFileActivities);
   globalRouter.get('/drive/users', _drive2.default.getParticipatingUsers);
+  globalRouter.get('/drive/projects', _drive2.default.getParticipatingProjects);
 
   // Tasks Related
   // =========================================================
   globalRouter.get('/tasks', _tasks2.default.getTasks);
   globalRouter.get('/tasks/activities', _tasks2.default.getActivities);
   globalRouter.get('/tasks/users', _tasks2.default.getParticipatingUsers);
+  globalRouter.get('/tasks/projects', _tasks2.default.getParticipatingProjects);
   globalRouter.get('/tasks/:taskId', _tasks2.default.getTask);
   globalRouter.get('/tasks/:taskId/activities', _tasks2.default.getTaskActivities);
 
@@ -72,6 +76,7 @@ module.exports = function (express) {
   globalRouter.get('/milestones/activities', _milestones2.default.getActivities);
   globalRouter.get('/milestones/tasks', _milestones2.default.getTasksByMilestones);
   globalRouter.get('/milestones/users', _milestones2.default.getParticipatingUsers);
+  globalRouter.get('/milestones/projects', _milestones2.default.getParticipatingProjects);
   globalRouter.get('/milestones/:milestoneId', _milestones2.default.getMilestone);
   globalRouter.get('/milestones/:milestoneId/activities', _milestones2.default.getMilestoneActivities);
 

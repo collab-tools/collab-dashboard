@@ -37,7 +37,7 @@ function getProject(req, res, next) {
 
   var response = function response(project) {
     if (_lodash2.default.isNil(project)) return next(_boom2.default.badRequest(_constants2.default.templates.error.badRequest));
-    res.status(200).json(project);
+    res.status(200).json(_lodash2.default.head(project));
   };
 
   return models.app.project.getProjectWithMembers(projectId).then(response).catch(next);

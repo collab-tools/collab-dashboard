@@ -37,7 +37,7 @@ function getUser(req, res, next) {
 
   var response = function response(user) {
     if (_lodash2.default.isNil(user)) return next(_boom2.default.badRequest(_constants2.default.templates.error.badRequest));
-    res.status(200).json(user);
+    res.status(200).json(_lodash2.default.head(user));
   };
 
   return models.app.user.getUserWithProjects(userId).then(response).catch(next);

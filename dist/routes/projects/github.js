@@ -16,7 +16,7 @@ var _moment = require('moment');
 
 var _moment2 = _interopRequireDefault(_moment);
 
-var _github = require('github');
+var _github = require('../../common/github');
 
 var _github2 = _interopRequireDefault(_github);
 
