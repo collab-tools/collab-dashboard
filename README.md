@@ -9,48 +9,68 @@ This will take care of the databases and various shared dependencies.
 
 ### Development Setup
 
-1. Create `config/local-dev.json` using the `config/_local_template.json` template. If unsure, please contact a fellow engineer!
+1. Clone repository to Collab-tools root folder.
+   
+   ```bash
+   $ git clone https://github.com/collab-tools/collab-dashboard.git
+   ```
+
+2. Create `config/local-dev.json` using the `config/_local-template.json` template. If unsure, please contact a fellow engineer!
 
     ```bash
-    cp config/_local_template.json config/local-dev.json
+    cp config/_local-template.json config/local-dev.json
     ```
+    
+3. Enter config details in local-dev.json (DB details same as that provided for collab config)
 
-2. Install dependencies
+4. Link collab-db-applications and collab-db-logging.
+
+    ```bash
+    $ sudo npm link collab-db-applications collab-db-logging```
+
+5. Install dependencies
 
     ```bash
     # Install server dependencies
-    npm install
+    $ sudo npm install
     # Install client dependencies
-    cd public/
-    npm install
-    npm install -g grunt-cli bower
-    bower install
+    $ cd public/
+    $ sudo npm install
+    $ sudo npm install -g grunt-cli bower
+    $ bower install
     ```
 
 3. Build the server
 
     ```bash
-    npm run compile
+    $ cd ../
+    $ sudo npm install babel-preset-env
+    $ sudo npm run compile
     ```
 
-4. Run the server
+4. Run the server. Server should start on port 4000.
 
     ```bash
     npm run dev
     ```
 
-5. Create an admin user
+5. Create an admin user (username: admin ; password : veryverysecretpassword) by running the following in a new terminal.
 
     ```bash
     # (Assuming your developer_key is set to 12341234 in config/local-dev.json)
-    curl -X POST -H "Content-Type: application/x-www-form-urlencoded" -d 'devKey=12341234&username=admin&password=veryverysecretpassword&name=admin&role=admin' "http://localhost:4000/api/admin"
+    $ curl -X POST -H "Content-Type: application/x-www-form-urlencoded" -d 'devKey=12341234&username=admin&password=veryverysecretpassword&name=admin&role=admin' "http://localhost:4000/api/admin"
     ```
 
 6. Serve the client files
 
-    - Since I'm not an Angular guy and the previous maintainer left out documentation, I'm not too sure what's the best way to go about serving the client files while reverse proxying `/api/*` requests to the server.
-    - Feel free to update this documentation!
-    - Here's a a nginx config to do so while rewriting the paths as necessary:
+    - Use nginx for reverse proxying `/api/*` requests to the server. To install nginx :
+        ```bash 
+        $ sudo apt-get install nginx
+        ```
+    -  You might have to stop apache before starting this service, if both services run on the same port.
+        ```bash
+        $ sudo service apache2 stop```
+    -  Add the following to root\etc\nginx\nginx.conf (within http{}) and root\etc\nginx\sites-available\default
 
         ```nginx
         server {
@@ -76,6 +96,11 @@ This will take care of the databases and various shared dependencies.
             }
         }
         ```
+     - Start nginx service : 
+        ```bash
+        $ sudo service nginx restart```
+        
+7. Open http://localhost:4000 on your browser and login with admin credentials.
 
 ### Additional Notes
 
