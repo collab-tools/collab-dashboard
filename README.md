@@ -4,8 +4,9 @@ Dashboard displaying metrics for Collab.
 
 ### Prerequisites
 
-Please set up [Collab](https://github.com/collab-tools/collab) before setting up the dashboard.
+* Please set up [Collab](https://github.com/collab-tools/collab) before setting up the dashboard.
 This will take care of the databases and various shared dependencies.
+* Use Node v8 to setup
 
 ### Development Setup
 
@@ -26,7 +27,7 @@ This will take care of the databases and various shared dependencies.
 4. Link collab-db-applications and collab-db-logging.
 
     ```bash
-    $ sudo npm link collab-db-applications collab-db-logging```
+    $ sudo npm link collab-db-application collab-db-logging```
 
 5. Install dependencies
 
@@ -99,8 +100,12 @@ This will take care of the databases and various shared dependencies.
      - Start nginx service : 
         ```bash
         $ sudo service nginx restart```
+
+7. If run in local server:
+* start server at `/collab-dashboard` by running `npm run dev`
+* start client at `/collab-dashboard/public` by running `grunt build`and`grunt watch`
         
-7. Open http://localhost:4000 on your browser and login with admin credentials.
+8. Open http://localhost:4000 on your browser and login with admin credentials.
 
 ### Additional Notes
 
