@@ -37,6 +37,7 @@ module.exports = {
       invalidParams : 'Bad request, check request parameters'
 
     }
+  },
   database: {
     role: {
       creator: 'creator',
