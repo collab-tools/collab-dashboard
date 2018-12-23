@@ -24,7 +24,7 @@ This will take care of the databases and various shared dependencies.
     
 3. Enter config details in local-dev.json (DB details same as that provided for collab config)
 
-4. Link collab-db-applications and collab-db-logging.
+4. Link collab-db-applications and collab-db-logging. Run the following command from the root folder of collab-dashboard.
 
     ```bash
     $ sudo npm link collab-db-application collab-db-logging```
@@ -58,8 +58,8 @@ This will take care of the databases and various shared dependencies.
 5. Create an admin user (username: admin ; password : veryverysecretpassword) by running the following in a new terminal.
 
     ```bash
-    # (Assuming your developer_key is set to 12341234 in config/local-dev.json)
-    $ curl -X POST -H "Content-Type: application/x-www-form-urlencoded" -d 'devKey=12341234&username=admin&password=veryverysecretpassword&name=admin&role=admin' "http://localhost:4000/api/admin"
+    # (Assuming the email of the admin is test@test.com and developer_key is set to 12341234 in config/local-dev.json)
+    $ curl -X POST -H "Content-Type: application/x-www-form-urlencoded" -d 'devKey=12341234&email=test@test.com' "http://localhost:4000/api/auth"
     ```
 
 6. Serve the client files

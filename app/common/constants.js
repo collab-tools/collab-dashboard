@@ -30,8 +30,20 @@ module.exports = {
       badRequest: 'Unable to serve your content. Check your arguments.',
       missingParam: 'is a required parameter in GET request.',
       unauthorized: 'Unauthorized Access. Check your credentials',
+      noRecordFound: 'Unauthorized Access. Requested record is not found on the database, check your parameters.',
       invalidData: 'contains the wrong data type as expected.',
-      invalidRange: 'Invalid date range has been provided.'
+      invalidRange: 'Invalid date range has been provided.',
+      clientIdNotFound: 'Google Client Id is not found on the server',
+      invalidParams : 'Bad request, check request parameters'
+
+    }
+  database: {
+    role: {
+      creator: 'creator',
+      basic: 'basic',
+      pending: 'pending',
+      supervisor: 'supervisor',
+      supervisor_creator: 'supervisor_creator'
     }
   }
 };
