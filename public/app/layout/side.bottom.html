@@ -1,15 +1,53 @@
 <nav ui-nav>
   <ul class="nav">
-    <li>
-      <div class="b-b b m-v-sm"></div>
-    </li>
+    <li><div class="b-b b m-v-sm"></div></li>
     <li class="no-bg">
+      <a id="collab-redirect" target="_blank">
+        <span class="nav-icon"><span class="glyphicon glyphicon-link"/></span>
+        <span class="nav-text">Collab</span>
+      </a>
+      <hr/>
       <a>
-        <span class="nav-icon">
-         <i class="material-icons">&#xe8ac;</i>
-        </span>
-        <span class="nav-text" ng-click="logout()">Logout</span>
+        <span class="nav-icon"> <i class="material-icons">&#xe8ac;</i> </span>
+        <span class="nav-text" onclick="signOut()">Logout</span>
       </a>
     </li>
   </ul>
+  <script>
+    function signOut() {
+      var auth2 = gapi.auth2.getAuthInstance();
+      auth2.signOut().then(function() {
+        auth2.disconnect();
+      });
+      auth2.disconnect();
+      localStorage.removeItem("ngStorage-auth-token");
+      localStorage.removeItem("ngStorage-settings");
+      $(location).attr("href", "./");
+    }
+    function onLoad() {
+      $.ajax({
+        // retrieves the google client id from the config 
+        type: "GET",
+        url: "./api/auth/configs?returndata=googleclientid,collaburl",
+        success: function(res) {
+          const google_client_id = res.data.client_id;
+	  $('#collab-redirect').attr('href', res.data.collab_url);
+          gapi.load("auth2", function() {
+            // auth2 library is loaded here.
+            auth2 = gapi.auth2.init({
+              client_id: google_client_id
+            });
+          });
+        },
+        error: function(res) {
+          console.log(res);
+        }
+      });
+    }
+  </script>
+  <script
+    src="https://apis.google.com/js/platform.js?onload=onLoad"
+    async
+    defer
+  ></script>
 </nav>

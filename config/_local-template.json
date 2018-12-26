@@ -9,8 +9,17 @@
   },
   "jwt_secret": "",
   "developer_key": "",
+  "google": {
+    "client_id": ""
+  },
   "github": {
     "client_id": "",
     "client_secret": ""
+  },
+  "admin": {
+    "email": ""
+  },
+  "collab": {
+    "url": ""
   }
 }

@@ -29,5 +29,14 @@
       },
       "logging": false
     }
+  },
+  "google": {
+    "client_id": ""
+  },
+  "admin": {
+    "email": ""
+  },
+  "collab": {
+    "url": ""
   }
 }

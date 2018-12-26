@@ -4,31 +4,259 @@
       <div ui-include="'layout/navbar.brand.html'"></div>
     </div>
   </div>
-  <div class="alert alert-warning alert-dismissible fade in" role="alert" ng-show="vm.hasError">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-    <strong>Something went wrong!</strong> Check your credentials and try again.
+
+  <script type="text/javascript">
+    window.email_body =
+      "Please fill in the following details. \n\nName: \nFaculty: \nProject you wish to supervise: \n";
+
+    function onLoad() {
+      // This start function is run at onload, (after the platform libraries are loaded).
+      var scopes =
+        "https://www.googleapis.com/auth/gmail.readonly " +
+        "https://www.googleapis.com/auth/gmail.send";
+      $.ajax({
+        // retrieves the google client id from the config
+        type: "GET",
+        url: "./api/auth/configs?returndata=googleclientid,adminemail",
+        success: function(res) {
+          const google_client_id = res.data.client_id;
+          const admin_email = res.data.admin_email;
+          $("#compose-to").val(admin_email);
+          gapi.load("auth2", function() {
+            // auth2 library is loaded here.
+            auth2 = gapi.auth2.init({
+              client_id: google_client_id,
+              scope: scopes,
+              prompt: "select_account" // Enables account selection screen on every login attempt, optional
+            });
+          });
+          loadGmailApi();
+        },
+        error: function(res) {
+          $("#alert-server-error").show();
+        }
+      });
+    }
+
+    function loginGoogle() {
+      clearAlerts();
+      $("login-btn-text").text("Logging in ...");
+      gapi.auth2
+        .getAuthInstance()
+        .signIn()
+        .then(signInCallback);
+    }
+
+    function handleAuthResult(authResult) {
+      if (authResult && !authResult.error) {
+        loadGmailApi();
+      } else {
+        console.log(authResult.error);
+      }
+    }
+
+    function clearAlerts() {
+      $("#alert-auth-error").hide();
+      $("#alert-server-error").hide();
+      $("#alert-email-success").hide();
+      $("#alert-email-failure").hide();
+      $("#compose-message").val(window.email_body);
+    }
+
+    function signInCallback(res) {
+      loadGmailApi();
+      var user_email = auth2.currentUser
+        .get()
+        .getBasicProfile()
+        .getEmail();
+      $("#compose-from").val(user_email);
+      $.ajax({
+        type: "POST",
+        url: "./api/auth/authenticate",
+        data: { email: user_email }
+      })
+        .done(function(res) {
+          localStorage.setItem(
+            "ngStorage-auth-token",
+            JSON.stringify(res.token)
+          );
+          localStorage.setItem(
+            "ngStorage-settings",
+            JSON.stringify(res.settings)
+          );
+          $(location).attr("href", "./app/dashboard");
+        })
+        .fail(function(res) {
+          $("#alert-auth-error").show();
+        });
+    }
+
+    function loadGmailApi() {
+      gapi.client.load("gmail", "v1");
+    }
+
+    function sendEmail() {
+      $("#send-button").addClass("disabled");
+
+      sendMessage(
+        {
+          To: $("#compose-to").val(),
+          Subject: $("#compose-subject").val()
+        },
+        $("#compose-message").val(),
+        composeTidy
+      );
+
+      return false;
+    }
+
+    function composeTidy(res) {
+      $("#compose-modal").modal("hide");
+      $("#send-button").removeClass("disabled");
+
+      if (res.error === undefined) {
+        $("#alert-email-success").show();
+      } else {
+        $("#alert-email-failure").show();
+      }
+    }
+
+    function sendMessage(headers_obj, message, callback) {
+      var email = "";
+
+      for (var header in headers_obj)
+        email += header += ": " + headers_obj[header] + "\r\n";
+
+      email += "\r\n" + message;
+
+      var sendRequest = gapi.client.gmail.users.messages.send({
+        userId: "me",
+        resource: {
+          raw: window
+            .btoa(email)
+            .replace(/\+/g, "-")
+            .replace(/\//g, "_")
+        }
+      });
+
+      return sendRequest.execute(callback);
+    }
+  </script>
+  <script
+    src="https://apis.google.com/js/client.js?onload=onLoad"
+    async
+    defer
+  ></script>
+  <center>
+    <hr />
+    <a class="btn btn-social btn-google" onclick="loginGoogle()">
+      <span class="fa fa-google"></span>
+      <span class="login-btn-text">Sign in with Google</span>
+    </a>
+  </center>
+  <br />
+  <div
+    id="alert-server-error"
+    class="alert alert-warning alert-dismissible fade in"
+    role="alert"
+    style="display:none"
+  >
+    <strong>Something went wrong!</strong> Please try again later.
   </div>
-  <div class="p-a-md box-color r box-shadow-z1 text-color m-a">
-    <div class="m-b text-sm">
-      Sign in with {{app.name}} Dashboard
+  <div
+    id="alert-auth-error"
+    class="alert alert-warning alert-dismissible fade in"
+    role="alert"
+    style="display:none"
+  >
+    <strong>Unauthorized access!</strong> You should be a supervisor to access
+    this site. <br />
+    Send email to request superviosr access
+    <a href="#compose-modal" data-toggle="modal" id="compose-button"
+      ><span class="glyphicon glyphicon-envelope" style="font-size:15px"></span
+    ></a>
+  </div>
+  <div
+    id="alert-email-success"
+    class="alert alert-success"
+    style="display:none"
+  >
+    <strong>Success!</strong> Thank you for the email, we will get back to you
+    soon!
+  </div>
+  <div id="alert-email-failure" class="alert alert-danger" style="display:none">
+    <strong>Failure!</strong> Something went wrong, Please try again later!
+  </div>
+
+  <div class="modal fade" id="compose-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title">Compose</h4>
+        </div>
+        <form onsubmit="return sendEmail();">
+          <div class="modal-body">
+            <div class="form-group">
+              From:
+              <input
+                type="email"
+                class="form-control"
+                id="compose-from"
+                required
+              />
+            </div>
+            <div class="form-group">
+              To:
+              <input
+                type="email"
+                class="form-control"
+                id="compose-to"
+                required
+                disabled
+              />
+            </div>
+
+            <div class="form-group">
+              Subject:
+              <input
+                type="text"
+                class="form-control"
+                id="compose-subject"
+                value="Requesting supervisor access to Collab-Dashboard"
+                required
+                disabled
+              />
+            </div>
+
+            <div class="form-group">
+              Message:
+              <textarea
+                class="form-control"
+                id="compose-message"
+                placeholder="Message"
+                rows="10"
+                required
+              ></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">
+              Close
+            </button>
+            <button type="submit" id="send-button" class="btn btn-primary">
+              Send
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
-    <form name="form" ng-submit="vm.onSubmit()">
-      <div class="md-form-group float-label">
-        <input id="name" type="text" class="md-input" ng-model="vm.credentials.username" required>
-        <label for="name">Username</label>
-      </div>
-      <div class="md-form-group float-label">
-        <input id="password" type="password" class="md-input" ng-model="vm.credentials.password" required>
-        <label for="password">Password</label>
-      </div>
-      <div class="m-b-md">
-        <label class="md-check">
-          <input type="checkbox" ng-model="vm.isLocal"><i class="primary"></i> Keep me signed in
-        </label>
-      </div>
-      <button type="submit" class="btn primary btn-block p-x-md">Sign in</button>
-    </form>
   </div>
 </div>
